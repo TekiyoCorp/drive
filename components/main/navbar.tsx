@@ -92,7 +92,7 @@ const Navbar = () => {
         <Container animation="fadeLeft" delay={0.1}>
           <div className="flex items-center gap-3">
             {pathname === "/vendre" && (
-              <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-lg:hidden">
+              <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden">
                 Prendre rendez-vous <VideoIcon className="fill-black size-5" />
               </Button>
             )}

@@ -94,6 +94,7 @@ const MobileNavbar = () => {
                     <div className="relative">
                       <Link
                         href={link.link}
+                        onClick={() => setToggleMenu(false)}
                         className="transition-all duration-500 text-white"
                       >
                         {link.name}
