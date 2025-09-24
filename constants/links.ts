@@ -1,0 +1,28 @@
+export const NAV_LINKS = [
+  { name: "Catalogue", link: "/catalogue" },
+  { name: "Vendre", link: "/vendre" },
+  { name: "Franchise", link: "/franchise" },
+  { name: "Agence", link: "/open-agency" },
+  { name: "Contact", link: "/contact" },
+];
+
+export const FOOTER_NAVIGATION_LINKS = [
+  { name: "Catalogue", link: "/catalogue" },
+  { name: "Vendre", link: "/vendre" },
+  { name: "Franchise", link: "/franchise" },
+  { name: "Agences", link: "/open-agency" },
+  { name: "Mentions légales", link: "/mentions-legales" },
+];
+
+export const FOOTER_CONTACT_LINKS = [
+  { name: "hello@drive.fr", link: "mailto:hello@drive.fr", type: "email" },
+  { name: "+33 1 38 88 88 88", link: "tel:+33138888888", type: "phone" },
+  { name: "WhatsApp Business", link: "#", type: "whatsapp", disabled: true },
+];
+
+export const FOOTER_SOCIAL_LINKS = [
+  { name: "Instagram", link: "#" },
+  { name: "LinkedIn", link: "#" },
+  { name: "Tiktok", link: "#" },
+  { name: "Facebook", link: "#" },
+];
