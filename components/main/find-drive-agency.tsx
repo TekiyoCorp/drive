@@ -34,7 +34,7 @@ const FindDriveAgency = () => {
       <Container
         animation="fadeLeft"
         delay={0.1}
-        className="flex flex-col items-start z-10 absolute top-0 sm:top-1/2 sm:-translate-y-1/2 left-0 px-2 sm:left-4 !h-screen sm:!h-fit w-full sm:w-fit lg:px-4"
+        className="flex flex-col items-start z-10 absolute top-0 sm:top-1/2 sm:-translate-y-1/2 left-0 px-2 sm:left-4 h-screen sm:h-[calc(100vh-12px)] w-full sm:w-fit lg:px-4"
       >
         <LiquidGlass
           borderRadius={24}
@@ -45,9 +45,9 @@ const FindDriveAgency = () => {
           shadowIntensity={0}
           displacementScale={0}
           elasticity={elasticity}
-          className="border border-white/30 border-x-white/20 w-full sm:!w-fit max-sm:h-full backdrop-blur-2xl"
+          className="border border-white/30 border-x-white/20 w-full sm:!w-fit h-fit backdrop-blur-2xl"
         >
-          <div className="p-4 sm:p-6 h-full w-full flex flex-col sm:!w-[374px]">
+          <div className="p-4 sm:p-6 py-4 h-full w-full flex flex-col sm:!w-[374px]">
             <Container animation="fadeUp" delay={0.2}>
               <div className="mb-6">
                 <h1 className="text-white text-2xl">
