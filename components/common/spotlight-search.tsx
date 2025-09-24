@@ -6,9 +6,11 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { OUR_CATALOGUES } from "@/constants/catalogues";
+import { SEARCH_DATA } from "@/constants/search-data";
 import { getResponsiveElasticity, useScreenSize } from "@/lib/liquidGlassUtils";
+import { cn } from "@/lib/utils";
 import { LiquidGlass } from "@liquidglass/react";
+import { ArrowRight, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
@@ -20,23 +22,25 @@ interface SpotlightSearchProps {
 
 const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
   const screenSize = useScreenSize();
-  const elasticity = getResponsiveElasticity(screenSize, 0.8);
+  const elasticity = getResponsiveElasticity(screenSize, 0.6);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const filteredCars = useMemo(() => {
+  const filteredItems = useMemo(() => {
     if (!searchQuery.trim()) {
-      return OUR_CATALOGUES;
+      return [];
     }
 
-    return OUR_CATALOGUES.filter((car) => {
+    return SEARCH_DATA.filter((item) => {
       const searchTerm = searchQuery.toLowerCase();
-      return car.title.toLowerCase().includes(searchTerm);
+      return item.title.toLowerCase().includes(searchTerm);
     });
   }, [searchQuery]);
 
-  const handleCarSelect = () => {
-    setOpen(false);
-  };
+  const groupedItems = useMemo(() => {
+    const vehicles = filteredItems.filter((item) => item.type === "vehicle");
+    const pages = filteredItems.filter((item) => item.type === "page");
+    return { vehicles, pages };
+  }, [filteredItems]);
 
   return (
     <CommandDialog
@@ -46,67 +50,91 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
       showCloseButton={false}
     >
       <LiquidGlass
-        borderRadius={24}
-        blur={8}
-        contrast={1.1}
-        brightness={1.8}
-        saturation={1.2}
+        borderRadius={30}
+        blur={10}
+        contrast={1}
+        brightness={1.1}
+        saturation={1}
         shadowIntensity={0}
-        displacementScale={0.7}
+        displacementScale={1.5}
         elasticity={elasticity}
-        className="border border-white/30 border-x-white/20 w-full max-sm:h-full backdrop-blur-2xl flex flex-col pb-1"
+        className={cn(
+          "border border-white/30 border-x-white/20 w-full max-sm:h-full backdrop-blur-2xl flex flex-col",
+          searchQuery && "pt-2 pb-3"
+        )}
       >
         <div className="w-full">
           <CommandInput
-            placeholder="Search for cars by brand..."
+            placeholder="Rechercher"
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
           <CommandList>
-            <CommandEmpty>No cars found matching your search.</CommandEmpty>
-            <CommandGroup
-              heading={searchQuery ? "Search Results" : "Featured Cars"}
-            >
-              {filteredCars.map((car) => (
-                <CommandItem
-                  key={car.id}
-                  onSelect={handleCarSelect}
-                  className="flex items-center gap-3 p-3 cursor-pointer"
-                  asChild
-                >
-                  <Link href={`/catalogue/${car.id}`}>
-                    <Image
-                      src={car.img}
-                      alt={`${car.title} ${car.subtitle}`}
-                      width={500}
-                      height={500}
-                      className="w-12 aspect-square object-cover rounded-lg"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <span className="font-medium text-ellipsis">
-                          {car.title}
+            {filteredItems.length === 0 && searchQuery && (
+              <CommandEmpty>Aucun résultat trouvé.</CommandEmpty>
+            )}
+
+            {/* Vehicles Group */}
+            {groupedItems.vehicles.length > 0 && (
+              <CommandGroup className={searchQuery && "border-t pt-3 mt-2"}>
+                {groupedItems.vehicles.map((item) => (
+                  <CommandItem
+                    key={item.id}
+                    onSelect={() => setOpen(false)}
+                    className="flex items-center gap-3 px-2 !py-1.5 cursor-pointer rounded-xl"
+                    asChild
+                  >
+                    <Link href={item.href}>
+                      {item.img && (
+                        <Image
+                          src={item.img}
+                          alt={item.title}
+                          width={39}
+                          height={39}
+                          className="w-10 aspect-square object-cover rounded-lg"
+                        />
+                      )}
+                      <div className="flex flex-col flex-1">
+                        <span className="font-medium text-base text-ellipsis">
+                          {item.title}
                         </span>
-                        <span className="text-sm text-white/60">
-                          {car.subtitle}
+                        <span className="text-xs text-white/70">
+                          {item.subtitle}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3 md:gap-4 text-xs text-white/60 mt-1">
-                        <span>{car.year}</span>
-                        <span>{car.km}</span>
-                        <span>{car.fuel}</span>
-                        <span>{car.trans}</span>
+                    </Link>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+
+            {/* Pages Group */}
+            {groupedItems.pages.length > 0 && (
+              <CommandGroup className={searchQuery && "mt-1"}>
+                {groupedItems.pages.map((item) => (
+                  <CommandItem
+                    key={item.id}
+                    onSelect={() => setOpen(false)}
+                    className="flex items-center gap-3 px-2 !py-1.5 cursor-pointer rounded-xl"
+                    asChild
+                  >
+                    <Link href={item.href} className="flex items-center w-full">
+                      <div className="w-10 aspect-square flex items-center justify-center rounded-lg">
+                        <ArrowRight className="size-6 text-white" />
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="font-medium text-primary">
-                        {car.price}
-                      </span>
-                    </div>
-                  </Link>
-                </CommandItem>
-              ))}
-            </CommandGroup>
+                      <div className="flex flex-col flex-1">
+                        <span className="font-medium text-base text-ellipsis">
+                          {item.title}
+                        </span>
+                        <span className="text-xs text-white/70">
+                          {item.subtitle}
+                        </span>
+                      </div>
+                    </Link>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
           </CommandList>
         </div>
       </LiquidGlass>
