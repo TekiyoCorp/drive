@@ -180,6 +180,10 @@ h6 {
   font-family: var(--font-heading);
 }
 
+p {
+  font-family: var(--font-base);
+}
+
 /* Hide scrollbar for filter options */
 .scrollbar-hide {
   -ms-overflow-style: none; /* Internet Explorer 10+ */
@@ -191,7 +195,7 @@ h6 {
 
 body {
   scroll-behavior: smooth;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-family: var(--font-base);
 }
 
 ::-webkit-scrollbar {
