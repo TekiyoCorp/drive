@@ -62,7 +62,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
             value={searchQuery}
             onValueChange={setSearchQuery}
           />
-          <CommandList className="min-h-96">
+          <CommandList>
             <CommandEmpty>No cars found matching your search.</CommandEmpty>
             <CommandGroup
               heading={searchQuery ? "Search Results" : "Featured Cars"}

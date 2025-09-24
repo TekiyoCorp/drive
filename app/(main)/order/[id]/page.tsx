@@ -1,3 +1,5 @@
+"use client";
+
 import Container from "@/components/global/container";
 import { SnapScrollContentBox } from "@/components/global/scroll-snap";
 import Wrapper from "@/components/global/wrapper";
@@ -6,9 +8,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
 import Image from "next/image";
+import { useState, use } from "react";
 
-const OrderPage = ({ params }: { params: { id: string } }) => {
-  const carId = parseInt(params.id);
+const OrderPage = ({ params }: { params: Promise<{ id: string }> }) => {
+  const [deliveryOption, setDeliveryOption] = useState<"pickup" | "delivery">(
+    "delivery"
+  );
+
+  const resolvedParams = use(params);
+  const carId = parseInt(resolvedParams.id);
   const car = OUR_CATALOGUES.find((c) => c.id === carId) || {
     id: 1,
     title: "Audi",
@@ -25,7 +33,7 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
     <SnapScrollContentBox>
       <div className="w-full relative flex flex-col text-white min-h-screen">
         <Wrapper className="pt-24 md:pt-28 lg:pt-40 w-full px-2.5 md:px-8 lg:px-28 xl:px-40 flex flex-col lg:flex-row gap-8 lg:gap-16 xl:gap-24">
-          <div className="flex-1">
+          <div className="flex-1 lg:sticky lg:top-32 lg:h-fit">
             <Container animation="fadeLeft" delay={0}>
               <h1 className="text-3xl md:text-4xl font-medium mb-8">
                 Votre commande
@@ -82,8 +90,15 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
 
                 <div>
                   <div className="flex items-center space-x-2">
-                    <Checkbox id="pickup" />
-                    <label htmlFor="pickup" className="text-base">
+                    <Checkbox
+                      id="pickup"
+                      checked={deliveryOption === "pickup"}
+                      onCheckedChange={() => setDeliveryOption("pickup")}
+                    />
+                    <label
+                      htmlFor="pickup"
+                      className="text-base cursor-pointer"
+                    >
                       Récupérer sur place
                     </label>
                   </div>
@@ -94,19 +109,32 @@ const OrderPage = ({ params }: { params: { id: string } }) => {
                 </div>
 
                 <div className="flex items-center space-x-2 pt-1">
-                  <Checkbox id="delivery" defaultChecked />
-                  <label htmlFor="delivery" className="text-base">
+                  <Checkbox
+                    id="delivery"
+                    checked={deliveryOption === "delivery"}
+                    onCheckedChange={() => setDeliveryOption("delivery")}
+                  />
+                  <label
+                    htmlFor="delivery"
+                    className="text-base cursor-pointer"
+                  >
                     Livraison à votre domicile
                   </label>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
-                  <Input placeholder="Adresse" className="col-span-2" />
-                  <Input placeholder="Ville" />
-                  <Input placeholder="Code postal" />
-                </div>
+                {deliveryOption === "delivery" && (
+                  <>
+                    <div className="grid grid-cols-2 gap-3">
+                      <Input placeholder="Adresse" className="col-span-2" />
+                      <Input placeholder="Ville" />
+                      <Input placeholder="Code postal" />
+                    </div>
 
-                <div className="text-base text-white">490€ supplémentaires</div>
+                    <div className="text-base text-white">
+                      490€ supplémentaires
+                    </div>
+                  </>
+                )}
               </Container>
 
               <Container animation="fadeLeft" delay={0.5} className="space-y-3">
