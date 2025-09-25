@@ -33,7 +33,7 @@ const FindDriveAgency = () => {
         delay={0.1}
         className="flex flex-col items-start z-10 absolute top-0 sm:top-1/2 sm:-translate-y-1/2 left-0 px-2 sm:left-4 !h-full !min-h-screen sm:h-[calc(100vh-12px)] w-full sm:w-fit lg:px-4"
       > */}
-      <LiquidGlass className="border border-white/30 border-x-white/20 w-full sm:!w-fit max-sm:min-h-screen sm:h-fit backdrop-blur-2xl z-20">
+      <LiquidGlass className="border border-white/30 border-x-white/20 w-full sm:!w-fit max-sm:min-h-screen sm:h-fit backdrop-blur-2xl z-20 lg:ml-4">
         <div className="p-4 sm:p-6 py-4 h-full w-full flex flex-col sm:!w-[374px] min-h-screen">
           <Container animation="fadeUp" delay={0.2}>
             <div className="mb-6">
