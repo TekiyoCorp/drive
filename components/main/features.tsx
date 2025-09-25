@@ -29,7 +29,7 @@ const Features = () => {
   ];
 
   return (
-    <div className="flex flex-col items-center justify-center w-full md:py-16 lg:py-24 min-h-screen">
+    <div className="flex flex-col items-center justify-center w-full py-8 md:py-16 lg:py-24 min-h-screen">
       <Wrapper className="px-2.5 lg:px-4 xl:!px-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {features.map((feature, index) => (
