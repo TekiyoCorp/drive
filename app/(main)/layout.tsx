@@ -10,7 +10,7 @@ export default function MarketingLayout({
 }) {
   return (
     <ScrollSnap>
-      <main className="w-full grow flex flex-col h-full min-h-screen">
+      <main className="w-full grow flex flex-col h-full min-h-screen overflow-x-hidden">
         <Navbar />
         <MobileNavbar />
         <div className="grow flex flex-col z-10 bg-[#181818]">{children}</div>

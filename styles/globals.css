@@ -198,6 +198,7 @@ p {
 body {
   scroll-behavior: smooth;
   font-family: var(--font-base);
+  overflow-x: hidden;
 }
 
 ::-webkit-scrollbar {
