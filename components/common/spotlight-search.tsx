@@ -7,13 +7,12 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { SEARCH_DATA } from "@/constants/search-data";
-import { getResponsiveElasticity, useScreenSize } from "@/lib/liquidGlassUtils";
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@liquidglass/react";
-import { ArrowRight, ChevronRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import LiquidGlass from "./liquid-glass";
 
 interface SpotlightSearchProps {
   open: boolean;
@@ -21,8 +20,6 @@ interface SpotlightSearchProps {
 }
 
 const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
-  const screenSize = useScreenSize();
-  const elasticity = getResponsiveElasticity(screenSize, 0.6);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredItems = useMemo(() => {
@@ -50,14 +47,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
       showCloseButton={false}
     >
       <LiquidGlass
-        borderRadius={30}
-        blur={10}
-        contrast={1}
-        brightness={1.1}
-        saturation={1}
-        shadowIntensity={0}
-        displacementScale={1.5}
-        elasticity={elasticity}
+        blur={8}
         className={cn(
           "border border-white/30 border-x-white/20 w-full max-sm:h-full backdrop-blur-2xl flex flex-col",
           searchQuery && "pt-2 pb-3"

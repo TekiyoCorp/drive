@@ -1,26 +1,23 @@
 "use client";
 
-import { LiquidGlass } from "@liquidglass/react";
-import Wrapper from "../global/wrapper";
-import { useScreenSize, getResponsiveElasticity } from "@/lib/liquidGlassUtils";
-import { AnimatePresence, motion } from "framer-motion";
-import Container from "../global/container";
-import Link from "next/link";
 import { NAV_LINKS } from "@/constants/links";
-import Image from "next/image";
-import LiquidGlassButton from "../common/liquid-glass-button";
-import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
-import { Button } from "../ui/button";
+import { AnimatePresence, motion } from "framer-motion";
+import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
+import LiquidGlass from "../common/liquid-glass";
+import LiquidGlassButton from "../common/liquid-glass-button";
 import SpotlightSearch from "../common/spotlight-search";
+import Container from "../global/container";
+import Wrapper from "../global/wrapper";
+import { Button } from "../ui/button";
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
   const [open, setOpen] = useState(false);
-  const screenSize = useScreenSize();
-  const elasticity = getResponsiveElasticity(screenSize, 0.6);
   const pathname = usePathname();
 
   // Handle hydration mismatch for pathname-based styling
@@ -39,17 +36,7 @@ const Navbar = () => {
         )}
       >
         <Container animation="fadeRight" delay={0.1}>
-          <LiquidGlass
-            borderRadius={40}
-            blur={1}
-            contrast={1}
-            brightness={1.2}
-            saturation={1}
-            shadowIntensity={0}
-            displacementScale={2.3}
-            elasticity={elasticity}
-            className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit"
-          >
+          <LiquidGlass className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit">
             <div className="flex flex-row items-center justify-center gap-x-6 xl:gap-x-10 text-sm font-medium px-8 py-3">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}

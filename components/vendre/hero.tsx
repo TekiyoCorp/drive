@@ -6,13 +6,13 @@ import {
   CarouselItem,
   type CarouselApi,
 } from "@/components/ui/carousel";
-import { LiquidGlass } from "@liquidglass/react";
 import Image from "next/image";
 import { useCallback, useEffect, useState } from "react";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import CarFilters from "./car-filters";
+import LiquidGlass from "../common/liquid-glass";
 
 const Hero = () => {
   const [api, setApi] = useState<CarouselApi>();
@@ -111,14 +111,7 @@ const Hero = () => {
             className="w-full max-lg:max-w-lg px-4 mx-auto"
           >
             <LiquidGlass
-              borderRadius={30}
-              blur={1}
-              contrast={1.2}
               brightness={1.5}
-              saturation={1}
-              shadowIntensity={0}
-              displacementScale={2.3}
-              elasticity={0.6}
               className="border border-white/50 border-x-0 relative mt-6 !w-full lg:!w-fit mx-auto"
             >
               <CarFilters />

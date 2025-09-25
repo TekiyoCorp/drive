@@ -3,8 +3,9 @@
 import { cn } from "@/lib/utils";
 import { LiquidGlass } from "@liquidglass/react";
 import { useScreenSize, getResponsiveElasticity } from "@/lib/liquidGlassUtils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import React from "react";
+import { useSafariDetection } from "@/lib/browser-detection";
 
 interface LiquidGlassButtonProps
   extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -22,8 +23,14 @@ const LiquidGlassButton = ({
   ...props
 }: LiquidGlassButtonProps) => {
   const screenSize = useScreenSize();
+  const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
   const elasticity = getResponsiveElasticity(screenSize, 0.2);
   const [isHovered, setIsHovered] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <button
@@ -32,6 +39,12 @@ const LiquidGlassButton = ({
         "cursor-pointer border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] whitespace-nowrap relative flex items-center justify-center",
         btnClassName
       )}
+      style={{
+        backdropFilter:
+          isClient && (isSafari || isSafariIOS || isSafariMacOS)
+            ? "blur(12px)"
+            : "none",
+      }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

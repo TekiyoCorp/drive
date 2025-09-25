@@ -1,12 +1,12 @@
 "use client";
 
-import { useScreenSize, getResponsiveElasticity } from "@/lib/liquidGlassUtils";
+import { getResponsiveElasticity, useScreenSize } from "@/lib/liquidGlassUtils";
 import { cn } from "@/lib/utils";
-import { LiquidGlass } from "@liquidglass/react";
 import { SlidersHorizontal } from "lucide-react";
+import { useState } from "react";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
-import { useState } from "react";
+import LiquidGlass from "../common/liquid-glass";
 
 const filters = [
   { id: "nouveaute", label: "Nouveauté", isActive: true },
@@ -19,22 +19,12 @@ const filters = [
 ];
 
 const CatalogueFilter = () => {
-  const screenSize = useScreenSize();
-  const elasticity = getResponsiveElasticity(screenSize, 0.6);
   const [showFilters, setShowFilters] = useState(false);
 
   return (
     <Wrapper className="flex items-center justify-between w-full !px-0">
       <Container animation="fadeRight" delay={0.1} className="w-full">
         <LiquidGlass
-          borderRadius={40}
-          blur={1}
-          contrast={1}
-          brightness={1.2}
-          saturation={1}
-          shadowIntensity={0}
-          displacementScale={2.3}
-          elasticity={elasticity}
           className={cn(
             "border border-white/50 border-r-0 border-l-0 rounded-[40px] !w-full !items-start flex-col md:flex-row transition-all duration-500",
             showFilters ? "!h-96" : "max-md:!h-12 !h-fit"

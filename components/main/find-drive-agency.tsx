@@ -1,16 +1,13 @@
 "use client";
 
+import Container from "@/components/global/container";
 import { LOCATIONS } from "@/constants/locations";
-import { useScreenSize, getResponsiveElasticity } from "@/lib/liquidGlassUtils";
-import { LiquidGlass } from "@liquidglass/react";
 import { Search } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import Container from "@/components/global/container";
+import LiquidGlass from "../common/liquid-glass";
 
 const FindDriveAgency = () => {
-  const screenSize = useScreenSize();
-  const elasticity = getResponsiveElasticity(screenSize, 0.6);
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredLocations = LOCATIONS.filter(
@@ -37,14 +34,9 @@ const FindDriveAgency = () => {
         className="flex flex-col items-start z-10 absolute top-0 sm:top-1/2 sm:-translate-y-1/2 left-0 px-2 sm:left-4 h-screen sm:h-[calc(100vh-12px)] w-full sm:w-fit lg:px-4"
       >
         <LiquidGlass
-          borderRadius={24}
           blur={5}
           contrast={1.2}
-          brightness={1.2}
-          saturation={1}
-          shadowIntensity={0}
           displacementScale={0}
-          elasticity={elasticity}
           className="border border-white/30 border-x-white/20 w-full sm:!w-fit h-fit backdrop-blur-2xl"
         >
           <div className="p-4 sm:p-6 py-4 h-full w-full flex flex-col sm:!w-[374px]">
@@ -63,14 +55,8 @@ const FindDriveAgency = () => {
               <div className="relative mb-5">
                 <div className="relative">
                   <LiquidGlass
-                    borderRadius={40}
-                    blur={1}
+                    blur={5}
                     contrast={1.2}
-                    brightness={1.2}
-                    saturation={1}
-                    shadowIntensity={0}
-                    displacementScale={2.3}
-                    elasticity={elasticity}
                     className="border border-white/50 border-x-0 backdrop-blur-2xl relative"
                   >
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 h-5 w-5" />
