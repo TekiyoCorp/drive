@@ -10,7 +10,7 @@ import OurTestimonials from "@/components/main/our-testimonials";
 
 const FranchisePage = () => {
   return (
-    <div className="w-full relative flex flex-col pt-20 lg:pt-0">
+    <div className="w-full relative flex flex-col pt-24 lg:pt-0">
       <SnapElement>
         <FindDriveAgency />
       </SnapElement>

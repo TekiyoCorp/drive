@@ -36,7 +36,11 @@ const Navbar = () => {
         )}
       >
         <Container animation="fadeRight" delay={0.1}>
-          <LiquidGlass className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit">
+          <LiquidGlass
+            blur={2}
+            elasticity={0.8}
+            className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit"
+          >
             <div className="flex flex-row items-center justify-center gap-x-6 xl:gap-x-10 text-sm font-medium px-8 py-3">
               <motion.div
                 initial={{ opacity: 0, y: -10 }}
