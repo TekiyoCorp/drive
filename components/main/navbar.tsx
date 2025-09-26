@@ -28,7 +28,7 @@ const Navbar = () => {
   const isHomePage = isClient ? pathname === "/" : false;
 
   return (
-    <header className="absolute top-8 inset-x-0 z-50 w-full h-16 max-lg:hidden">
+    <header className="relative top-24 inset-x-0 z-50 w-full h-16 max-lg:hidden">
       <Wrapper
         className={cn(
           "flex items-center justify-between gap-2",
@@ -77,7 +77,12 @@ const Navbar = () => {
         </Container>
 
         <Container animation="fadeLeft" delay={0.1}>
-          <div className="flex items-center gap-3">
+          <div
+            className={cn(
+              "flex items-center gap-3 fixed top-12",
+              isHomePage ? "right-8 lg:right-16" : "right-8 lg:right-24"
+            )}
+          >
             {pathname === "/vendre" && (
               <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden">
                 Prendre rendez-vous <VideoIcon className="fill-black size-5" />
