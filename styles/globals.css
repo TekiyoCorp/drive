@@ -213,6 +213,11 @@ body {
   -webkit-overflow-scrolling: touch;
 }
 
+header {
+  position: fixed;
+  height: 10vh;
+}
+
 .snap-parent-y-proximity {
   scroll-snap-type: y proximity;
   overflow: scroll;
