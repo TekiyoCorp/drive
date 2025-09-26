@@ -53,9 +53,9 @@ const CarFilters = () => {
   ];
 
   return (
-    <div className="flex lg:flex-row flex-col lg:items-center gap-0 bg-transparent rounded-full py-4 px-6 min-w-[335px] w-full lg:py-0">
+    <div className="flex lg:flex-row flex-col lg:items-center gap-0 bg-transparent rounded-full py-4 px-6 min-w-[335px] w-full lg:py-0.5">
       <Select>
-        <SelectTrigger className="min-w-[140px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
+        <SelectTrigger className="min-w-[160px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
           <SelectValue placeholder="Marque" />
         </SelectTrigger>
         <SelectContent className="bg-[#1c1c1c] !text-sm border-white/20 text-white">
@@ -70,7 +70,7 @@ const CarFilters = () => {
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
       <Select>
-        <SelectTrigger className="min-w-[140px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
+        <SelectTrigger className="min-w-[160px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
           <SelectValue placeholder="Modèle" />
         </SelectTrigger>
         <SelectContent className="bg-[#1c1c1c] !text-sm border-white/20 text-white">
@@ -85,7 +85,7 @@ const CarFilters = () => {
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
       <Select>
-        <SelectTrigger className="min-w-[140px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
+        <SelectTrigger className="min-w-[160px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
           <SelectValue placeholder="Année" />
         </SelectTrigger>
         <SelectContent className="bg-[#1c1c1c] !text-sm border-white/20 text-white">
@@ -100,7 +100,7 @@ const CarFilters = () => {
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
       <Select>
-        <SelectTrigger className="min-w-[140px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
+        <SelectTrigger className="min-w-[160px] !text-sm flex items-center justify-start lg:justify-center !outline-none !bg-transparent border-none text-white  focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:pr-4 [&>svg]:text-white/70 cursor-pointer">
           <SelectValue placeholder="Km" />
         </SelectTrigger>
         <SelectContent className="bg-[#1c1c1c] !text-sm border-white/20 text-white">
@@ -116,7 +116,7 @@ const CarFilters = () => {
 
       <Button
         variant="ghost"
-        className="!bg-transparent text-white border-none rounded-none lg:h-12 p-0 lg:px-6 font-medium hover:!bg-transparent !cursor-pointer min-w-[140px] flex justify-start lg:!items-center lg:!justify-center"
+        className="!bg-transparent text-white border-none rounded-none lg:h-12 p-0 lg:px-6 font-medium hover:!bg-transparent !cursor-pointer min-w-[160px] flex justify-start lg:!items-center lg:!justify-center"
       >
         Immatriculation
       </Button>
