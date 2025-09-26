@@ -38,7 +38,7 @@ const SellingFee = () => {
           </Container>
         </Container>
 
-        <Container animation="fadeUp" delay={1.5} className="my-16">
+        <Container animation="fadeUp" delay={1.5} className="mt-16">
           <Image
             src="/images/vendre/car.webp"
             alt="Car"
