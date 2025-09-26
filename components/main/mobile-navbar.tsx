@@ -27,8 +27,8 @@ const MobileNavbar = () => {
   return (
     <header
       className={cn(
-        "absolute inset-x-0 z-50 w-full lg:hidden select-none",
-        toggleMenu ? "top-[7.8rem]" : isHomePage ? "top-2" : "top-2"
+        "relative inset-x-0 z-50 w-full lg:hidden select-none",
+        toggleMenu ? "top-[20.5rem]" : isHomePage ? "top-20" : "top-20"
       )}
     >
       <Wrapper
