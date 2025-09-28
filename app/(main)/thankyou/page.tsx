@@ -30,9 +30,9 @@ const ThankyouPage = () => {
 
         <div className="absolute left-1/2 -translate-x-1/2 bottom-5 z-20 flex flex-col items-center justify-center px-4 md:px-8">
           <Container delay={0.1}>
-            <h1 className="text-white text-[28px] font-medium tracking-wide text-center mb-4">
+            <h2 className="text-white text-[28px] font-medium tracking-wide text-center mb-4">
               Étape
-            </h1>
+            </h2>
           </Container>
 
           <Container delay={0.2}>

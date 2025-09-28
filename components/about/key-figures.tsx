@@ -81,9 +81,9 @@ const KeyFigures = () => {
         </div>
 
         <Container animation="fadeDown" delay={5}>
-          <h1 className="text-2xl font-medium mb-10 text-center">
+          <h2 className="text-2xl font-medium mb-10 text-center">
             Pourquoi l&apos;intermédiation ?
-          </h1>
+          </h2>
         </Container>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-32 max-w-4xl mx-auto">

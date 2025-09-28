@@ -1,16 +1,16 @@
 export const NAV_LINKS = [
   { name: "Catalogue", link: "/catalogue" },
   { name: "Vendre", link: "/vendre" },
-  { name: "Franchise", link: "/franchise" },
-  { name: "Agence", link: "/open-agency" },
+  { name: "Franchise", link: "/open-agency" },
+  { name: "Agence", link: "/franchise" },
   { name: "Contact", link: "/contact" },
 ];
 
 export const FOOTER_NAVIGATION_LINKS = [
   { name: "Catalogue", link: "/catalogue" },
   { name: "Vendre", link: "/vendre" },
-  { name: "Franchise", link: "/franchise" },
-  { name: "Agences", link: "/open-agency" },
+  { name: "Franchise", link: "/open-agency" },
+  { name: "Agence", link: "/franchise" },
   { name: "Mentions légales", link: "/mentions-legales" },
 ];
 
