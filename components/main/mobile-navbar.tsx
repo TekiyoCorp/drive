@@ -28,7 +28,7 @@ const MobileNavbar = () => {
     <header
       className={cn(
         "absolute inset-x-0 z-50 w-full lg:hidden select-none",
-        toggleMenu ? "top-6" : isHomePage ? "top-4" : "top-6"
+        toggleMenu ? "top-6" : isHomePage ? "top-6" : "top-6"
       )}
     >
       <Wrapper
@@ -38,11 +38,11 @@ const MobileNavbar = () => {
         )}
       >
         <LiquidGlass
-          blur={2}
+          blur={toggleMenu ? 8 : 2}
           elasticity={0.8}
           className={cn(
             "border border-white/40 border-r-0 border-l-0 rounded-[30px] !w-full overflow-hidden transition-all duration-500",
-            toggleMenu ? "!h-[290px]" : "!h-12"
+            toggleMenu ? "!h-[290px] bg-black/20" : "!h-12 bg-transparent"
           )}
           parentClassName="w-full"
         >

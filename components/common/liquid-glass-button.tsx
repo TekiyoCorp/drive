@@ -22,9 +22,8 @@ const LiquidGlassButton = ({
   showTooltips = false,
   ...props
 }: LiquidGlassButtonProps) => {
-  const screenSize = useScreenSize();
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
-  const elasticity = getResponsiveElasticity(screenSize, 0.2);
+  const elasticity = 0.2;
   const [isHovered, setIsHovered] = useState(false);
   const [isClient, setIsClient] = useState(false);
 

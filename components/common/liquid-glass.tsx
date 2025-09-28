@@ -1,7 +1,6 @@
 "use client";
 
 import { useSafariDetection } from "@/lib/browser-detection";
-import { getResponsiveElasticity, useScreenSize } from "@/lib/liquidGlassUtils";
 import { cn } from "@/lib/utils";
 import { LiquidGlass as LiquidGlassDisplay } from "@liquidglass/react";
 import { useEffect, useState } from "react";
@@ -34,8 +33,8 @@ const LiquidGlass = ({
   parentClassName,
 }: LiquidGlassProps) => {
   const [isClient, setIsClient] = useState(false);
-  const screenSize = useScreenSize();
-  const responsiveElasticity = getResponsiveElasticity(screenSize, elasticity);
+  // const responsiveElasticity = getResponsiveElasticity(screenSize, elasticity);
+  const responsiveElasticity = elasticity;
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
 
   useEffect(() => {
