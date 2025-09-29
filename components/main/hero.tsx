@@ -46,7 +46,7 @@ const Hero = () => {
           </Container>
 
           <Container delay={2}>
-            <button 
+            <button
               className="mt-6 flex items-center gap-1 text-base font-medium group cursor-pointer"
               aria-label="Discover the DRIVE network"
             >

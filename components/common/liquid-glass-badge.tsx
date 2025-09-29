@@ -10,10 +10,7 @@ interface LiquidGlassBadgeProps {
   className?: string;
 }
 
-const LiquidGlassBadge = ({
-  children,
-  className,
-}: LiquidGlassBadgeProps) => {
+const LiquidGlassBadge = ({ children, className }: LiquidGlassBadgeProps) => {
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
   const elasticity = 0.2;
   const [isClient, setIsClient] = useState(false);

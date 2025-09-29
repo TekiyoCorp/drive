@@ -100,7 +100,7 @@ const UserInfo = () => {
           className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center max-w-full transition-all duration-200 min-w-24"
           style={{ width: `${cityInputWidth}ch` }}
         />
-        <button 
+        <button
           className="bg-white w-5 aspect-square rounded-full flex items-center justify-center"
           aria-label="Submit location"
         >
