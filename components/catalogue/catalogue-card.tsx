@@ -1,8 +1,8 @@
-import Image from "next/image";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
+import Link from "next/link";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
-import Link from "next/link";
 
 export type CatalogueCardData = {
   id: number;
@@ -47,8 +47,9 @@ const CatalogueCard = ({
         <Image
           src={data.img}
           alt={`${data.title} ${data.subtitle} image`}
-          layout="fill"
-          objectFit="cover"
+          fill
+          className="object-cover"
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority={priority}
         />
       </div>

@@ -65,6 +65,7 @@ const MobileNavbar = () => {
                     width={50}
                     height={50}
                     className="w-max h-6"
+                    priority
                   />
                 </Link>
               </motion.div>

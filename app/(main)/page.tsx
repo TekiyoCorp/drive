@@ -18,10 +18,13 @@ const HomePage = () => {
         <Hero />
       </SnapElement>
       <SnapElement>
-        <Features />
+        <OurCatalog />
       </SnapElement>
       <SnapElement>
-        <OurCatalog />
+        <OurTestimonials />
+      </SnapElement>
+      <SnapElement>
+        <Features />
       </SnapElement>
       <SnapElement>
         <OpenDriveAgency />
@@ -31,9 +34,6 @@ const HomePage = () => {
       </SnapElement>
       <SnapElement>
         <FindDriveAgency />
-      </SnapElement>
-      <SnapElement>
-        <OurTestimonials />
       </SnapElement>
       <SnapScrollContentBox>
         <FAQs />

@@ -55,6 +55,7 @@ const OurTestimonials = () => {
                     alt="Quote Icon"
                     width={32}
                     height={32}
+                    className="w-auto h-auto"
                   />
 
                   <div>
