@@ -41,7 +41,6 @@ const OurCatalog = () => {
                 <CatalogueCard
                   data={card}
                   animation="fadeUp"
-                  delay={0.3 + idx * 0.2}
                   priority={idx === 0}
                   className={cn(
                     "snap-start",

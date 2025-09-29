@@ -4,7 +4,11 @@ import { cn } from "@/lib/utils";
 import { generateMetadata } from "@/lib/metadata";
 import "@/styles/globals.css";
 
-export const metadata = generateMetadata();
+export const metadata = generateMetadata({
+  title: "DRIVE",
+  description:
+    "Drive - La plateforme de vente et d'achat de véhicules entre particuliers et professionnels",
+});
 
 export default function RootLayout({
   children,

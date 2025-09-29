@@ -79,9 +79,9 @@ const VehicleFeatures = () => {
                     <div className="absolute top-6 left-20 rounded-lg h-[1px] w-[70%] lg:w-[65%] bg-white/40 border-gray-600 pointer-events-none max-md:hidden" />
                   )}
                   <div>
-                    <h3 className="font-medium text-lg text-white mb-2">
+                    <h4 className="font-medium text-lg text-white mb-2">
                       {feature.title}
-                    </h3>
+                    </h4>
                     <p className="text-xs md:hidden">{feature.description}</p>
                   </div>
                 </div>

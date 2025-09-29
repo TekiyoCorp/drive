@@ -91,9 +91,9 @@ const SellMyCar = () => {
                   )}
 
                   <div>
-                    <h3 className="font-medium text-lg text-white mb-2">
+                    <h2 className="font-medium text-lg text-white mb-2">
                       {feature.title}
-                    </h3>
+                    </h2>
                     <p className="text-xs">{feature.description}</p>
                   </div>
                 </div>

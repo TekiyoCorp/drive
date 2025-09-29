@@ -62,9 +62,9 @@ const OurTestimonials = () => {
                       {testimonial.quote}
                     </p>
 
-                    <h4 className="text-white font-medium text-[28px]">
+                    <h3 className="text-white font-medium text-[28px]">
                       {testimonial.name}
-                    </h4>
+                    </h3>
                     <p className="text-white/70 text-lg -mt-2">
                       {testimonial.location}
                     </p>
