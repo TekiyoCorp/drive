@@ -22,6 +22,11 @@ const MobileNavbar = () => {
     setIsClient(true);
   }, []);
 
+  // Close menu when navigating to a new page
+  useEffect(() => {
+    setToggleMenu(false);
+  }, [pathname]);
+
   const isHomePage = isClient ? pathname === "/" : false;
 
   return (
@@ -86,7 +91,7 @@ const MobileNavbar = () => {
                     <div className="relative">
                       <Link
                         href={link.link}
-                        onClick={() => setToggleMenu(false)}
+                        // onClick={() => setToggleMenu(false)}
                         className="transition-all duration-500 text-white"
                       >
                         {link.name}
