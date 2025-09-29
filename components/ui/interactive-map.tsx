@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
 import {
   MapContainer,
   TileLayer,
@@ -87,7 +88,6 @@ interface MapEventsProps {
 interface CustomControlsProps {
   onLocate: () => void;
   onToggleLayer: (layerType: keyof MapLayers) => void;
-  layers: MapLayers;
 }
 
 interface SearchControlProps {
@@ -95,7 +95,8 @@ interface SearchControlProps {
 }
 
 // Fix for default markers in React-Leaflet
-delete (L.Icon.Default.prototype as any)._getIconUrl;
+delete (L.Icon.Default.prototype as L.Icon & { _getIconUrl?: () => void })
+  ._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -127,7 +128,7 @@ const createCustomIcon = (
     shadowSize: [41, 41],
     // Add accessibility
     alt: title,
-  } as any);
+  } as L.IconOptions);
 };
 
 // Custom dot marker for modern look
@@ -190,11 +191,11 @@ const MapEvents: React.FC<MapEventsProps> = ({
 }) => {
   const map = useMapEvents({
     click: (e: L.LeafletMouseEvent) => {
-      onMapClick && onMapClick(e.latlng);
+      if (onMapClick) onMapClick(e.latlng);
     },
     locationfound: (e: L.LocationEvent) => {
       const latlng: [number, number] = [e.latlng.lat, e.latlng.lng];
-      onLocationFound && onLocationFound(latlng);
+      if (onLocationFound) onLocationFound(latlng);
       map.flyTo(e.latlng, map.getZoom());
     },
   });
@@ -206,7 +207,6 @@ const MapEvents: React.FC<MapEventsProps> = ({
 const CustomControls: React.FC<CustomControlsProps> = ({
   onLocate,
   onToggleLayer,
-  layers,
 }) => {
   const map = useMap();
 
@@ -269,7 +269,7 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
         const { lat, lon, display_name } = results[0];
         const latLng: [number, number] = [parseFloat(lat), parseFloat(lon)];
         map.flyTo(latLng, 13);
-        onSearch && onSearch({ latLng, name: display_name });
+        if (onSearch) onSearch({ latLng, name: display_name });
       }
     } catch (error) {
       console.error("Search error:", error);
@@ -327,7 +327,7 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
     return () => {
       control.remove();
     };
-  }, [map]);
+  }, [map, handleSearch]);
 
   return null;
 };
@@ -362,6 +362,10 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [clickedLocation, setClickedLocation] = useState<L.LatLng | null>(null);
 
+  // Drawing feature is available but not implemented yet
+  // TODO: Implement drawing functionality when isDrawingEnabled is true
+  console.debug("Drawing enabled:", enableDrawing);
+
   // Handle layer toggling
   const handleToggleLayer = useCallback((layerType: keyof MapLayers) => {
     setCurrentLayers((prev) => ({
@@ -389,7 +393,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   const handleMapClick = useCallback(
     (latlng: L.LatLng) => {
       setClickedLocation(latlng);
-      onMapClick && onMapClick(latlng);
+      if (onMapClick) onMapClick(latlng);
     },
     [onMapClick]
   );
@@ -448,7 +452,6 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
           <CustomControls
             onLocate={handleLocate}
             onToggleLayer={handleToggleLayer}
-            layers={currentLayers}
           />
         )}
 
@@ -476,9 +479,11 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
                       <h3>{marker.popup.title}</h3>
                       <p>{marker.popup.content}</p>
                       {marker.popup.image && (
-                        <img
+                        <Image
                           src={marker.popup.image}
                           alt={marker.popup.title}
+                          width={200}
+                          height={150}
                           style={{ maxWidth: "200px", height: "auto" }}
                         />
                       )}

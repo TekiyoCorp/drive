@@ -17,6 +17,20 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <link
+          rel="preload"
+          href="/images/main/hero.svg"
+          as="image"
+          type="image/svg+xml"
+        />
+        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="//fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={cn(
           "min-h-screen bg-[#181818] text-foreground font-base antialiased dark",

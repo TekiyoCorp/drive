@@ -1,6 +1,5 @@
 "use client";
 
-import { getResponsiveElasticity, useScreenSize } from "@/lib/liquidGlassUtils";
 import { cn } from "@/lib/utils";
 import { SlidersHorizontal } from "lucide-react";
 import { useState } from "react";

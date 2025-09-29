@@ -8,8 +8,6 @@ import LiquidGlass from "../common/liquid-glass";
 import {
   AdvancedMapWrapper as AdvancedMap,
   type MarkerData,
-  type PolygonData,
-  type CircleData,
 } from "../ui/interactive-map-wrapper";
 import type L from "leaflet";
 

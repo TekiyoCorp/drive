@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Button } from "@/components/ui/button";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { ArrowRight, PlaneTakeoff, Send } from "lucide-react";
+import { Send } from "lucide-react";
 
 const UserInfo = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +24,7 @@ const UserInfo = () => {
   useEffect(() => {
     setPhoneInputWidth(calculateCharWidth(formData.phone));
     setCityInputWidth(calculateCharWidth(formData.city));
-  }, []);
+  }, [formData.phone, formData.city]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({

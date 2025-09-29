@@ -7,17 +7,19 @@ import Wrapper from "../global/wrapper";
 const Hero = () => {
   return (
     <div className="relative z-0 w-full p-2.5 md:p-4 h-screen">
-      <Container animation="scaleUp" delay={0.3} className="w-full h-screen">
-        <Image
-          src="/images/main/hero.svg"
-          alt="Hero Image"
-          width={1024}
-          height={1024}
-          className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
-          priority
-          fetchPriority="high"
-        />
-      </Container>
+      {/* Remove animation wrapper from critical image to improve LCP */}
+      <Image
+        src="/images/main/hero.svg"
+        alt="Hero Image"
+        width={1920}
+        height={1080}
+        className="hero-image top-0 z-10"
+        priority
+        fetchPriority="high"
+        loading="eager"
+        quality={85}
+        placeholder="empty"
+      />
 
       <Wrapper className="py-12 absolute bottom-0 left-1/2 -translate-x-1/2 h-fit">
         <div className="flex flex-col items-center justify-center w-full z-10">

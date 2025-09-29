@@ -2,7 +2,6 @@
 
 import { cn } from "@/lib/utils";
 import { LiquidGlass } from "@liquidglass/react";
-import { useScreenSize, getResponsiveElasticity } from "@/lib/liquidGlassUtils";
 import { useState, useEffect } from "react";
 import React from "react";
 import { useSafariDetection } from "@/lib/browser-detection";
@@ -38,7 +37,7 @@ const LiquidGlassButton = ({
     if (typeof node === "string") return node;
     if (typeof node === "number") return node.toString();
     if (React.isValidElement(node)) {
-      const props = node.props as any;
+      const props = node.props as { children?: React.ReactNode };
       if (props.children) {
         return getTextContent(props.children);
       }

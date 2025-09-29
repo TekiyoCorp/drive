@@ -1,7 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
-import LiquidGlassButton from "../common/liquid-glass-button";
 import LiquidGlassBadge from "../common/liquid-glass-badge";
 import Container from "../global/container";
 
