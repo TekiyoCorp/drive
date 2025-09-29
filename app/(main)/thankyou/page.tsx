@@ -16,6 +16,8 @@ const ThankyouPage = () => {
             width={1024}
             height={1024}
             className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
+            priority
+            fetchPriority="high"
           />
         </Container>
 

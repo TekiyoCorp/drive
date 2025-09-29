@@ -20,6 +20,8 @@ const Hero = () => {
             width={1920}
             height={1080}
             className="object-cover object-center lg:object-right-bottom bg-no-repeat top-0 z-10 rounded-3xl w-full h-screen"
+            priority
+            fetchPriority="high"
           />
         </div>
       </Container>
