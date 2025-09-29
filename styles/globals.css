@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import "leaflet/dist/leaflet.css";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -246,4 +247,20 @@ body {
   z-index: 10;
   width: 100%;
   flex: none;
+}
+
+/* Custom map marker accessibility styles */
+.custom-dot-marker div:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.custom-dot-marker div:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+.custom-dot-marker div:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
 }

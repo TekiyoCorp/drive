@@ -2,6 +2,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
 import LiquidGlassButton from "../common/liquid-glass-button";
+import LiquidGlassBadge from "../common/liquid-glass-badge";
 import Container from "../global/container";
 
 export type CatalogueCardData = {
@@ -67,15 +68,15 @@ const CatalogueCard = ({
         </p>
 
         <div className="flex gap-3 mt-2 flex-wrap">
-          <LiquidGlassButton className="flex items-center justify-center !h-[20px] w-fit !p-0">
+          <LiquidGlassBadge className="flex items-center justify-center !h-[20px] w-fit !p-0">
             <span className="text-xs px-2">• {data.year}</span>
-          </LiquidGlassButton>
-          <LiquidGlassButton className="flex items-center justify-center !h-[20px] w-fit !p-0">
+          </LiquidGlassBadge>
+          <LiquidGlassBadge className="flex items-center justify-center !h-[20px] w-fit !p-0">
             <span className="text-xs px-2">• {data.fuel}</span>
-          </LiquidGlassButton>
-          <LiquidGlassButton className="flex items-center justify-center !h-[20px] w-fit !p-0">
+          </LiquidGlassBadge>
+          <LiquidGlassBadge className="flex items-center justify-center !h-[20px] w-fit !p-0">
             <span className="text-xs px-2">• {data.trans}</span>
-          </LiquidGlassButton>
+          </LiquidGlassBadge>
         </div>
       </div>
 

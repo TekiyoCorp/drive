@@ -12,7 +12,7 @@ const FranchisePage = () => {
   return (
     <div className="w-full relative flex flex-col pt-24 lg:pt-0">
       <SnapElement>
-        <div className="pt-0 lg:pt-32">
+        <div className="md:pt-24 lg:pt-32">
           <FindDriveAgency />
         </div>
       </SnapElement>

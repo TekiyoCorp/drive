@@ -6,11 +6,11 @@ import { Search } from "lucide-react";
 import { useState } from "react";
 import LiquidGlass from "../common/liquid-glass";
 import {
-  AdvancedMap,
+  AdvancedMapWrapper as AdvancedMap,
   type MarkerData,
   type PolygonData,
   type CircleData,
-} from "../ui/interactive-map";
+} from "../ui/interactive-map-wrapper";
 import type L from "leaflet";
 
 const FindDriveAgency = () => {

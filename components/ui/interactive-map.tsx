@@ -12,7 +12,6 @@ import {
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import L from "leaflet";
-import "leaflet/dist/leaflet.css";
 
 // Type definitions
 interface MarkerData {
@@ -109,7 +108,8 @@ L.Icon.Default.mergeOptions({
 // Custom marker icons
 const createCustomIcon = (
   color: string = "blue",
-  size: "small" | "medium" | "large" = "medium"
+  size: "small" | "medium" | "large" = "medium",
+  title: string = "Map marker"
 ): L.Icon => {
   const sizes: Record<"small" | "medium" | "large", [number, number]> = {
     small: [20, 32],
@@ -125,12 +125,15 @@ const createCustomIcon = (
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
-  });
+    // Add accessibility
+    alt: title,
+  } as any);
 };
 
 // Custom dot marker for modern look
 const createDotIcon = (
-  size: "small" | "medium" | "large" = "medium"
+  size: "small" | "medium" | "large" = "medium",
+  title: string = "Map marker"
 ): L.DivIcon => {
   const sizes: Record<"small" | "medium" | "large", number> = {
     small: 12,
@@ -143,16 +146,24 @@ const createDotIcon = (
   return new L.DivIcon({
     className: "custom-dot-marker",
     html: `
-      <div style="
-        width: ${dotSize}px;
-        height: ${dotSize}px;
-        background: rgba(255, 255, 255, 0.9);
-        border: 2px solid rgba(255, 255, 255, 1);
-        border-radius: 50%;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-        backdrop-filter: blur(4px);
-        position: relative;
-      ">
+      <div 
+        role="button" 
+        tabindex="0" 
+        aria-label="${title}"
+        title="${title}"
+        onkeydown="if(event.key==='Enter'||event.key===' '){event.target.click();event.preventDefault();}"
+        style="
+          width: ${dotSize}px;
+          height: ${dotSize}px;
+          background: rgba(255, 255, 255, 0.9);
+          border: 2px solid rgba(255, 255, 255, 1);
+          border-radius: 50%;
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+          backdrop-filter: blur(4px);
+          position: relative;
+          cursor: pointer;
+        "
+      >
         <div style="
           width: ${dotSize * 0.4}px;
           height: ${dotSize * 0.4}px;
@@ -162,6 +173,7 @@ const createDotIcon = (
           top: 50%;
           left: 50%;
           transform: translate(-50%, -50%);
+          pointer-events: none;
         "></div>
       </div>
     `,
@@ -205,9 +217,9 @@ const CustomControls: React.FC<CustomControlsProps> = ({
       const div = L.DomUtil.create("div", "custom-controls");
       div.innerHTML = `
         <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-          <button id="locate-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
-          <button id="satellite-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
-          <button id="traffic-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
+          <button id="locate-btn" aria-label="Locate my position on map" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
+          <button id="satellite-btn" aria-label="Toggle satellite view" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
+          <button id="traffic-btn" aria-label="Toggle traffic overlay" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
         </div>
       `;
 
@@ -275,10 +287,12 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
             id="search-input" 
             type="text" 
             placeholder="Search places..." 
+            aria-label="Search places on map"
             style="padding: 8px; border: 1px solid #ddd; border-radius: 3px; width: 200px;"
           />
           <button 
             id="search-btn" 
+            aria-label="Search map location"
             style="padding: 8px 12px; border: none; border-radius: 3px; cursor: pointer; background: #007bff; color: white;"
           >
             🔍
@@ -399,21 +413,21 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         scrollWheelZoom={false}
       >
         {/* Base tile layers */}
-        {currentLayers.openstreetmap && (
+        {currentLayers?.openstreetmap && (
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
         )}
 
-        {currentLayers.satellite && (
+        {currentLayers?.satellite && (
           <TileLayer
             attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           />
         )}
 
-        {currentLayers.dark && (
+        {currentLayers?.dark && (
           <TileLayer
             attribution='&copy; <a href="https://carto.com/">CARTO</a>'
             url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
@@ -445,7 +459,13 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
               <Marker
                 key={marker.id || index}
                 position={marker.position}
-                icon={marker.icon || createDotIcon(marker.size)}
+                icon={
+                  marker.icon ||
+                  createDotIcon(
+                    marker.size,
+                    marker.popup?.title || `Location marker ${index + 1}`
+                  )
+                }
                 eventHandlers={{
                   click: () => onMarkerClick && onMarkerClick(marker),
                 }}
@@ -473,7 +493,13 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
             <Marker
               key={marker.id || index}
               position={marker.position}
-              icon={marker.icon || createDotIcon(marker.size)}
+              icon={
+                marker.icon ||
+                createDotIcon(
+                  marker.size,
+                  marker.popup?.title || `Location marker ${index + 1}`
+                )
+              }
               eventHandlers={{
                 click: () => onMarkerClick && onMarkerClick(marker),
               }}
@@ -494,7 +520,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {userLocation && (
           <Marker
             position={userLocation}
-            icon={createCustomIcon("red", "medium")}
+            icon={createCustomIcon("red", "medium", "Your current location")}
           >
             <Popup>Your current location</Popup>
           </Marker>
@@ -504,7 +530,11 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {searchResult && (
           <Marker
             position={searchResult.latLng}
-            icon={createCustomIcon("green", "large")}
+            icon={createCustomIcon(
+              "green",
+              "large",
+              `Search result: ${searchResult.name}`
+            )}
           >
             <Popup>{searchResult.name}</Popup>
           </Marker>
@@ -514,7 +544,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {clickedLocation && (
           <Marker
             position={[clickedLocation.lat, clickedLocation.lng]}
-            icon={createCustomIcon("orange", "small")}
+            icon={createCustomIcon("orange", "small", "Clicked location")}
           >
             <Popup>
               Lat: {clickedLocation.lat.toFixed(6)}

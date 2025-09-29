@@ -37,10 +37,16 @@ const ReadyToTakeAction = () => {
 
           <Container delay={0.8}>
             <div className="mt-6 flex max-md:flex-col md:items-center gap-3">
-              <LiquidGlassButton className="px-8 w-full">
+              <LiquidGlassButton 
+                className="px-8 w-full"
+                ariaLabel="View the vehicle catalogue"
+              >
                 <span>Voir le catalogue</span>
               </LiquidGlassButton>
-              <LiquidGlassButton className="px-8">
+              <LiquidGlassButton 
+                className="px-8"
+                ariaLabel="Estimate my vehicle value"
+              >
                 <span>Estimer mon véhicule</span>
               </LiquidGlassButton>
             </div>

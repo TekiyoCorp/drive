@@ -13,6 +13,7 @@ interface LiquidGlassButtonProps
   className?: string;
   btnClassName?: string;
   showTooltips?: boolean;
+  ariaLabel?: string;
 }
 
 const LiquidGlassButton = ({
@@ -20,6 +21,7 @@ const LiquidGlassButton = ({
   className,
   btnClassName,
   showTooltips = false,
+  ariaLabel,
   ...props
 }: LiquidGlassButtonProps) => {
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
@@ -31,9 +33,28 @@ const LiquidGlassButton = ({
     setIsClient(true);
   }, []);
 
+  // Extract text content for accessibility if no ariaLabel is provided
+  const getTextContent = (node: React.ReactNode): string => {
+    if (typeof node === "string") return node;
+    if (typeof node === "number") return node.toString();
+    if (React.isValidElement(node)) {
+      const props = node.props as any;
+      if (props.children) {
+        return getTextContent(props.children);
+      }
+    }
+    if (Array.isArray(node)) {
+      return node.map(getTextContent).join(" ");
+    }
+    return "";
+  };
+
+  const accessibleName = ariaLabel || getTextContent(children) || "Button";
+
   return (
     <button
       {...props}
+      aria-label={accessibleName}
       className={cn(
         "cursor-pointer border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] whitespace-nowrap relative flex items-center justify-center",
         btnClassName
