@@ -1,21 +1,38 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import Wrapper from "../global/wrapper";
+import { usePathname } from "next/navigation";
+
 import Container from "../global/container";
+import Wrapper from "../global/wrapper";
 import NeedAssistance from "./need-assistance";
 import ReadyToTakeAction from "./ready-to-take-action";
+import { SnapElement } from "../global/scroll-snap";
+
 import {
   FOOTER_NAVIGATION_LINKS,
   FOOTER_CONTACT_LINKS,
   FOOTER_SOCIAL_LINKS,
 } from "../../constants/links";
-import { usePathname } from "next/navigation";
-import { SnapElement } from "../global/scroll-snap";
+import { getGlobalContentData } from "@/lib/strapi-actions";
+import { getStrapiMediaURL } from "@/lib/strapi";
 
 const Footer = () => {
   const pathname = usePathname();
+  const [globalContent, setGlobalContent] = useState<any | null>(null);
+
+  useEffect(() => {
+    const fetchGlobalContent = async () => {
+      const response = await getGlobalContentData();
+      if (response.success) {
+        setGlobalContent(response.data);
+      }
+    };
+
+    fetchGlobalContent();
+  }, []);
 
   return (
     <>
@@ -111,7 +128,11 @@ const Footer = () => {
                     <div>
                       <h3 className="text-2xl font-medium mb-3">Légal</h3>
                       <p className="text-lg">
-                        © 2025 DRIVE - Tous droits réservés Propulsé par Tekiyo
+                        {globalContent?.siteName
+                          ? `© ${new Date().getFullYear()} ${
+                              globalContent.siteName
+                            } - Tous droits réservés`
+                          : "© 2025 DRIVE - Tous droits réservés Propulsé par Tekiyo"}
                       </p>
                     </div>
                   </Container>
@@ -119,29 +140,55 @@ const Footer = () => {
               </div>
 
               <Container animation="fadeUp" delay={2}>
-                <Image
-                  src="/logo.svg"
-                  alt="logo"
-                  width={1024}
-                  height={1024}
-                  className="object-cover object-center z-10 rounded-3xl w-full hover:scale-105 transition-transform duration-300"
-                />
+                {globalContent?.logo ? (
+                  <Image
+                    src={getStrapiMediaURL(globalContent.logo)}
+                    alt={globalContent.logo.alternativeText || "Logo"}
+                    width={1024}
+                    height={1024}
+                    className="object-contain object-center z-10 rounded-3xl w-full max-h-40"
+                  />
+                ) : (
+                  <Image
+                    src="/logo.svg"
+                    alt="logo"
+                    width={1024}
+                    height={1024}
+                    className="object-cover object-center z-10 rounded-3xl w-full hover:scale-105 transition-transform duration-300"
+                  />
+                )}
               </Container>
 
               <Container animation="fadeUp" delay={3}>
                 <div className="flex items-center justify-center flex-col gap-5 max-md:mt-5">
-                  <Container animation="scaleUp" delay={3}>
-                    <Image
-                      src="/tekiyo.svg"
-                      alt="logo"
-                      width={27}
-                      height={27}
-                      className="hover:scale-110 transition-transform duration-200"
-                    />
-                  </Container>
+                  {globalContent?.logoSmall ? (
+                    <Container animation="scaleUp" delay={3}>
+                      <Image
+                        src={getStrapiMediaURL(globalContent.logoSmall)}
+                        alt={
+                          globalContent.logoSmall.alternativeText ||
+                          "Logo secondaire"
+                        }
+                        width={80}
+                        height={80}
+                        className="object-contain"
+                      />
+                    </Container>
+                  ) : (
+                    <Container animation="scaleUp" delay={3}>
+                      <Image
+                        src="/tekiyo.svg"
+                        alt="logo"
+                        width={27}
+                        height={27}
+                        className="hover:scale-110 transition-transform duration-200"
+                      />
+                    </Container>
+                  )}
                   <Container animation="fadeUp" delay={1.8}>
                     <p className="text-sm font-medium">
-                      © 2025 Maison Tekiyo™ - Tous droits réservés.
+                      {globalContent?.siteDescription ??
+                        "© 2025 Maison Tekiyo™ - Tous droits réservés."}
                     </p>
                   </Container>
                 </div>

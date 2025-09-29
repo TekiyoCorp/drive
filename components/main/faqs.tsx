@@ -8,10 +8,18 @@ import {
   AccordionContent,
   AccordionItem,
 } from "@/components/ui/accordion";
-import { FAQ } from "@/constants/faqs";
 import Wrapper from "../global/wrapper";
+import { getFAQsData } from "@/lib/strapi-actions";
 
-const FAQs = () => {
+const FAQs = async () => {
+  const faqsResponse = await getFAQsData();
+
+  // Utilise les données de Strapi si disponibles, sinon fallback vers les constantes
+  const faqs =
+    faqsResponse.success && Array.isArray(faqsResponse.data)
+      ? faqsResponse.data
+      : [];
+
   return (
     <div className="flex flex-col items-center justify-center w-full md:py-16 lg:py-24">
       <Wrapper>
@@ -29,9 +37,20 @@ const FAQs = () => {
                   type="single"
                   collapsible
                   className="w-full space-y-2"
-                  defaultValue="1"
+                  defaultValue={
+                    faqs.length ? faqs[0]?.id?.toString() : "placeholder"
+                  }
                 >
-                  {FAQ.map((item, index) => (
+                  {(faqs.length > 0
+                    ? faqs
+                    : [
+                        {
+                          id: "placeholder",
+                          title: "Aucune question disponible",
+                          content: "Les FAQ seront bientôt disponibles.",
+                        },
+                      ]
+                  ).map((item, index) => (
                     <Container
                       animation="fadeUp"
                       delay={2.5 + index * 0.1}
