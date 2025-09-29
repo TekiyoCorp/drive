@@ -10,9 +10,9 @@ import NeedAssistance from "@/components/main/need-assistance";
 import OurCatalog from "@/components/main/our-catalog";
 import OurTestimonials from "@/components/main/our-testimonials";
 
-const FranchiseDetilasPage = () => {
+const FranchiseDetailsPage = () => {
   return (
-    <div className="w-full relative flex flex-col pt-36">
+    <div className="w-full relative flex flex-col">
       <SnapElement>
         <Hero />
       </SnapElement>
@@ -38,4 +38,4 @@ const FranchiseDetilasPage = () => {
   );
 };
 
-export default FranchiseDetilasPage;
+export default FranchiseDetailsPage;
