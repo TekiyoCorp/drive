@@ -37,9 +37,9 @@ const MaximizeYourProfitability = () => {
           >
             <p className="text-white text-base lg:text-[22px]">
               Drive propose une approche innovante en combinant la force du
-              digital et un réseau physique d&apos;agences locales, permettant ainsi
-              d&apos;optimiser la génération de leads et d&apos;accélérer le closing des
-              ventes.
+              digital et un réseau physique d&apos;agences locales, permettant
+              ainsi d&apos;optimiser la génération de leads et d&apos;accélérer
+              le closing des ventes.
             </p>
           </Container>
         </Container>

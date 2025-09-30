@@ -7,7 +7,6 @@ import Wrapper from "../global/wrapper";
 const Hero = () => {
   return (
     <div className="relative z-0 w-full p-2.5 md:p-4 h-screen">
-      {/* Remove animation wrapper from critical image to improve LCP */}
       <Image
         src="/images/main/hero.svg"
         alt="Hero Image"

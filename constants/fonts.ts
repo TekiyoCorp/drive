@@ -17,21 +17,6 @@ export const heading = localFont({
       weight: "600",
       style: "normal",
     },
-    {
-      path: "../public/fonts/InterDisplay-Bold.ttf",
-      weight: "700",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/InterDisplay-Black.ttf",
-      weight: "800",
-      style: "normal",
-    },
-    {
-      path: "../public/fonts/InterDisplay-Black.ttf",
-      weight: "900",
-      style: "normal",
-    },
   ],
   variable: "--font-heading",
   display: "swap",

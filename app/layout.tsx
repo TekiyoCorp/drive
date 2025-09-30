@@ -16,7 +16,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="fr" suppressHydrationWarning>
       <head>
         <link
           rel="preload"
@@ -24,12 +24,12 @@ export default function RootLayout({
           as="image"
           type="image/svg+xml"
         />
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link
-          rel="preconnect"
-          href="//fonts.gstatic.com"
-          crossOrigin="anonymous"
-        />
+        {/* Preconnect to OpenStreetMap origins for map tiles */}
+        <link rel="preconnect" href="https://openstreetmap.org" />
+        <link rel="preconnect" href="https://a.tile.openstreetmap.org" />
+        <link rel="preconnect" href="https://b.tile.openstreetmap.org" />
+        <link rel="preconnect" href="https://c.tile.openstreetmap.org" />
+        <link rel="preconnect" href="https://nominatim.openstreetmap.org" />
       </head>
       <body
         className={cn(
