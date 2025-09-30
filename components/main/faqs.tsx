@@ -1,6 +1,6 @@
 import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
-import { Accordion as AccordionPrimitive } from "radix-ui";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
 
 import Container from "@/components/global/container";
 import {
