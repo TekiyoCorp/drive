@@ -18,13 +18,6 @@ export default function RootLayout({
   return (
     <html lang="fr" suppressHydrationWarning>
       <head>
-        <link
-          rel="preload"
-          href="/images/main/hero.svg"
-          as="image"
-          type="image/svg+xml"
-        />
-        {/* Preconnect to OpenStreetMap origins for map tiles */}
         <link rel="preconnect" href="https://openstreetmap.org" />
         <link rel="preconnect" href="https://a.tile.openstreetmap.org" />
         <link rel="preconnect" href="https://b.tile.openstreetmap.org" />

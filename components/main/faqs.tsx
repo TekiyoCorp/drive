@@ -74,7 +74,7 @@ const FAQs = () => {
 
               <Container animation="fadeUp" delay={4} className="grow h-full">
                 <Image
-                  src="/images/main/faq/1.jpg"
+                  src="/images/main/faq/1.webp"
                   alt="Car brake disc"
                   width={1024}
                   height={1024}
@@ -87,7 +87,7 @@ const FAQs = () => {
             <div className="col-span-2 max-lg:hidden">
               <Container animation="fadeLeft" delay={3} className="h-full grow">
                 <Image
-                  src="/images/main/faq/2.jpg"
+                  src="/images/main/faq/2.webp"
                   alt="Car with person"
                   width={1024}
                   height={1024}

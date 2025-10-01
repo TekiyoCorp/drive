@@ -58,7 +58,12 @@ const MobileNavbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link href="/" className="flex items-center gap-2">
+                <Link
+                  rel="preload"
+                  as="image"
+                  href="/"
+                  className="flex items-center gap-2"
+                >
                   <Image
                     src="/logo-small.svg"
                     alt="logo"

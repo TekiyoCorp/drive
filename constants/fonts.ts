@@ -19,7 +19,8 @@ export const heading = localFont({
     },
   ],
   variable: "--font-heading",
-  display: "swap",
+  display: "optional",
+  preload: true,
 });
 
 export const base = localFont({
@@ -46,5 +47,6 @@ export const base = localFont({
     },
   ],
   variable: "--font-base",
-  display: "swap",
+  display: "optional",
+  preload: true,
 });

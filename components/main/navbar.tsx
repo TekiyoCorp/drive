@@ -47,13 +47,18 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link href="/" className="flex items-center gap-2">
+                <Link
+                  href="/"
+                  rel="preload"
+                  as="image"
+                  prefetch
+                  className="flex items-center gap-2"
+                >
                   <Image
                     src="/logo-small.svg"
                     alt="logo"
-                    width={50}
-                    height={50}
-                    className="w-max h-6"
+                    width={45}
+                    height={45}
                     priority
                   />
                 </Link>
@@ -61,20 +66,15 @@ const Navbar = () => {
 
               <AnimatePresence>
                 {NAV_LINKS.map((link, index) => (
-                  <Container
+                  // <Container animation="fadeDown" delay={0.1 * index}>
+                  <Link
                     key={index}
-                    animation="fadeDown"
-                    delay={0.1 * index}
+                    href={link.link}
+                    className="transition-all duration-500 text-white"
                   >
-                    <div className="relative">
-                      <Link
-                        href={link.link}
-                        className="transition-all duration-500 text-white"
-                      >
-                        {link.name}
-                      </Link>
-                    </div>
-                  </Container>
+                    {link.name}
+                  </Link>
+                  // </Container>
                 ))}
               </AnimatePresence>
             </div>
