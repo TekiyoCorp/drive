@@ -3,10 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next start",
+    "build": "next build",
+    "build:optimized": "npm run optimize:images && next build",
+    "build:analyze": "ANALYZE=true next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "optimize:images": "./scripts/optimize-images-performance.sh",
+    "analyze": "ANALYZE=true npm run build",
+    "performance:test": "lighthouse http://localhost:3000 --output=json --output=html --output-path=./performance-report",
+    "performance:production": "./scripts/test-production.sh",
+    "test:lighthouse": "lighthouse http://localhost:3000 --only-categories=performance --output=html --output-path=./lighthouse-performance.html",
+    "bundle:analyze": "pnpm build:analyze && npx serve out"
   },
   "dependencies": {
     "@liquidglass/react": "^0.1.3",
@@ -34,14 +42,18 @@
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
+    "@next/bundle-analyzer": "^15.5.3",
     "@tailwindcss/postcss": "^4",
     "@types/leaflet": "^1.9.20",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "critters": "^0.0.25",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "sharp": "^0.34.4",
     "tailwindcss": "^4",
+    "terser": "^5.36.0",
     "tw-animate-css": "^1.3.8",
     "typescript": "^5"
   }

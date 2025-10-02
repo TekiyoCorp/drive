@@ -122,9 +122,9 @@ const Footer = () => {
                 <Image
                   src="/logo.svg"
                   alt="logo"
-                  width={1024}
-                  height={1024}
-                  className="object-cover object-center z-10 rounded-3xl w-full hover:scale-105 transition-transform duration-300"
+                  width={1080}
+                  height={1080}
+                  className="object-cover object-center z-10 rounded-3xl transition-transform duration-300 w-full h-fit"
                 />
               </Container>
 

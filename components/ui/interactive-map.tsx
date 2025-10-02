@@ -1,21 +1,22 @@
-import React, { useState, useEffect, useCallback } from "react";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 import Image from "next/image";
+import React, { useCallback, useEffect, useState } from "react";
 import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
   Circle,
+  MapContainer,
+  Marker,
   Polygon,
   Polyline,
+  Popup,
+  TileLayer,
   useMap,
   useMapEvents,
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
-import L from "leaflet";
 
 // Type definitions
-interface MarkerData {
+export interface MarkerData {
   id?: string | number;
   position: [number, number];
   icon?: L.Icon;
@@ -28,14 +29,14 @@ interface MarkerData {
   };
 }
 
-interface PolygonData {
+export interface PolygonData {
   id?: string | number;
-  positions: [number, number][] | [number, number][][];
+  positions: [number, number][];
   style?: L.PathOptions;
   popup?: string;
 }
 
-interface CircleData {
+export interface CircleData {
   id?: string | number;
   center: [number, number];
   radius: number;
@@ -43,41 +44,22 @@ interface CircleData {
   popup?: string;
 }
 
-interface PolylineData {
+export interface PolylineData {
   id?: string | number;
   positions: [number, number][];
   style?: L.PathOptions;
   popup?: string;
 }
 
-interface MapLayers {
+export interface MapLayers {
   openstreetmap: boolean;
   satellite: boolean;
-  dark: boolean;
   traffic: boolean;
 }
 
-interface SearchResult {
+export interface SearchResult {
   latLng: [number, number];
   name: string;
-}
-
-interface AdvancedMapProps {
-  center?: [number, number];
-  zoom?: number;
-  markers?: MarkerData[];
-  polygons?: PolygonData[];
-  circles?: CircleData[];
-  polylines?: PolylineData[];
-  onMarkerClick?: (marker: MarkerData) => void;
-  onMapClick?: (latlng: L.LatLng) => void;
-  enableClustering?: boolean;
-  enableSearch?: boolean;
-  enableControls?: boolean;
-  enableDrawing?: boolean;
-  mapLayers?: MapLayers;
-  className?: string;
-  style?: React.CSSProperties;
 }
 
 interface MapEventsProps {
@@ -94,9 +76,31 @@ interface SearchControlProps {
   onSearch?: (result: SearchResult) => void;
 }
 
+export interface AdvancedMapProps {
+  center?: [number, number];
+  zoom?: number;
+  markers?: MarkerData[];
+  polygons?: PolygonData[];
+  circles?: CircleData[];
+  polylines?: PolylineData[];
+  onMarkerClick?: (marker: MarkerData) => void;
+  onMapClick?: (latlng: L.LatLng) => void;
+  enableClustering?: boolean;
+  enableSearch?: boolean;
+  enableControls?: boolean;
+  mapLayers?: MapLayers;
+  className?: string;
+  style?: React.CSSProperties;
+}
+
 // Fix for default markers in React-Leaflet
-delete (L.Icon.Default.prototype as L.Icon & { _getIconUrl?: () => void })
-  ._getIconUrl;
+try {
+  // @ts-expect-error - This is a known workaround for Leaflet in React
+  delete L.Icon.Default.prototype._getIconUrl;
+} catch {
+  // Ignore error if already deleted
+}
+
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
@@ -108,9 +112,8 @@ L.Icon.Default.mergeOptions({
 
 // Custom marker icons
 const createCustomIcon = (
-  color: string = "blue",
-  size: "small" | "medium" | "large" = "medium",
-  title: string = "Map marker"
+  color = "blue",
+  size: "small" | "medium" | "large" = "medium"
 ): L.Icon => {
   const sizes: Record<"small" | "medium" | "large", [number, number]> = {
     small: [20, 32],
@@ -126,61 +129,6 @@ const createCustomIcon = (
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
     shadowSize: [41, 41],
-    // Add accessibility
-    alt: title,
-  } as L.IconOptions);
-};
-
-// Custom dot marker for modern look
-const createDotIcon = (
-  size: "small" | "medium" | "large" = "medium",
-  title: string = "Map marker"
-): L.DivIcon => {
-  const sizes: Record<"small" | "medium" | "large", number> = {
-    small: 12,
-    medium: 16,
-    large: 20,
-  };
-
-  const dotSize = sizes[size];
-
-  return new L.DivIcon({
-    className: "custom-dot-marker",
-    html: `
-      <div 
-        role="button" 
-        tabindex="0" 
-        aria-label="${title}"
-        title="${title}"
-        onkeydown="if(event.key==='Enter'||event.key===' '){event.target.click();event.preventDefault();}"
-        style="
-          width: ${dotSize}px;
-          height: ${dotSize}px;
-          background: rgba(255, 255, 255, 0.9);
-          border: 2px solid rgba(255, 255, 255, 1);
-          border-radius: 50%;
-          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-          backdrop-filter: blur(4px);
-          position: relative;
-          cursor: pointer;
-        "
-      >
-        <div style="
-          width: ${dotSize * 0.4}px;
-          height: ${dotSize * 0.4}px;
-          background: rgba(139, 92, 246, 0.8);
-          border-radius: 50%;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          pointer-events: none;
-        "></div>
-      </div>
-    `,
-    iconSize: [dotSize, dotSize],
-    iconAnchor: [dotSize / 2, dotSize / 2],
-    popupAnchor: [0, -(dotSize / 2)],
   });
 };
 
@@ -190,12 +138,16 @@ const MapEvents: React.FC<MapEventsProps> = ({
   onLocationFound,
 }) => {
   const map = useMapEvents({
-    click: (e: L.LeafletMouseEvent) => {
-      if (onMapClick) onMapClick(e.latlng);
+    click: (e) => {
+      if (onMapClick) {
+        onMapClick(e.latlng);
+      }
     },
-    locationfound: (e: L.LocationEvent) => {
-      const latlng: [number, number] = [e.latlng.lat, e.latlng.lng];
-      if (onLocationFound) onLocationFound(latlng);
+    locationfound: (e) => {
+      const location: [number, number] = [e.latlng.lat, e.latlng.lng];
+      if (onLocationFound) {
+        onLocationFound(location);
+      }
       map.flyTo(e.latlng, map.getZoom());
     },
   });
@@ -217,9 +169,9 @@ const CustomControls: React.FC<CustomControlsProps> = ({
       const div = L.DomUtil.create("div", "custom-controls");
       div.innerHTML = `
         <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-          <button id="locate-btn" aria-label="Locate my position on map" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
-          <button id="satellite-btn" aria-label="Toggle satellite view" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
-          <button id="traffic-btn" aria-label="Toggle traffic overlay" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
+          <button id="locate-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
+          <button id="satellite-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
+          <button id="traffic-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
         </div>
       `;
 
@@ -231,9 +183,15 @@ const CustomControls: React.FC<CustomControlsProps> = ({
       ) as HTMLButtonElement;
       const trafficBtn = div.querySelector("#traffic-btn") as HTMLButtonElement;
 
-      if (locateBtn) locateBtn.onclick = () => onLocate();
-      if (satelliteBtn) satelliteBtn.onclick = () => onToggleLayer("satellite");
-      if (trafficBtn) trafficBtn.onclick = () => onToggleLayer("traffic");
+      if (locateBtn) {
+        locateBtn.onclick = () => onLocate();
+      }
+      if (satelliteBtn) {
+        satelliteBtn.onclick = () => onToggleLayer("satellite");
+      }
+      if (trafficBtn) {
+        trafficBtn.onclick = () => onToggleLayer("traffic");
+      }
 
       return div;
     };
@@ -253,30 +211,32 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
   const [query, setQuery] = useState("");
   const map = useMap();
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
-
-    try {
-      // Using Nominatim API for geocoding
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          query
-        )}`
-      );
-      const results = await response.json();
-
-      if (results.length > 0) {
-        const { lat, lon, display_name } = results[0];
-        const latLng: [number, number] = [parseFloat(lat), parseFloat(lon)];
-        map.flyTo(latLng, 13);
-        if (onSearch) onSearch({ latLng, name: display_name });
-      }
-    } catch (error) {
-      console.error("Search error:", error);
-    }
-  };
-
   useEffect(() => {
+    const handleSearch = async () => {
+      if (!query.trim()) return;
+
+      try {
+        // Using Nominatim API for geocoding
+        const response = await fetch(
+          `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+            query
+          )}`
+        );
+        const results = await response.json();
+
+        if (results.length > 0) {
+          const { lat, lon, display_name } = results[0];
+          const latLng: [number, number] = [parseFloat(lat), parseFloat(lon)];
+          map.flyTo(latLng, 13);
+          if (onSearch) {
+            onSearch({ latLng, name: display_name });
+          }
+        }
+      } catch (error) {
+        console.error("Search error:", error);
+      }
+    };
+
     const control = new L.Control({ position: "topleft" });
 
     control.onAdd = () => {
@@ -287,12 +247,10 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
             id="search-input" 
             type="text" 
             placeholder="Search places..." 
-            aria-label="Search places on map"
             style="padding: 8px; border: 1px solid #ddd; border-radius: 3px; width: 200px;"
           />
           <button 
             id="search-btn" 
-            aria-label="Search map location"
             style="padding: 8px 12px; border: none; border-radius: 3px; cursor: pointer; background: #007bff; color: white;"
           >
             🔍
@@ -306,17 +264,20 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
       const button = div.querySelector("#search-btn") as HTMLButtonElement;
 
       if (input) {
-        input.addEventListener("input", (e: Event) => {
+        input.addEventListener("input", (e) => {
           const target = e.target as HTMLInputElement;
-          setQuery(target.value);
+          if (target) {
+            setQuery(target.value);
+          }
         });
-        input.addEventListener("keypress", (e: KeyboardEvent) => {
-          if (e.key === "Enter") handleSearch();
+        input.addEventListener("keypress", (e) => {
+          const keyboardEvent = e as KeyboardEvent;
+          if (keyboardEvent.key === "Enter") void handleSearch();
         });
       }
 
       if (button) {
-        button.addEventListener("click", handleSearch);
+        button.addEventListener("click", () => void handleSearch());
       }
 
       return div;
@@ -327,7 +288,7 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
     return () => {
       control.remove();
     };
-  }, [map, handleSearch]);
+  }, [map, query, onSearch]);
 
   return null;
 };
@@ -345,11 +306,9 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   enableClustering = true,
   enableSearch = true,
   enableControls = true,
-  enableDrawing = false,
   mapLayers = {
     openstreetmap: true,
     satellite: false,
-    dark: false,
     traffic: false,
   },
   className = "",
@@ -361,10 +320,6 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   );
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [clickedLocation, setClickedLocation] = useState<L.LatLng | null>(null);
-
-  // Drawing feature is available but not implemented yet
-  // TODO: Implement drawing functionality when isDrawingEnabled is true
-  console.debug("Drawing enabled:", enableDrawing);
 
   // Handle layer toggling
   const handleToggleLayer = useCallback((layerType: keyof MapLayers) => {
@@ -393,7 +348,9 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   const handleMapClick = useCallback(
     (latlng: L.LatLng) => {
       setClickedLocation(latlng);
-      if (onMapClick) onMapClick(latlng);
+      if (onMapClick) {
+        onMapClick(latlng);
+      }
     },
     [onMapClick]
   );
@@ -404,8 +361,8 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   }, []);
 
   // Handle location found
-  const handleLocationFound = useCallback((latlng: [number, number]) => {
-    setUserLocation(latlng);
+  const handleLocationFound = useCallback((location: [number, number]) => {
+    setUserLocation(location);
   }, []);
 
   return (
@@ -417,24 +374,17 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         scrollWheelZoom={false}
       >
         {/* Base tile layers */}
-        {currentLayers?.openstreetmap && (
+        {currentLayers.openstreetmap && (
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
         )}
 
-        {currentLayers?.satellite && (
+        {currentLayers.satellite && (
           <TileLayer
             attribution='&copy; <a href="https://www.esri.com/">Esri</a>'
             url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
-          />
-        )}
-
-        {currentLayers?.dark && (
-          <TileLayer
-            attribution='&copy; <a href="https://carto.com/">CARTO</a>'
-            url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           />
         )}
 
@@ -463,14 +413,14 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
                 key={marker.id || index}
                 position={marker.position}
                 icon={
-                  marker.icon ||
-                  createDotIcon(
-                    marker.size,
-                    marker.popup?.title || `Location marker ${index + 1}`
-                  )
+                  marker.icon || createCustomIcon(marker.color, marker.size)
                 }
                 eventHandlers={{
-                  click: () => onMarkerClick && onMarkerClick(marker),
+                  click: () => {
+                    if (onMarkerClick) {
+                      onMarkerClick(marker);
+                    }
+                  },
                 }}
               >
                 {marker.popup && (
@@ -498,15 +448,13 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
             <Marker
               key={marker.id || index}
               position={marker.position}
-              icon={
-                marker.icon ||
-                createDotIcon(
-                  marker.size,
-                  marker.popup?.title || `Location marker ${index + 1}`
-                )
-              }
+              icon={marker.icon || createCustomIcon(marker.color, marker.size)}
               eventHandlers={{
-                click: () => onMarkerClick && onMarkerClick(marker),
+                click: () => {
+                  if (onMarkerClick) {
+                    onMarkerClick(marker);
+                  }
+                },
               }}
             >
               {marker.popup && (
@@ -525,7 +473,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {userLocation && (
           <Marker
             position={userLocation}
-            icon={createCustomIcon("red", "medium", "Your current location")}
+            icon={createCustomIcon("red", "medium")}
           >
             <Popup>Your current location</Popup>
           </Marker>
@@ -535,11 +483,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {searchResult && (
           <Marker
             position={searchResult.latLng}
-            icon={createCustomIcon(
-              "green",
-              "large",
-              `Search result: ${searchResult.name}`
-            )}
+            icon={createCustomIcon("green", "large")}
           >
             <Popup>{searchResult.name}</Popup>
           </Marker>
@@ -549,7 +493,7 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {clickedLocation && (
           <Marker
             position={[clickedLocation.lat, clickedLocation.lng]}
-            icon={createCustomIcon("orange", "small", "Clicked location")}
+            icon={createCustomIcon("orange", "small")}
           >
             <Popup>
               Lat: {clickedLocation.lat.toFixed(6)}
@@ -599,19 +543,4 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
       </MapContainer>
     </div>
   );
-};
-
-// Default export
-export default AdvancedMap;
-
-// Additional utility exports
-export { createCustomIcon, createDotIcon };
-export type {
-  AdvancedMapProps,
-  MarkerData,
-  PolygonData,
-  CircleData,
-  PolylineData,
-  MapLayers,
-  SearchResult,
 };

@@ -42,13 +42,15 @@ const OurTestimonials = () => {
                     idx !== TESTIMONIALS.length - 1 ? "mr-3" : ""
                   )}
                 >
-                  <Image
-                    src={testimonial.avatar}
-                    alt="Avatar"
-                    width={45}
-                    height={45}
-                    className="w-[45px] h-[45px] rounded-full object-cover object-top"
-                  />
+                  <div className="relative w-[45px] h-[45px] rounded-full overflow-hidden">
+                    <Image
+                      src={testimonial.avatar}
+                      alt="Avatar"
+                      fill
+                      sizes="45px"
+                      className="object-cover object-top"
+                    />
+                  </div>
 
                   <Image
                     src={"/icons/quote.svg"}

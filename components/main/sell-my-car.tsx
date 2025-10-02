@@ -56,7 +56,7 @@ const SellMyCar = () => {
                 alt="Blue car"
                 width={600}
                 height={300}
-                className="w-full max-w-lg h-auto"
+                className="w-full max-w-lg h-auto min-h-[150px] sm:min-h-[300px]"
               />
             </div>
           </Container>
@@ -83,6 +83,7 @@ const SellMyCar = () => {
                       alt=""
                       width={25}
                       height={25}
+                      style={{ height: 25 }}
                       className="w-fit h-fit object-contain"
                     />
                   </div>

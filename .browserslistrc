@@ -1,0 +1,8 @@
+# Ultra-modern browsers only - eliminates most polyfills
+Chrome >= 91
+Firefox >= 90  
+Safari >= 14
+Edge >= 91
+not IE 11
+not dead
+not < 0.5%

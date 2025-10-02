@@ -72,6 +72,7 @@ const VehicleFeatures = () => {
                       alt=""
                       width={25}
                       height={25}
+                      style={{ height: 25 }}
                       className="w-fit h-fit object-contain"
                     />
                   </div>

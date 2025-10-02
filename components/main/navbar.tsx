@@ -4,7 +4,6 @@ import { NAV_LINKS } from "@/constants/links";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -14,6 +13,7 @@ import SpotlightSearch from "../common/spotlight-search";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { Button } from "../ui/button";
+import Image from "next/image";
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
@@ -47,19 +47,21 @@ const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link
-                  href="/"
-                  rel="preload"
-                  as="image"
-                  prefetch
-                  className="flex items-center gap-2"
-                >
+                <Link href="/" className="flex items-center gap-2">
                   <Image
                     src="/logo-small.svg"
                     alt="logo"
-                    width={45}
-                    height={45}
-                    priority
+                    width={39}
+                    height={24}
+                    style={{
+                      height: "24px",
+                      width: "auto",
+                      minHeight: "24px",
+                      maxHeight: "24px",
+                    }}
+                    className="!h-6 !w-auto force-logo-height"
+                    loading="eager"
+                    fetchPriority="high"
                   />
                 </Link>
               </motion.div>
@@ -89,7 +91,7 @@ const Navbar = () => {
             )}
           >
             {pathname === "/vendre" && (
-              <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden">
+              <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden bg-white text-black">
                 Prendre rendez-vous <VideoIcon className="fill-black size-5" />
               </Button>
             )}

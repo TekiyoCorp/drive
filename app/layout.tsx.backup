@@ -1,0 +1,261 @@
+import Providers from "@/components/global/providers";
+import { base, heading } from "@/constants/fonts";
+import { cn } from "@/lib/utils";
+import { generateMetadata } from "@/lib/metadata";
+import "@/styles/globals.css";
+/* Critical CSS - Above the fold styles that must load immediately */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  background-color: #181818;
+  color: white;
+  font-family: var(--font-base, system-ui, sans-serif);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+}
+
+@media (min-width: 768px) {
+  .hero-container {
+    padding: 16px;
+  }
+}
+
+.hero-image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  z-index: -10;
+  transform: translateZ(0);
+  will-change: auto;
+  contain: layout style paint;
+}
+
+.prevent-cls {
+  contain: layout style paint;
+  will-change: auto;
+}
+`;
+
+export const metadata = generateMetadata({
+  title: "DRIVE",
+  description:
+    "Drive - La plateforme de vente et d'achat de véhicules entre particuliers et professionnels",
+});
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <html lang="fr" suppressHydrationWarning>
+      <head>
+        {/* DNS prefetch only for origins we actually use */}
+        <link rel="dns-prefetch" href="//localhost:3000" />
+
+        {/* Preconnect only to origins that are actually used */}
+        <link rel="preconnect" href="/" crossOrigin="" />
+        
+        {/* Preconnect to OpenStreetMap tile servers for faster map loading */}
+        <link rel="dns-prefetch" href="//a.tile.openstreetmap.org" />
+        <link rel="dns-prefetch" href="//b.tile.openstreetmap.org" />
+        <link rel="dns-prefetch" href="//c.tile.openstreetmap.org" />
+        
+        {/* Resource hints for better caching */}
+        <link rel="prefetch" href="/_next/static/css/globals.css" />
+        <meta name="theme-color" content="#181818" />
+        <meta name="color-scheme" content="dark" />
+
+        {/* Critical viewport and charset */}
+        <meta charSet="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, viewport-fit=cover"
+        />
+
+        {/* Inline critical CSS to eliminate render-blocking */}
+        <style
+          data-critical="true"
+          dangerouslySetInnerHTML={{ __html: `
+            /* Critical above-the-fold styles only */
+            * { box-sizing: border-box; }
+            html { -webkit-text-size-adjust: 100%; }
+            body { 
+              margin: 0; 
+              background-color: #181818; 
+              color: white; 
+              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+              line-height: 1.5;
+              -webkit-font-smoothing: antialiased;
+            }
+            .hero-container { 
+              position: relative; 
+              width: 100%; 
+              height: 100vh; 
+              padding: 10px; 
+            }
+          ` }}
+        />
+
+        {/* Critical LCP image preloading with highest priority */}
+        <link
+          rel="preload"
+          as="image"
+          href="/images/main/hero.avif"
+          type="image/avif"
+          fetchPriority="high"
+          imageSrcSet="/images/main/hero.avif 1252w"
+          imageSizes="100vw"
+        />
+        <link
+          rel="preload"
+          as="image"
+          href="/images/main/hero.webp"
+          type="image/webp"
+          fetchPriority="high"
+        />
+
+        {/* Critical fonts preloading with display=swap */}
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/InterDisplay-Regular.ttf"
+          type="font/ttf"
+          crossOrigin="anonymous"
+          fetchPriority="high"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/InterDisplay-Medium.ttf"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/InterDisplay-SemiBold.ttf"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+
+        {/* Critical image optimization script - runs immediately */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Preload hero image with highest priority
+                function preloadCriticalImage() {
+                  var link = document.createElement('link');
+                  link.rel = 'preload';
+                  link.as = 'image';
+                  link.href = '/images/main/hero.avif';
+                  link.type = 'image/avif';
+                  link.fetchPriority = 'high';
+                  document.head.appendChild(link);
+                  
+                  // Fallback for WebP
+                  var linkWebP = document.createElement('link');
+                  linkWebP.rel = 'preload';
+                  linkWebP.as = 'image';
+                  linkWebP.href = '/images/main/hero.webp';
+                  linkWebP.type = 'image/webp';
+                  linkWebP.fetchPriority = 'high';
+                  document.head.appendChild(linkWebP);
+                }
+                
+                // Execute immediately
+                if (document.readyState === 'loading') {
+                  document.addEventListener('DOMContentLoaded', preloadCriticalImage);
+                } else {
+                  preloadCriticalImage();
+                }
+                
+                // Optimize image loading
+                window.addEventListener('load', function() {
+                  var heroImg = document.querySelector('.hero-image');
+                  if (heroImg) {
+                    heroImg.loading = 'eager';
+                    heroImg.fetchPriority = 'high';
+                    heroImg.decoding = 'sync';
+                  }
+                  
+                  // Defer non-critical CSS loading using requestIdleCallback for better performance
+                  function deferNonCriticalCSS() {
+                    // Find and defer all non-critical CSS chunks
+                    var existingLinks = document.querySelectorAll('link[rel="stylesheet"]');
+                    existingLinks.forEach(function(link) {
+                      if (link.href && link.href.indexOf('chunks/') > -1) {
+                        link.media = 'print';
+                        link.onload = function() {
+                          this.media = 'all';
+                        };
+                      }
+                    });
+                  }
+                  
+                  if ('requestIdleCallback' in window) {
+                    requestIdleCallback(deferNonCriticalCSS);
+                  } else {
+                    setTimeout(deferNonCriticalCSS, 50);
+                  }
+                }, { once: true });
+              })();
+            `,
+          }}
+        />
+
+        {/* Performance monitoring */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                // Monitor LCP
+                if ('PerformanceObserver' in window) {
+                  var lcpObserver = new PerformanceObserver(function(list) {
+                    var entries = list.getEntries();
+                    var lastEntry = entries[entries.length - 1];
+                    console.log('LCP:', lastEntry.startTime + 'ms');
+                  });
+                  lcpObserver.observe({ entryTypes: ['largest-contentful-paint'] });
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
+      <body
+        className={cn(
+          "min-h-screen bg-[#181818] text-foreground font-base antialiased dark",
+          base.variable,
+          heading.variable
+        )}
+      >
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}

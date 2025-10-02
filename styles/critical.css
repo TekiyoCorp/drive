@@ -1,0 +1,196 @@
+/* Critical CSS - Above the fold styles that must load immediately - OPTIMIZED */
+
+/* Minimal reset for performance */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  background-color: #181818;
+  color: white;
+  font-family: var(
+    --font-base,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif
+  );
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Critical hero section styles - MINIMAL */
+.hero-container {
+  position: relative;
+  z-index: 0;
+  width: 100%;
+  height: 100vh;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+  z-index: -10;
+  transform: translateZ(0);
+  will-change: auto;
+  contain: layout style paint;
+}
+
+.hero-content {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  height: fit-content;
+  padding: 48px 20px;
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.hero-title {
+  font-size: 32px;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  letter-spacing: -0.025em;
+  margin: 24px 0 0;
+  width: 100%;
+  contain: layout style;
+  will-change: auto;
+}
+
+.hero-description {
+  font-size: 16px;
+  font-weight: 400;
+  text-align: center;
+  color: rgba(255, 255, 255, 0.8);
+  max-width: 368px;
+  margin: 16px auto 0;
+  line-height: 1.625;
+  contain: layout style;
+  will-change: auto;
+  transform: translateZ(0);
+}
+
+/* Minimal button styles */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  border: 1px solid transparent;
+  padding: 8px 24px;
+  height: 40px;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+  backdrop-filter: blur(8px);
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* Essential utilities only */
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100vh;
+}
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.text-center {
+  text-align: center;
+}
+.mt-6 {
+  margin-top: 24px;
+}
+.mt-4 {
+  margin-top: 16px;
+}
+.gap-3 {
+  gap: 12px;
+}
+.rounded-3xl {
+  border-radius: 24px;
+}
+.object-cover {
+  object-fit: cover;
+}
+.inset-0 {
+  inset: 0;
+}
+.z-10 {
+  z-index: 10;
+}
+
+/* Critical font loading - optimized */
+@font-face {
+  font-family: "InterDisplay";
+  src: url("/fonts/InterDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "InterDisplay";
+  src: url("/fonts/InterDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "InterDisplay";
+  src: url("/fonts/InterDisplay-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Performance optimizations */
+.prevent-cls {
+  contain: layout style paint;
+  will-change: auto;
+}
+
+/* Remove loading states to reduce CSS size */

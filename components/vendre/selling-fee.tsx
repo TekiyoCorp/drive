@@ -7,7 +7,7 @@ import { PhoneIcon, VideoIcon } from "lucide-react";
 const SellingFee = () => {
   return (
     <div>
-      <Wrapper className="w-full flex-col min-h-screen flex items-center justify-center gap-5">
+      <Wrapper className="w-full flex-col min-h-screen flex items-center justify-center gap-5 md:pt-24">
         <Container animation="fadeUp" delay={0.2}>
           <h2 className="text-center text-2xl md:text-4xl font-medium w-full">
             La vente sereine, zéro frais.
@@ -38,7 +38,7 @@ const SellingFee = () => {
           </Container>
         </Container>
 
-        <Container animation="fadeUp" delay={1.5} className="mt-16">
+        <Container animation="fadeUp" delay={1.5} className="mt-5">
           <Image
             src="/images/vendre/car.webp"
             alt="Car"

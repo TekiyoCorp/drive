@@ -13,7 +13,7 @@ import Wrapper from "../global/wrapper";
 
 const FAQs = () => {
   return (
-    <div className="flex flex-col items-center justify-center w-full md:py-16 lg:py-24">
+    <div className="flex flex-col items-center justify-center w-full py-16 lg:py-24 min-h-screen h-full">
       <Wrapper>
         <Container animation="fadeUp">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-16">
@@ -72,26 +72,34 @@ const FAQs = () => {
                 </Accordion>
               </Container>
 
-              <Container animation="fadeUp" delay={4} className="grow h-full">
+              <Container
+                animation="fadeUp"
+                delay={4}
+                className="relative grow h-full min-h-[262px]"
+              >
                 <Image
                   src="/images/main/faq/1.webp"
                   alt="Car brake disc"
-                  width={1024}
-                  height={1024}
-                  className="h-full object-cover rounded-3xl min-h-[262px]"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover rounded-3xl"
                 />
               </Container>
             </div>
 
             {/* Right side takes 2 columns - Images */}
             <div className="col-span-2 max-lg:hidden">
-              <Container animation="fadeLeft" delay={3} className="h-full grow">
+              <Container
+                animation="fadeLeft"
+                delay={3}
+                className="relative h-full grow min-h-[400px]"
+              >
                 <Image
                   src="/images/main/faq/2.webp"
                   alt="Car with person"
-                  width={1024}
-                  height={1024}
-                  className="object-cover h-full rounded-3xl"
+                  fill
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover rounded-3xl"
                 />
               </Container>
             </div>

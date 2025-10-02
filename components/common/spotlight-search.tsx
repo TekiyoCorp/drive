@@ -43,7 +43,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
     <CommandDialog
       open={open}
       onOpenChange={setOpen}
-      className="!bg-transparent !border-0 md:min-w-xl"
+      className="!bg-transparent !border-0 md:min-w-xl *:text-white"
       showCloseButton={false}
     >
       <LiquidGlass
@@ -53,7 +53,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
           searchQuery && "pt-2 pb-3"
         )}
       >
-        <div className="w-full">
+        <div className="w-full text-white">
           <CommandInput
             placeholder="Rechercher"
             value={searchQuery}
@@ -85,7 +85,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
                         />
                       )}
                       <div className="flex flex-col flex-1">
-                        <span className="font-medium text-base text-ellipsis">
+                        <span className="font-medium text-base text-ellipsis text-white">
                           {item.title}
                         </span>
                         <span className="text-xs text-white/70">
@@ -109,11 +109,11 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
                     asChild
                   >
                     <Link href={item.href} className="flex items-center w-full">
-                      <div className="w-10 aspect-square flex items-center justify-center rounded-lg">
+                      <div className="w-10 aspect-square flex items-center justify-center rounded-lg bg-transparent">
                         <ArrowRight className="size-6 text-white" />
                       </div>
                       <div className="flex flex-col flex-1">
-                        <span className="font-medium text-base text-ellipsis">
+                        <span className="font-medium text-base text-white text-ellipsis">
                           {item.title}
                         </span>
                         <span className="text-xs text-white/70">

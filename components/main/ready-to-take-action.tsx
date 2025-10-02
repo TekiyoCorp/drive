@@ -9,14 +9,14 @@ const ReadyToTakeAction = () => {
       <Container
         animation="scaleUp"
         delay={0.4}
-        className="w-full h-full min-h-screen"
+        className="relative w-full h-full min-h-screen"
       >
         <Image
           src="/images/main/footer-bg.webp"
           alt="Footer Background"
-          width={1024}
-          height={1024}
-          className="object-cover object-center top-0 z-10 rounded-3xl w-full h-full"
+          fill
+          sizes="100vw"
+          className="object-cover object-center min-h-screen -z-10 rounded-3xl"
         />
       </Container>
 

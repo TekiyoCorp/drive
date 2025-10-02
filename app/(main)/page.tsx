@@ -4,7 +4,7 @@ import {
 } from "@/components/global/scroll-snap";
 import FAQs from "@/components/main/faqs";
 import Features from "@/components/main/features";
-import FindDriveAgency from "@/components/main/find-drive-agency";
+import LazyFindDriveAgency from "@/components/optimized/lazy-find-drive-agency";
 import Hero from "@/components/main/hero";
 import OpenDriveAgency from "@/components/main/open-drive-agency";
 import OurCatalog from "@/components/main/our-catalog";
@@ -33,7 +33,7 @@ const HomePage = () => {
         <SellMyCar />
       </SnapElement>
       <SnapElement>
-        <FindDriveAgency />
+        <LazyFindDriveAgency />
       </SnapElement>
       <SnapScrollContentBox>
         <FAQs />

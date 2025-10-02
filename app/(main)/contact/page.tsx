@@ -49,7 +49,8 @@ const ContactUsPage = () => {
             alt="Contact Background"
             width={1024}
             height={1024}
-            className="object-cover object-center rounded-3xl w-full h-screen"
+            sizes="100vw"
+            className="object-cover object-center bg-no-repeat z-10 rounded-3xl h-full w-full min-h-screen"
           />
         </Container>
 

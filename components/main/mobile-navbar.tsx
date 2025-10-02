@@ -58,19 +58,16 @@ const MobileNavbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <Link
-                  rel="preload"
-                  as="image"
-                  href="/"
-                  className="flex items-center gap-2"
-                >
+                <Link href="/" className="flex items-center gap-2">
                   <Image
                     src="/logo-small.svg"
                     alt="logo"
-                    width={50}
-                    height={50}
-                    className="w-max h-6"
-                    priority
+                    width={39}
+                    height={30}
+                    style={{ height: "24px", width: "auto" }}
+                    className="h-6 w-auto"
+                    fetchPriority="high"
+                    loading="eager"
                   />
                 </Link>
               </motion.div>

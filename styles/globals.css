@@ -1,6 +1,5 @@
 @import "tailwindcss";
 @import "tw-animate-css";
-/* @import "leaflet/dist/leaflet.css"; */
 
 @custom-variant dark (&:is(.dark *));
 
@@ -263,4 +262,12 @@ body {
 .custom-dot-marker div:hover {
   transform: scale(1.1);
   transition: transform 0.2s ease;
+}
+
+/* Force logo height to be exactly 24px */
+.force-logo-height {
+  height: 24px !important;
+  min-height: 24px !important;
+  max-height: 24px !important;
+  width: auto !important;
 }

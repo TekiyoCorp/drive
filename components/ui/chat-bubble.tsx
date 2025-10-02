@@ -58,6 +58,7 @@ export function ChatBubbleMessage({
           alt="Chat bubble tail"
           width={20}
           height={20}
+          style={{ height: "100%" }}
           className="absolute bottom-0 w-fit h-full aspect-square -right-6"
         />
       ) : (
@@ -66,6 +67,7 @@ export function ChatBubbleMessage({
           alt="Chat bubble tail"
           width={20}
           height={20}
+          style={{ height: "100%" }}
           className="absolute bottom-0 w-fit h-full aspect-square -left-6"
         />
       )}

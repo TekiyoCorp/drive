@@ -26,13 +26,17 @@ const VehicleCondition = () => {
                 Résultat immédiat, sans engagement.
               </p>
             </Container>
-            <Container animation="scaleUp" delay={3}>
+            <Container
+              animation="scaleUp"
+              delay={3}
+              className="relative min-h-[193px] ml-[50%] sm:ml-[60%] -mt-20 sm:-mt-36"
+            >
               <Image
                 src="/images/vendre/vehicle-condition/1.webp"
                 alt="Vehicle Condition 1"
-                width={1024}
-                height={1024}
-                className="w-full object-cover ml-[50%] sm:ml-[60%] min-h-[193px] -mt-20 sm:-mt-36 object-left"
+                fill
+                sizes="50vw"
+                className="object-cover object-left"
               />
             </Container>
           </Container>
@@ -53,14 +57,14 @@ const VehicleCondition = () => {
             <Container
               animation="scaleUp"
               delay={3}
-              className="flex-1 w-full mt-auto"
+              className="relative flex-1 w-full mt-auto min-h-[193px]"
             >
               <Image
                 src="/images/vendre/vehicle-condition/2.webp"
                 alt="Vehicle Condition 2"
-                width={1024}
-                height={1024}
-                className="w-full object-cover object-left min-h-[193px]"
+                fill
+                sizes="50vw"
+                className="object-cover object-left"
               />
             </Container>
           </Container>
@@ -79,14 +83,14 @@ const VehicleCondition = () => {
             <Container
               animation="scaleUp"
               delay={6}
-              className="flex-1 w-full h-full -mt-[5%] max-sm:-mt-[20%] max-md:-mt-[35%]"
+              className="relative flex-1 w-full h-full -mt-[5%] max-sm:-mt-[20%] max-md:-mt-[35%] max-sm:min-h-[200px]"
             >
               <Image
                 src="/images/vendre/vehicle-condition/3.png"
                 alt="Vehicle Condition 3"
-                width={1024}
-                height={1024}
-                className="-rotate-90 w-full h-full max-sm:min-h-[200px] object-left object-cover"
+                fill
+                sizes="30vw"
+                className="-rotate-90 object-left object-cover"
               />
             </Container>
 

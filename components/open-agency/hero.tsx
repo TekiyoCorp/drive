@@ -6,7 +6,7 @@ import Wrapper from "../global/wrapper";
 
 const Hero = () => {
   return (
-    <div className="relative z-0 w-full p-2.5 md:p-4 min-h-screen">
+    <div className="relative z-0 w-full p-2.5 md:p-4 h-screen">
       <Container
         animation="scaleUp"
         delay={0.1}
@@ -17,7 +17,8 @@ const Hero = () => {
           alt="Hero Image"
           width={1024}
           height={1024}
-          className="object-cover object-center top-0 z-10 rounded-3xl w-full h-full"
+          className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
+          style={{ height: "100%" }}
         />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/80 via-transparent to-black/40 rounded-3xl" />
       </Container>

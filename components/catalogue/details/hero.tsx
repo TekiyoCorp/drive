@@ -151,9 +151,9 @@ const Hero = () => {
                     <Image
                       src={image.src}
                       alt={image.alt}
-                      width={1920}
-                      height={1080}
-                      className="object-cover object-center lg:object-right-bottom bg-no-repeat top-0 z-10 rounded-3xl w-full min-h-[500px] lg:h-full lg:min-h-screen"
+                      fill
+                      sizes="100vw"
+                      className="object-cover object-center lg:object-right-bottom bg-no-repeat z-10 rounded-3xl"
                       priority={index === 0}
                       fetchPriority={index === 0 ? "high" : "auto"}
                     />

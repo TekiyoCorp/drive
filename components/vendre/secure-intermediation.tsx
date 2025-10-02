@@ -32,9 +32,9 @@ const SecureIntermediation = () => {
           <Image
             src="/images/main/car.svg"
             alt="Blue car"
-            width={1000}
-            height={1000}
-            className="w-full h-full object-cover object-left"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover object-left"
             style={{ transform: "scaleX(-1)" }}
           />
         </div>
