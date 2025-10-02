@@ -62,9 +62,9 @@ const MobileNavbar = () => {
                   <Image
                     src="/logo-small.svg"
                     alt="logo"
-                    width={39}
-                    height={30}
-                    style={{ height: "24px", width: "auto" }}
+                    width={47}
+                    height={24}
+                    style={{ height: "24px", width: "46.8px" }}
                     className="h-6 w-auto"
                     fetchPriority="high"
                     loading="eager"

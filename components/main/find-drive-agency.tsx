@@ -6,7 +6,7 @@ import { MARKERS } from "@/constants/map";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import LiquidGlass from "../common/liquid-glass";
-import { AdvancedMap } from "../ui/interactive-map";
+import { LazyInteractiveMap } from "../optimized/lazy-components";
 
 const FindDriveAgency = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,7 +27,7 @@ const FindDriveAgency = () => {
         className="object-cover object-center -z-10 w-[96%] sm:w-[98%] min-h-[95vh] h-full absolute top-0 left-1/2 -translate-x-1/2 rounded-3xl"
       /> */}
 
-      <AdvancedMap
+      <LazyInteractiveMap
         center={[46.603354, 1.888334]} // Center of France
         zoom={6.2}
         markers={MARKERS}

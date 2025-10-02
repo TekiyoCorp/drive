@@ -9,6 +9,8 @@ export const MARKERS: MarkerData[] = [
       title: "Paris",
       content: "8° arrondissement (Champs-Élysées)",
     },
+    ariaLabel: "Paris agency location in 8th arrondissement",
+    title: "Paris - Champs-Élysées",
   },
   {
     id: 2,
@@ -18,6 +20,8 @@ export const MARKERS: MarkerData[] = [
       title: "Lyon",
       content: "Presqu'île, Rue de la République",
     },
+    ariaLabel: "Lyon agency location in Presqu'île",
+    title: "Lyon - Presqu'île",
   },
   {
     id: 3,
@@ -27,6 +31,8 @@ export const MARKERS: MarkerData[] = [
       title: "Bordeaux",
       content: "Quartier des Chartrons",
     },
+    ariaLabel: "Bordeaux agency location in Chartrons district",
+    title: "Bordeaux - Chartrons",
   },
   {
     id: 4,
@@ -36,6 +42,8 @@ export const MARKERS: MarkerData[] = [
       title: "Nice",
       content: "Promenade des Anglais",
     },
+    ariaLabel: "Nice agency location on Promenade des Anglais",
+    title: "Nice - Promenade des Anglais",
   },
   {
     id: 5,
@@ -45,6 +53,8 @@ export const MARKERS: MarkerData[] = [
       title: "Toulouse",
       content: "Place du Capitole",
     },
+    ariaLabel: "Toulouse agency location at Place du Capitole",
+    title: "Toulouse - Place du Capitole",
   },
   {
     id: 6,
@@ -54,6 +64,8 @@ export const MARKERS: MarkerData[] = [
       title: "Lille",
       content: "Vieux-Lille, Rue de la Monnaie",
     },
+    ariaLabel: "Lille agency location in Vieux-Lille",
+    title: "Lille - Vieux-Lille",
   },
   {
     id: 7,
@@ -63,6 +75,8 @@ export const MARKERS: MarkerData[] = [
       title: "Marseille",
       content: "Prado / 8°",
     },
+    ariaLabel: "Marseille agency location in Prado district",
+    title: "Marseille - Prado",
   },
   {
     id: 8,
@@ -72,6 +86,8 @@ export const MARKERS: MarkerData[] = [
       title: "Nantes",
       content: "Île de Nantes, Hangar à Bananes",
     },
+    ariaLabel: "Nantes agency location at Hangar à Bananes",
+    title: "Nantes - Hangar à Bananes",
   },
   {
     id: 9,
@@ -81,5 +97,7 @@ export const MARKERS: MarkerData[] = [
       title: "Strasbourg",
       content: "Quartier de l'Orangerie",
     },
+    ariaLabel: "Strasbourg agency location in Orangerie district",
+    title: "Strasbourg - Orangerie",
   },
 ];

@@ -264,10 +264,12 @@ body {
   transition: transform 0.2s ease;
 }
 
-/* Force logo height to be exactly 24px */
+/* Force logo height to be exactly 24px with correct aspect ratio */
 .force-logo-height {
   height: 24px !important;
   min-height: 24px !important;
   max-height: 24px !important;
-  width: auto !important;
+  width: 46.8px !important;
+  min-width: 46.8px !important;
+  max-width: 46.8px !important;
 }

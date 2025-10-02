@@ -51,11 +51,11 @@ const Navbar = () => {
                   <Image
                     src="/logo-small.svg"
                     alt="logo"
-                    width={39}
+                    width={47}
                     height={24}
                     style={{
                       height: "24px",
-                      width: "auto",
+                      width: "46.8px",
                       minHeight: "24px",
                       maxHeight: "24px",
                     }}

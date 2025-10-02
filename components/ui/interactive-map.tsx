@@ -1,5 +1,6 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import "../../styles/map-markers.css";
 import Image from "next/image";
 import React, { useCallback, useEffect, useState } from "react";
 import {
@@ -15,11 +16,104 @@ import {
 } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
+// Fix for Leaflet default icon issue - disable default icon loading
+delete (L.Icon.Default.prototype as L.Icon.Default & { _getIconUrl?: unknown })
+  ._getIconUrl;
+
+// Custom CSS-based icon creation - Pure CSS div markers only
+export const createCustomIcon = (
+  color: string = "#4285f4",
+  size: "small" | "medium" | "large" = "medium",
+  pulse: boolean = false,
+  accessibilityLabel?: string,
+  title?: string
+) => {
+  const sizes = {
+    small: { outerWidth: 16, innerWidth: 10 },
+    medium: { outerWidth: 20, innerWidth: 14 },
+    large: { outerWidth: 24, innerWidth: 18 },
+  };
+
+  const iconSize = sizes[size];
+  const pulseClass = pulse ? " pulse" : "";
+
+  // Default accessibility label if none provided
+  const defaultLabel = accessibilityLabel || `Map marker at location`;
+  const defaultTitle = title || `Interactive map marker`;
+
+  // Create pure CSS div-based marker with outer ring and inner dot
+  const iconHtml = `
+    <div class="custom-dot-marker${pulseClass}" 
+         role="button"
+         tabindex="0"
+         aria-label="${defaultLabel}"
+         title="${defaultTitle}"
+         onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"
+         style="
+      width: ${iconSize.outerWidth}px;
+      height: ${iconSize.outerWidth}px;
+      background-color: #9ca3af;
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    ">
+      <div style="
+        width: ${iconSize.innerWidth}px;
+        height: ${iconSize.innerWidth}px;
+        background-color: ${color};
+        border-radius: 50%;
+        border: 1px solid #ffffff;
+      "></div>
+    </div>
+  `;
+
+  return L.divIcon({
+    html: iconHtml,
+    className: "custom-marker-icon",
+    iconSize: [iconSize.outerWidth + 8, iconSize.outerWidth + 8], // Extra space for border and shadow
+    iconAnchor: [(iconSize.outerWidth + 8) / 2, (iconSize.outerWidth + 8) / 2],
+    popupAnchor: [0, -(iconSize.outerWidth + 8) / 2],
+  });
+};
+
+// Create a default blue dot icon for cases where no icon is specified
+export const createDefaultIcon = () =>
+  createCustomIcon(
+    "#4285f4",
+    "medium",
+    false,
+    "Default map marker",
+    "Interactive map marker"
+  );
+
+// Create a pulsing marker for special attention
+export const createPulsingIcon = (
+  color: string = "red",
+  size: "small" | "medium" | "large" = "large",
+  accessibilityLabel?: string
+) =>
+  createCustomIcon(
+    color,
+    size,
+    true,
+    accessibilityLabel || "Important map marker",
+    "Pulsing map marker"
+  );
+
 // Type definitions
 export interface MarkerData {
   id?: string | number;
   position: [number, number];
-  icon?: L.Icon;
+  icon?: L.Icon | L.DivIcon;
   color?: string;
   size?: "small" | "medium" | "large";
   popup?: {
@@ -27,6 +121,10 @@ export interface MarkerData {
     content: string;
     image?: string;
   };
+  // Accessibility properties
+  ariaLabel?: string;
+  title?: string;
+  description?: string;
 }
 
 export interface PolygonData {
@@ -93,45 +191,6 @@ export interface AdvancedMapProps {
   style?: React.CSSProperties;
 }
 
-// Fix for default markers in React-Leaflet
-try {
-  // @ts-expect-error - This is a known workaround for Leaflet in React
-  delete L.Icon.Default.prototype._getIconUrl;
-} catch {
-  // Ignore error if already deleted
-}
-
-L.Icon.Default.mergeOptions({
-  iconRetinaUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
-  iconUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
-  shadowUrl:
-    "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-});
-
-// Custom marker icons
-const createCustomIcon = (
-  color = "blue",
-  size: "small" | "medium" | "large" = "medium"
-): L.Icon => {
-  const sizes: Record<"small" | "medium" | "large", [number, number]> = {
-    small: [20, 32],
-    medium: [25, 41],
-    large: [30, 50],
-  };
-
-  return new L.Icon({
-    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
-    shadowUrl:
-      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
-    iconSize: sizes[size],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
-  });
-};
-
 // Map event handler component
 const MapEvents: React.FC<MapEventsProps> = ({
   onMapClick,
@@ -169,9 +228,9 @@ const CustomControls: React.FC<CustomControlsProps> = ({
       const div = L.DomUtil.create("div", "custom-controls");
       div.innerHTML = `
         <div style="background: white; padding: 10px; border-radius: 5px; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-          <button id="locate-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
-          <button id="satellite-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
-          <button id="traffic-btn" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
+          <button id="locate-btn" aria-label="Find my current location on map" title="Locate Me" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">📍 Locate Me</button>
+          <button id="satellite-btn" aria-label="Toggle satellite view" title="Toggle Satellite View" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🛰️ Satellite</button>
+          <button id="traffic-btn" aria-label="Toggle traffic information" title="Toggle Traffic" style="margin: 2px; padding: 8px; border: none; border-radius: 3px; cursor: pointer;">🚦 Traffic</button>
         </div>
       `;
 
@@ -247,10 +306,13 @@ const SearchControl: React.FC<SearchControlProps> = ({ onSearch }) => {
             id="search-input" 
             type="text" 
             placeholder="Search places..." 
+            aria-label="Search for places on the map"
             style="padding: 8px; border: 1px solid #ddd; border-radius: 3px; width: 200px;"
           />
           <button 
             id="search-btn" 
+            aria-label="Search for location"
+            title="Search"
             style="padding: 8px 12px; border: none; border-radius: 3px; cursor: pointer; background: #007bff; color: white;"
           >
             🔍
@@ -314,12 +376,18 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
   className = "",
   style = { height: "500px", width: "100%" },
 }) => {
+  const [isClient, setIsClient] = useState(false);
   const [currentLayers, setCurrentLayers] = useState<MapLayers>(mapLayers);
   const [userLocation, setUserLocation] = useState<[number, number] | null>(
     null
   );
   const [searchResult, setSearchResult] = useState<SearchResult | null>(null);
   const [clickedLocation, setClickedLocation] = useState<L.LatLng | null>(null);
+
+  // Ensure component only renders on client side
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Handle layer toggling
   const handleToggleLayer = useCallback((layerType: keyof MapLayers) => {
@@ -365,8 +433,28 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
     setUserLocation(location);
   }, []);
 
+  // Show loading state during SSR
+  if (!isClient) {
+    return (
+      <div
+        className={`advanced-map ${className}`}
+        style={style}
+        aria-label="Loading interactive map"
+      >
+        <div className="h-full w-full bg-gray-100 animate-pulse rounded-lg flex items-center justify-center">
+          <div className="text-gray-500">Loading map...</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className={`advanced-map ${className}`} style={style}>
+    <div
+      className={`advanced-map ${className}`}
+      style={style}
+      aria-label="Interactive map showing agency locations"
+      role="application"
+    >
       <MapContainer
         center={center}
         zoom={zoom}
@@ -413,7 +501,18 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
                 key={marker.id || index}
                 position={marker.position}
                 icon={
-                  marker.icon || createCustomIcon(marker.color, marker.size)
+                  marker.icon ||
+                  createCustomIcon(
+                    marker.color || "#4285f4",
+                    marker.size || "medium",
+                    false,
+                    marker.ariaLabel ||
+                      marker.popup?.title ||
+                      `Map marker ${index + 1}`,
+                    marker.title ||
+                      marker.popup?.title ||
+                      `Interactive map marker`
+                  )
                 }
                 eventHandlers={{
                   click: () => {
@@ -448,7 +547,20 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
             <Marker
               key={marker.id || index}
               position={marker.position}
-              icon={marker.icon || createCustomIcon(marker.color, marker.size)}
+              icon={
+                marker.icon ||
+                createCustomIcon(
+                  marker.color || "#4285f4",
+                  marker.size || "medium",
+                  false,
+                  marker.ariaLabel ||
+                    marker.popup?.title ||
+                    `Map marker ${index + 1}`,
+                  marker.title ||
+                    marker.popup?.title ||
+                    `Interactive map marker`
+                )
+              }
               eventHandlers={{
                 click: () => {
                   if (onMarkerClick) {
@@ -473,7 +585,13 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {userLocation && (
           <Marker
             position={userLocation}
-            icon={createCustomIcon("red", "medium")}
+            icon={createCustomIcon(
+              "red",
+              "medium",
+              false,
+              "Your current location",
+              "Your current location marker"
+            )}
           >
             <Popup>Your current location</Popup>
           </Marker>
@@ -483,7 +601,13 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {searchResult && (
           <Marker
             position={searchResult.latLng}
-            icon={createCustomIcon("green", "large")}
+            icon={createCustomIcon(
+              "green",
+              "large",
+              false,
+              `Search result: ${searchResult.name}`,
+              `Search result marker for ${searchResult.name}`
+            )}
           >
             <Popup>{searchResult.name}</Popup>
           </Marker>
@@ -493,7 +617,15 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
         {clickedLocation && (
           <Marker
             position={[clickedLocation.lat, clickedLocation.lng]}
-            icon={createCustomIcon("orange", "small")}
+            icon={createCustomIcon(
+              "orange",
+              "small",
+              false,
+              `Clicked location at ${clickedLocation.lat.toFixed(
+                4
+              )}, ${clickedLocation.lng.toFixed(4)}`,
+              "Clicked location marker"
+            )}
           >
             <Popup>
               Lat: {clickedLocation.lat.toFixed(6)}
