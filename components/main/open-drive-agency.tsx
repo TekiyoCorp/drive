@@ -17,7 +17,8 @@ const OpenDriveAgency = () => {
           fill
           sizes="100vw"
           className="object-cover object-center -z-10 rounded-3xl"
-          priority
+          loading="lazy" // Change to lazy loading
+          priority={false} // Remove priority to defer loading
         />
       </Container>
 

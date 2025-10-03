@@ -9,8 +9,8 @@ export const heading = localFont({
     },
   ],
   variable: "--font-heading",
-  display: "fallback", // Use fallback instead of swap for faster rendering
-  preload: false, // Critical: Don't preload fonts to eliminate critical path blocking
+  display: "swap", // Use swap for optimal font display
+  preload: true, // Preload critical heading font
   fallback: [
     "-apple-system",
     "BlinkMacSystemFont",
@@ -21,6 +21,7 @@ export const heading = localFont({
     "Arial",
     "sans-serif",
   ],
+  adjustFontFallback: "Arial", // Reduce layout shift with font metric overrides
 });
 
 export const base = localFont({
@@ -32,8 +33,8 @@ export const base = localFont({
     },
   ],
   variable: "--font-base",
-  display: "fallback", // Use fallback for better performance
-  preload: false, // Critical: Don't preload fonts to eliminate blocking
+  display: "swap", // Use swap for optimal font display
+  preload: true, // Preload critical base font
   fallback: [
     "-apple-system",
     "BlinkMacSystemFont",
@@ -44,4 +45,5 @@ export const base = localFont({
     "Arial",
     "sans-serif",
   ],
+  adjustFontFallback: "Arial", // Reduce layout shift with font metric overrides
 });

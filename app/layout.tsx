@@ -64,79 +64,79 @@ export default function RootLayout({
           data-critical="true"
           dangerouslySetInnerHTML={{
             __html: `
-            /* Critical above-the-fold styles only */
+            /* Critical above-the-fold styles only - Optimized for LCP */
             *,*::before,*::after { box-sizing: border-box; }
             html { 
               -webkit-text-size-adjust: 100%; 
               font-feature-settings: 'kern' 1;
               text-rendering: optimizeLegibility;
+              tab-size: 4;
             }
             body { 
               margin: 0; 
               padding: 0;
               background-color: #181818; 
               color: white; 
-              font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, sans-serif;
+              font-family: var(--font-base, -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, Roboto, sans-serif);
               line-height: 1.5;
               -webkit-font-smoothing: antialiased;
               -moz-osx-font-smoothing: grayscale;
-              font-display: fallback;
+              font-display: swap;
+              min-height: 100vh;
             }
+            /* Hero container optimization */
             .hero-container { 
               position: relative; 
               width: 100%; 
               height: 100vh; 
               padding: 10px; 
               contain: layout style paint;
+              border-radius: 24px;
+              overflow: hidden;
             }
             /* Prevent layout shift */
-            img, video { max-width: 100%; height: auto; }
+            img, video { 
+              max-width: 100%; 
+              height: auto;
+              font-display: swap;
+            }
             [data-loading] { opacity: 0; }
-            [data-loaded] { opacity: 1; transition: opacity 0.3s; }
+            [data-loaded] { opacity: 1; transition: opacity 0.3s ease; }
+            /* Preload critical fonts */
+            @font-face {
+              font-family: 'InterDisplay';
+              font-style: normal;
+              font-weight: 400;
+              font-display: swap;
+              src: url('/fonts/InterDisplay-Regular.ttf') format('truetype');
+            }
+            @font-face {
+              font-family: 'InterDisplay';
+              font-style: normal;
+              font-weight: 600;
+              font-display: swap;
+              src: url('/fonts/InterDisplay-SemiBold.ttf') format('truetype');
+            }
           `,
           }}
         />
 
         {/* Non-critical CSS will be loaded by Next.js automatically */}
 
-        {/* Optimized font loading strategy */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Load fonts after critical path
-              window.addEventListener('load', () => {
-                // Use requestIdleCallback for non-critical font loading
-                if ('requestIdleCallback' in window) {
-                  requestIdleCallback(() => {
-                    const fonts = [
-                      '/fonts/InterDisplay-Regular.ttf',
-                      '/fonts/InterDisplay-SemiBold.ttf'
-                    ];
-                    fonts.forEach(font => {
-                      const link = document.createElement('link');
-                      link.rel = 'preload';
-                      link.as = 'font';
-                      link.type = 'font/ttf';
-                      link.crossOrigin = 'anonymous';
-                      link.href = font;
-                      document.head.appendChild(link);
-                    });
-                  });
-                } else {
-                  // Fallback for browsers without requestIdleCallback
-                  setTimeout(() => {
-                    const link = document.createElement('link');
-                    link.rel = 'preload';
-                    link.as = 'font';
-                    link.type = 'font/ttf';
-                    link.crossOrigin = 'anonymous';
-                    link.href = '/fonts/InterDisplay-Regular.ttf';
-                    document.head.appendChild(link);
-                  }, 2000);
-                }
-              });
-            `,
-          }}
+        {/* Preload critical fonts with proper resource hints */}
+        <link
+          rel="preload"
+          href="/fonts/InterDisplay-Regular.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/InterDisplay-SemiBold.ttf"
+          as="font"
+          type="font/ttf"
+          crossOrigin="anonymous"
         />
 
         {/* Performance monitoring script */}

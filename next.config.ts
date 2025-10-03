@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
 
   // Enhanced webpack configuration for better minification
   webpack: (config, { dev, isServer }) => {
-    // Disable polyfills for modern browsers
+    // Disable polyfills for modern browsers to reduce bundle size
     config.resolve.fallback = {
       ...config.resolve.fallback,
       // Disable Node.js polyfills that aren't needed in modern browsers
@@ -69,10 +69,15 @@ const nextConfig: NextConfig = {
       assert: false,
       os: false,
       path: false,
+      buffer: false,
+      process: false,
     };
 
     // Production optimizations only
-    if (!dev) {
+    if (!dev && !isServer) {
+      // Target modern browsers to reduce polyfills
+      config.target = ["web", "es2020"];
+
       // Basic bundle splitting optimization
       config.optimization = {
         ...config.optimization,

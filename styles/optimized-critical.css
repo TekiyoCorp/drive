@@ -1,0 +1,126 @@
+/* Optimized Critical CSS - Inline in HTML head for fastest LCP */
+
+/* Minimal reset - only essential styles */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  tab-size: 4;
+  font-feature-settings: "kern" 1;
+  text-rendering: optimizeLegibility;
+}
+body {
+  margin: 0;
+  line-height: 1.5;
+  background-color: #181818;
+  color: #fff;
+  font-family: var(
+    --font-base,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    system-ui,
+    Roboto,
+    sans-serif
+  );
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Hero container - critical for LCP */
+.hero-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  padding: 10px;
+  contain: layout style paint;
+  border-radius: 24px;
+  overflow: hidden;
+}
+
+/* Image optimization */
+img,
+video {
+  max-width: 100%;
+  height: auto;
+  font-display: swap;
+}
+
+/* Loading states */
+[data-loading] {
+  opacity: 0;
+}
+[data-loaded] {
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+/* Font faces with swap */
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-Regular.ttf") format("truetype");
+}
+@font-face {
+  font-family: "InterDisplay";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("/fonts/InterDisplay-SemiBold.ttf") format("truetype");
+}
+
+/* Essential utility classes for above-fold content */
+.relative {
+  position: relative;
+}
+.absolute {
+  position: absolute;
+}
+.w-full {
+  width: 100%;
+}
+.h-full {
+  height: 100%;
+}
+.h-screen {
+  height: 100vh;
+}
+.flex {
+  display: flex;
+}
+.items-center {
+  align-items: center;
+}
+.justify-center {
+  justify-content: center;
+}
+.text-center {
+  text-align: center;
+}
+.text-white {
+  color: #fff;
+}
+.bg-black {
+  background-color: #000;
+}
+.rounded-3xl {
+  border-radius: 24px;
+}
+.object-cover {
+  object-fit: cover;
+}
+.object-center {
+  object-position: center;
+}
+.-z-10 {
+  z-index: -10;
+}
+.z-10 {
+  z-index: 10;
+}

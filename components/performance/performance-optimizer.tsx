@@ -143,39 +143,52 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
       });
     };
 
-    // Image optimization
+    // Image optimization - avoid forced reflows
     const optimizeImages = () => {
-      // Find all images and optimize loading
-      const images = document.querySelectorAll("img");
-      images.forEach((img, index) => {
-        // Set loading attribute based on position
-        if (
-          index === 0 ||
-          img.getBoundingClientRect().top < window.innerHeight
-        ) {
-          // Above the fold - load immediately
-          img.loading = "eager";
-          img.fetchPriority = "high";
-          img.decoding = "sync";
-        } else {
-          // Below the fold - lazy load
-          img.loading = "lazy";
-          img.fetchPriority = "low";
-          img.decoding = "async";
-        }
+      // Use requestIdleCallback to avoid forced reflows
+      const idleCallback =
+        (window as Window & { requestIdleCallback?: (cb: () => void) => void })
+          .requestIdleCallback || ((cb: () => void) => setTimeout(cb, 1));
 
-        // Add error handling for AVIF fallbacks
-        img.addEventListener(
-          "error",
-          function (this: HTMLImageElement) {
-            if (this.src.includes(".avif")) {
-              this.src = this.src.replace(".avif", ".webp");
-            } else if (this.src.includes(".webp")) {
-              this.src = this.src.replace(".webp", ".jpg");
-            }
-          },
-          { once: true }
-        );
+      idleCallback(() => {
+        // Find all images and optimize loading
+        const images = document.querySelectorAll("img");
+        const rects = new Map(); // Cache getBoundingClientRect calls
+
+        // Batch DOM reads to avoid forced reflows
+        images.forEach((img) => {
+          rects.set(img, img.getBoundingClientRect());
+        });
+
+        images.forEach((img, index) => {
+          const imgRect = rects.get(img);
+
+          // Set loading attribute based on position
+          if (index === 0 || imgRect.top < window.innerHeight) {
+            // Above the fold - load immediately
+            img.loading = "eager";
+            img.fetchPriority = "high";
+            img.decoding = "sync";
+          } else {
+            // Below the fold - lazy load
+            img.loading = "lazy";
+            img.fetchPriority = "low";
+            img.decoding = "async";
+          }
+
+          // Add error handling for AVIF fallbacks
+          img.addEventListener(
+            "error",
+            function (this: HTMLImageElement) {
+              if (this.src.includes(".avif")) {
+                this.src = this.src.replace(".avif", ".webp");
+              } else if (this.src.includes(".webp")) {
+                this.src = this.src.replace(".webp", ".jpg");
+              }
+            },
+            { once: true }
+          );
+        });
       });
     };
 

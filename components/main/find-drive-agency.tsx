@@ -6,7 +6,7 @@ import { MARKERS } from "@/constants/map";
 import { Search } from "lucide-react";
 import { useState } from "react";
 import LiquidGlass from "../common/liquid-glass";
-import { LazyInteractiveMap } from "../optimized/lazy-components";
+import MinimalInteractiveMap from "../ui/interactive-map-minimal";
 
 const FindDriveAgency = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -17,28 +17,20 @@ const FindDriveAgency = () => {
       location.district.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Convert markers to minimal format
+  const minimalMarkers = MARKERS.map((marker) => ({
+    id: marker.id,
+    position: marker.position,
+    color: "#4285f4",
+    popup: marker.popup,
+  }));
+
   return (
     <div className="relative z-0 w-full p-2.5 md:p-4 min-h-[95vh] h-full overflow-hidden">
-      {/* <Image
-        src="/images/main/map.svg"
-        alt="Map View"
-        width={1024}
-        height={1024}
-        className="object-cover object-center -z-10 w-[96%] sm:w-[98%] min-h-[95vh] h-full absolute top-0 left-1/2 -translate-x-1/2 rounded-3xl"
-      /> */}
-
-      <LazyInteractiveMap
+      <MinimalInteractiveMap
         center={[46.603354, 1.888334]} // Center of France
         zoom={6.2}
-        markers={MARKERS}
-        enableClustering={false}
-        enableSearch={false}
-        enableControls={false}
-        mapLayers={{
-          openstreetmap: true,
-          satellite: false,
-          traffic: false,
-        }}
+        markers={minimalMarkers}
         style={{
           borderRadius: "1.5rem",
           filter: "saturate(3) contrast(1) brightness(0.85)",
