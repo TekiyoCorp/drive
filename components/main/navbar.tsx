@@ -1,8 +1,6 @@
 "use client";
 
-import { NAV_LINKS } from "@/constants/links";
 import { cn } from "@/lib/utils";
-import { AnimatePresence } from "framer-motion";
 import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -13,6 +11,7 @@ import LiquidGlassButton from "../common/liquid-glass-button";
 import SpotlightSearch from "../common/spotlight-search";
 import Wrapper from "../global/wrapper";
 import { Button } from "../ui/button";
+import { NAV_LINKS } from "@/constants/links";
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
@@ -24,7 +23,8 @@ const Navbar = () => {
     setIsClient(true);
   }, []);
 
-  const isHomePage = isClient ? pathname === "/" : false;
+  // Prevent hydration mismatch by ensuring consistent rendering
+  const isHomePage = isClient ? pathname === "/" : true; // Default to home page styling for SSR
 
   return (
     <header className="relative top-24 inset-x-0 z-50 w-full h-16 max-lg:hidden">
@@ -65,19 +65,17 @@ const Navbar = () => {
               </Link>
               {/* </motion.div> */}
 
-              <AnimatePresence>
-                {NAV_LINKS.map((link, index) => (
-                  // <Container animation="fadeDown" delay={0.1 * index}>
-                  <Link
-                    key={index}
-                    href={link.link}
-                    className="transition-all duration-500 text-white"
-                  >
-                    {link.name}
-                  </Link>
-                  // </Container>
-                ))}
-              </AnimatePresence>
+              {NAV_LINKS.map((link, index) => (
+                // <Container animation="fadeDown" delay={0.1 * index}>
+                <Link
+                  key={index}
+                  href={link.link}
+                  className="transition-all duration-500 text-white"
+                >
+                  {link.name}
+                </Link>
+                // </Container>
+              ))}
             </div>
           </LiquidGlass>
         </div>
@@ -89,7 +87,7 @@ const Navbar = () => {
               isHomePage ? "right-8 lg:right-16" : "right-8 lg:right-24"
             )}
           >
-            {pathname === "/vendre" && (
+            {isClient && pathname === "/vendre" && (
               <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden bg-white text-black">
                 Prendre rendez-vous <VideoIcon className="fill-black size-5" />
               </Button>

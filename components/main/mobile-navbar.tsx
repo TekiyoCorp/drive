@@ -32,7 +32,7 @@ const MobileNavbar = () => {
   return (
     <header
       className={cn(
-        "absolute inset-x-0 z-50 w-full lg:hidden select-none",
+        "absolute inset-x-0 z-50 w-full xl:hidden select-none",
         toggleMenu ? "top-6" : isHomePage ? "top-6" : "top-6"
       )}
     >
@@ -47,11 +47,11 @@ const MobileNavbar = () => {
           elasticity={0.8}
           className={cn(
             "border border-white/40 border-r-0 border-l-0 rounded-[30px] !w-full overflow-hidden transition-all duration-500",
-            toggleMenu ? "!h-[290px] bg-black/20" : "!h-12 bg-transparent"
+            toggleMenu ? "!h-[325px] bg-black/20" : "!h-12 bg-transparent"
           )}
           parentClassName="w-full"
         >
-          <div className="flex flex-col w-full gap-8 px-5 py-3">
+          <div className="flex flex-col w-full gap-8 px-5 py-3 h-full">
             <div className="flex items-center justify-between gap-x-6 xl:gap-x-10 text-sm text-muted-foreground font-medium w-full">
               {/* <motion.div
                 initial={{ opacity: 0, y: -10 }}
@@ -80,8 +80,8 @@ const MobileNavbar = () => {
 
             <div
               className={cn(
-                "flex flex-col w-full gap-5",
-                toggleMenu ? "flex" : "hidden"
+                "w-full pb-2",
+                toggleMenu ? "flex flex-col gap-5" : "hidden"
               )}
             >
               <AnimatePresence>

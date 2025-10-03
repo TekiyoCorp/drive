@@ -8,14 +8,14 @@ const Hero = () => {
       <Container
         animation="scaleUp"
         delay={0.1}
-        className="w-full h-screen relative"
+        className="w-full h-screen relative overflow-hidden rounded-3xl"
       >
         <Image
           src="/images/about/hero.png"
           alt="Hero Image"
           width={1024}
           height={1024}
-          className="object-cover object-bottom top-0 z-10 rounded-3xl w-full h-full"
+          className="object-cover object-bottom top-0 z-10 rounded-3xl w-full h-screen"
         />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/80 via-transparent to-transparent rounded-3xl" />
       </Container>

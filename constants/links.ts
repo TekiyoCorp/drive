@@ -4,6 +4,7 @@ export const NAV_LINKS = [
   { name: "Franchise", link: "/open-agency" },
   { name: "Agence", link: "/franchise" },
   { name: "Contact", link: "/contact" },
+  { name: "À propos", link: "/about" },
 ];
 
 export const FOOTER_NAVIGATION_LINKS = [

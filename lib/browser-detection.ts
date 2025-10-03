@@ -3,6 +3,8 @@
  * Used to detect specific browsers for applying conditional styles
  */
 
+import { useEffect, useState } from "react";
+
 /**
  * Detects if the current browser is Safari
  * @returns {boolean} True if Safari browser is detected
@@ -75,7 +77,13 @@ export const isSafariMacOS = (): boolean => {
  * @returns {object} Object containing Safari detection flags
  */
 export const useSafariDetection = () => {
-  if (typeof window === "undefined") {
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  if (typeof window === "undefined" || !isClient) {
     return {
       isSafari: false,
       isSafariIOS: false,

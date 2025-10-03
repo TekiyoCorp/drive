@@ -33,6 +33,7 @@ const LiquidGlass = ({
   parentClassName,
 }: LiquidGlassProps) => {
   const [isClient, setIsClient] = useState(false);
+  const [safariStyles, setSafariStyles] = useState<React.CSSProperties>({});
   // const responsiveElasticity = getResponsiveElasticity(screenSize, elasticity);
   const responsiveElasticity = elasticity;
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
@@ -41,16 +42,15 @@ const LiquidGlass = ({
     setIsClient(true);
   }, []);
 
+  // Apply Safari-specific styles only after client hydration
+  useEffect(() => {
+    if (isClient && (isSafari || isSafariIOS || isSafariMacOS)) {
+      setSafariStyles({ backdropFilter: "blur(12px)" });
+    }
+  }, [isClient, isSafari, isSafariIOS, isSafariMacOS]);
+
   return (
-    <div
-      style={{
-        backdropFilter:
-          isClient && (isSafari || isSafariIOS || isSafariMacOS)
-            ? "blur(12px)"
-            : "none",
-      }}
-      className={cn("rounded-[30px]", parentClassName)}
-    >
+    <div style={safariStyles} className={cn("rounded-[30px]", parentClassName)}>
       <LiquidGlassDisplay
         borderRadius={borderRadius}
         blur={blur}
