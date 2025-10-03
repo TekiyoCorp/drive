@@ -17,12 +17,14 @@ const FindDriveAgency = () => {
       location.district.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Convert markers to minimal format
+  // Convert markers to minimal format with accessibility
   const minimalMarkers = MARKERS.map((marker) => ({
     id: marker.id,
     position: marker.position,
     color: "#4285f4",
     popup: marker.popup,
+    ariaLabel: marker.ariaLabel || `${marker.popup?.title} agency location`,
+    title: marker.title || `${marker.popup?.title} - DRIVE agency`,
   }));
 
   return (

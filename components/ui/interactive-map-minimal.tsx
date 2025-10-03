@@ -14,6 +14,9 @@ export interface MinimalMarkerData {
     title: string;
     content: string;
   };
+  // Accessibility properties
+  ariaLabel?: string;
+  title?: string;
 }
 
 export interface MinimalMapProps {
@@ -24,10 +27,20 @@ export interface MinimalMapProps {
   style?: React.CSSProperties;
 }
 
-// Minimal icon creation - only essential features
-const createMinimalIcon = (color: string = "#4285f4") => {
+// Minimal icon creation - only essential features with accessibility
+const createMinimalIcon = (
+  color: string = "#4285f4",
+  ariaLabel: string = "Map marker",
+  title: string = "Interactive map marker"
+) => {
   const iconHtml = `
-    <div style="
+    <div 
+      role="button"
+      tabindex="0"
+      aria-label="${ariaLabel}"
+      title="${title}"
+      onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}"
+      style="
       width: 20px;
       height: 20px;
       background-color: #9ca3af;
@@ -83,10 +96,13 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
       <div
         className={`minimal-map ${className}`}
         style={style}
-        aria-label="Loading map"
+        aria-label="Loading map of DRIVE agency locations"
+        role="status"
+        aria-live="polite"
       >
         <div className="h-full w-full bg-gray-100 animate-pulse rounded-lg flex items-center justify-center">
-          <div className="text-gray-500">Loading map...</div>
+          <div className="text-gray-500" aria-hidden="true">Loading map...</div>
+          <span className="sr-only">Loading interactive map with agency locations</span>
         </div>
       </div>
     );
@@ -96,7 +112,7 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
     <div
       className={`minimal-map ${className}`}
       style={style}
-      aria-label="Interactive map"
+      aria-label="Interactive map showing DRIVE agency locations across France"
       role="application"
     >
       <MapContainer
@@ -107,6 +123,7 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
         preferCanvas={true} // Use canvas for better performance
         worldCopyJump={false} // Disable world copy jump for performance
         zoomControl={false} // Minimal controls
+        aria-label="Map of DRIVE agency locations"
       >
         {/* Only essential tile layer */}
         <TileLayer
@@ -119,29 +136,42 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
           minZoom={6}
         />
 
-        {/* Minimal markers */}
-        {markers.map((marker, index) => (
-          <Marker
-            key={marker.id || index}
-            position={marker.position}
-            icon={createMinimalIcon(marker.color || "#4285f4")}
-          >
-            {marker.popup && (
-              <Popup>
-                <div>
-                  <h3
-                    style={{ margin: 0, fontSize: "14px", fontWeight: "600" }}
-                  >
-                    {marker.popup.title}
-                  </h3>
-                  <p style={{ margin: "4px 0 0 0", fontSize: "12px" }}>
-                    {marker.popup.content}
-                  </p>
-                </div>
-              </Popup>
-            )}
-          </Marker>
-        ))}
+        {/* Minimal markers with accessibility */}
+        {markers.map((marker, index) => {
+          const ariaLabel = marker.ariaLabel || 
+            marker.popup?.title || 
+            `Map marker ${index + 1}`;
+          const title = marker.title || 
+            marker.popup?.title || 
+            "Interactive map marker";
+          
+          return (
+            <Marker
+              key={marker.id || index}
+              position={marker.position}
+              icon={createMinimalIcon(
+                marker.color || "#4285f4",
+                ariaLabel,
+                title
+              )}
+            >
+              {marker.popup && (
+                <Popup>
+                  <div>
+                    <h3
+                      style={{ margin: 0, fontSize: "14px", fontWeight: "600" }}
+                    >
+                      {marker.popup.title}
+                    </h3>
+                    <p style={{ margin: "4px 0 0 0", fontSize: "12px" }}>
+                      {marker.popup.content}
+                    </p>
+                  </div>
+                </Popup>
+              )}
+            </Marker>
+          );
+        })}
       </MapContainer>
     </div>
   );

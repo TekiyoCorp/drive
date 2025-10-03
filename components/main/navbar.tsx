@@ -2,18 +2,17 @@
 
 import { NAV_LINKS } from "@/constants/links";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence } from "framer-motion";
 import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import LiquidGlass from "../common/liquid-glass";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import SpotlightSearch from "../common/spotlight-search";
-import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { Button } from "../ui/button";
-import Image from "next/image";
 
 const Navbar = () => {
   const [isClient, setIsClient] = useState(false);
@@ -35,36 +34,36 @@ const Navbar = () => {
           isHomePage ? "px-8 lg:px-16" : "px-8 lg:px-24"
         )}
       >
-        <Container animation="fadeRight" delay={0.1}>
+        <div>
           <LiquidGlass
             blur={2}
             elasticity={0.8}
             className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit"
           >
             <div className="flex flex-row items-center justify-center gap-x-6 xl:gap-x-10 text-sm font-medium px-8 py-3">
-              <motion.div
+              {/* <motion.div
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.2 }}
-              >
-                <Link href="/" className="flex items-center gap-2">
-                  <Image
-                    src="/logo-small.svg"
-                    alt="logo"
-                    width={47}
-                    height={24}
-                    style={{
-                      height: "24px",
-                      width: "46.8px",
-                      minHeight: "24px",
-                      maxHeight: "24px",
-                    }}
-                    className="!h-6 !w-auto force-logo-height"
-                    loading="eager"
-                    fetchPriority="high"
-                  />
-                </Link>
-              </motion.div>
+              > */}
+              <Link href="/" className="flex items-center gap-2">
+                <Image
+                  src="/logo-small.svg"
+                  alt="logo"
+                  width={47}
+                  height={24}
+                  style={{
+                    height: "24px",
+                    width: "46.8px",
+                    minHeight: "24px",
+                    maxHeight: "24px",
+                  }}
+                  className="!h-6 !w-auto force-logo-height"
+                  loading="eager"
+                  fetchPriority="high"
+                />
+              </Link>
+              {/* </motion.div> */}
 
               <AnimatePresence>
                 {NAV_LINKS.map((link, index) => (
@@ -81,9 +80,9 @@ const Navbar = () => {
               </AnimatePresence>
             </div>
           </LiquidGlass>
-        </Container>
+        </div>
 
-        <Container animation="fadeLeft" delay={0.1}>
+        <div>
           <div
             className={cn(
               "flex items-center gap-3 fixed top-12",
@@ -112,7 +111,7 @@ const Navbar = () => {
               </LiquidGlassButton>
             </Link>
           </div>
-        </Container>
+        </div>
       </Wrapper>
     </header>
   );
