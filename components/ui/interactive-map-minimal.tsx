@@ -101,8 +101,12 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
         aria-live="polite"
       >
         <div className="h-full w-full bg-gray-100 animate-pulse rounded-lg flex items-center justify-center">
-          <div className="text-gray-500" aria-hidden="true">Loading map...</div>
-          <span className="sr-only">Loading interactive map with agency locations</span>
+          <div className="text-gray-500" aria-hidden="true">
+            Loading map...
+          </div>
+          <span className="sr-only">
+            Loading interactive map with agency locations
+          </span>
         </div>
       </div>
     );
@@ -138,13 +142,13 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
 
         {/* Minimal markers with accessibility */}
         {markers.map((marker, index) => {
-          const ariaLabel = marker.ariaLabel || 
-            marker.popup?.title || 
+          const ariaLabel =
+            marker.ariaLabel ||
+            marker.popup?.title ||
             `Map marker ${index + 1}`;
-          const title = marker.title || 
-            marker.popup?.title || 
-            "Interactive map marker";
-          
+          const title =
+            marker.title || marker.popup?.title || "Interactive map marker";
+
           return (
             <Marker
               key={marker.id || index}
