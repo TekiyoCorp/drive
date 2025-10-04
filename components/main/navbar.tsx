@@ -27,7 +27,7 @@ const Navbar = () => {
   const isHomePage = isClient ? pathname === "/" : true; // Default to home page styling for SSR
 
   return (
-    <header className="relative top-24 inset-x-0 z-50 w-full h-16 max-lg:hidden">
+    <header className="relative top-24 inset-x-0 z-50 w-full h-16 max-xl:hidden">
       <Wrapper
         className={cn(
           "flex items-center justify-between gap-2",

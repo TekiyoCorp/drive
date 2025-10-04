@@ -6,9 +6,10 @@ import FAQs from "@/components/main/faqs";
 import OurTestimonials from "@/components/main/our-testimonials";
 import ApplicationForm from "@/components/open-agency/application-form";
 import Hero from "@/components/open-agency/hero";
-import KeyBenefits from "@/components/open-agency/key-benefits";
+import MediaCardSlider from "@/components/open-agency/media-card-slider";
 import VehicleFeatures from "@/components/open-agency/vehicle-features";
 import VehicleShowcase from "@/components/open-agency/vehicle-showcase";
+import { MEDIA_CARD_SLIDER } from "@/constants/media-card-slider";
 
 const OpenAgencyPage = () => {
   return (
@@ -17,7 +18,7 @@ const OpenAgencyPage = () => {
         <Hero />
       </SnapElement>
       <SnapScrollContentBox>
-        <KeyBenefits />
+        <MediaCardSlider />
       </SnapScrollContentBox>
       <SnapScrollContentBox>
         <VehicleShowcase />
