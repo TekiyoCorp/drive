@@ -18,7 +18,7 @@
     ]
   },
   "scripts": {
-    "dev": "next start",
+    "dev": "next dev",
     "build": "next build",
     "build:optimized": "./scripts/build-optimized.sh",
     "build:fonts": "./scripts/build-with-fonts.sh",
