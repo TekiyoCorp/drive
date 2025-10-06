@@ -41,7 +41,7 @@ const FindDriveAgency = () => {
       />
 
       <LiquidGlass
-        blur={8}
+        blur={4}
         className="border border-white/30 border-x-white/20 w-full sm:!w-fit max-sm:min-h-[95vh] sm:h-fit backdrop-blur-2xl z-20 lg:ml-4 bg-black/15"
       >
         <div className="p-4 sm:p-6 py-4 h-full w-full flex flex-col sm:!w-[374px] min-h-[95vh]">

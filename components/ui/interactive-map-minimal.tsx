@@ -129,10 +129,10 @@ const MinimalInteractiveMap: React.FC<MinimalMapProps> = ({
         zoomControl={false} // Minimal controls
         aria-label="Map of DRIVE agency locations"
       >
-        {/* Only essential tile layer */}
+        {/* Dark theme tile layer */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://carto.com/attributions">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           updateWhenIdle={true}
           updateWhenZooming={false}
           keepBuffer={1}
