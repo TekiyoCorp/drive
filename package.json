@@ -21,10 +21,12 @@
     "dev": "next start",
     "build": "next build",
     "build:optimized": "./scripts/build-optimized.sh",
+    "build:fonts": "./scripts/build-with-fonts.sh",
     "build:analyze": "ANALYZE=true next build",
     "start": "next start",
     "lint": "eslint",
     "optimize:images": "./scripts/optimize-images-performance.sh",
+    "optimize:fonts": "node scripts/optimize-fonts.js",
     "analyze": "ANALYZE=true npm run build",
     "performance:test": "lighthouse http://localhost:3000 --output=json --output=html --output-path=./performance-report",
     "performance:production": "./scripts/test-production.sh",
@@ -66,10 +68,13 @@
     "critters": "^0.0.25",
     "eslint": "^9",
     "eslint-config-next": "15.5.3",
+    "fonttools": "^1.0.7",
     "sharp": "^0.34.4",
     "tailwindcss": "^4",
     "terser": "^5.36.0",
+    "ttf2woff2": "^8.0.0",
     "tw-animate-css": "^1.3.8",
-    "typescript": "^5"
+    "typescript": "^5",
+    "woff2": "^1.0.0"
   }
 }

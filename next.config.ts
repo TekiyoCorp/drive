@@ -132,6 +132,14 @@ const nextConfig: NextConfig = {
               chunks: "all",
               priority: 10,
             },
+            // Font optimization
+            fonts: {
+              test: /\.(woff|woff2|eot|ttf|otf)$/,
+              name: "fonts",
+              priority: 20,
+              chunks: "all",
+              enforce: true,
+            },
           },
         },
       };

@@ -1,5 +1,5 @@
 import Providers from "@/components/global/providers";
-import { base, heading } from "@/constants/fonts";
+import { base, heading, light } from "@/constants/fonts";
 import { cn } from "@/lib/utils";
 import { generateMetadata } from "@/lib/metadata";
 import "@/styles/globals.css";
@@ -102,20 +102,30 @@ export default function RootLayout({
             }
             [data-loading] { opacity: 0; }
             [data-loaded] { opacity: 1; transition: opacity 0.3s ease; }
-            /* Preload critical fonts */
+            /* Optimized font faces with WOFF2 format */
             @font-face {
               font-family: 'InterDisplay';
               font-style: normal;
               font-weight: 400;
               font-display: swap;
-              src: url('/fonts/InterDisplay-Regular.ttf') format('truetype');
+              src: url('/fonts/optimized/InterDisplay-Regular.woff2') format('woff2');
+              unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+            }
+            @font-face {
+              font-family: 'InterDisplay';
+              font-style: normal;
+              font-weight: 500;
+              font-display: swap;
+              src: url('/fonts/optimized/InterDisplay-Medium.woff2') format('woff2');
+              unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
             }
             @font-face {
               font-family: 'InterDisplay';
               font-style: normal;
               font-weight: 600;
               font-display: swap;
-              src: url('/fonts/InterDisplay-SemiBold.ttf') format('truetype');
+              src: url('/fonts/optimized/InterDisplay-SemiBold.woff2') format('woff2');
+              unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
             }
           `,
           }}
@@ -123,19 +133,26 @@ export default function RootLayout({
 
         {/* Non-critical CSS will be loaded by Next.js automatically */}
 
-        {/* Preload critical fonts with proper resource hints */}
+        {/* Preload critical fonts with proper resource hints - Optimized WOFF2 */}
         <link
           rel="preload"
-          href="/fonts/InterDisplay-Regular.ttf"
+          href="/fonts/optimized/InterDisplay-Regular.woff2"
           as="font"
-          type="font/ttf"
+          type="font/woff2"
           crossOrigin="anonymous"
         />
         <link
           rel="preload"
-          href="/fonts/InterDisplay-SemiBold.ttf"
+          href="/fonts/optimized/InterDisplay-SemiBold.woff2"
           as="font"
-          type="font/ttf"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preload"
+          href="/fonts/optimized/InterDisplay-Medium.woff2"
+          as="font"
+          type="font/woff2"
           crossOrigin="anonymous"
         />
 
@@ -231,7 +248,8 @@ export default function RootLayout({
         className={cn(
           "min-h-screen bg-background font-sans antialiased",
           base.variable,
-          heading.variable
+          heading.variable,
+          light.variable
         )}
         suppressHydrationWarning
       >
