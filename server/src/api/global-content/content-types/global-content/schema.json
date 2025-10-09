@@ -1,0 +1,50 @@
+{
+  "kind": "singleType",
+  "collectionName": "global_contents",
+  "info": {
+    "singularName": "global-content",
+    "pluralName": "global-contents",
+    "displayName": "Contenu Global",
+    "description": "Textes et éléments globaux du site"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "siteName": {
+      "type": "string",
+      "default": "DRIVE"
+    },
+    "siteDescription": {
+      "type": "text",
+      "default": "Plateforme de vente et achat de voitures premium"
+    },
+    "logo": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "logoSmall": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "contactEmail": {
+      "type": "email",
+      "default": "contact@drive.com"
+    },
+    "contactPhone": {
+      "type": "string",
+      "default": "+33 1 23 45 67 89"
+    },
+    "socialMedia": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-link"
+    }
+  }
+}
+

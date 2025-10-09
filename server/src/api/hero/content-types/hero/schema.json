@@ -1,0 +1,45 @@
+{
+  "kind": "singleType",
+  "collectionName": "heros",
+  "info": {
+    "singularName": "hero",
+    "pluralName": "heros",
+    "displayName": "Hero Section",
+    "description": "Contenu de la section hero principale"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "La confiance au volant."
+    },
+    "subtitle": {
+      "type": "text",
+      "required": true,
+      "default": "Simplifiez la vente ou l'achat de votre voiture premium grâce à notre réseau de courtiers certifiés."
+    },
+    "backgroundImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    },
+    "ctaText": {
+      "type": "string",
+      "default": "Découvrir le réseau DRIVE"
+    },
+    "sellButtonText": {
+      "type": "string",
+      "default": "Vendre"
+    },
+    "buyButtonText": {
+      "type": "string",
+      "default": "Acheter"
+    }
+  }
+}
+
