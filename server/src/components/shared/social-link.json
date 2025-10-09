@@ -2,7 +2,7 @@
   "collectionName": "components_shared_social_links",
   "info": {
     "displayName": "Social Link",
-    "description": "Lien vers réseau social"
+    "description": "Social media link component"
   },
   "options": {},
   "attributes": {
@@ -13,13 +13,6 @@
     "url": {
       "type": "string",
       "required": true
-    },
-    "icon": {
-      "type": "media",
-      "multiple": false,
-      "required": false,
-      "allowedTypes": ["images"]
     }
   }
 }
-
