@@ -3,44 +3,47 @@
 import { ArrowRight } from "lucide-react";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Wrapper from "../global/wrapper";
-import { useHero } from "@/hooks/use-strapi";
 import { getImageUrl } from "@/lib/strapi";
 
-const Hero = () => {
-  const { data: heroData, loading, error } = useHero({ populate: ['backgroundImage'] });
+interface HeroProps {
+  heroData?: any;
+  error?: string | null;
+}
+
+const Hero = ({ heroData, error = null }: HeroProps) => {
   return (
     <div className="hero-container relative z-0 w-full !p-2.5 md:!p-4 min-h-screen h-full">
       {/* Critical LCP image - optimized for immediate loading */}
       <div className="-z-10 rounded-3xl overflow-hidden">
-        {loading ? (
-          <div className="w-full h-full min-h-screen bg-gray-800 rounded-3xl animate-pulse" />
-        ) : (
-          <picture>
-            <img
-              src={heroData?.attributes?.backgroundImage ? getImageUrl(heroData.attributes.backgroundImage) : "/images/main/hero.webp"}
-              alt={heroData?.attributes?.backgroundImage?.data?.attributes?.alternativeText || "Hero Image - Drive Premium Car Platform"}
-              className="w-full object-cover h-full min-h-screen object-center rounded-3xl"
-              style={{
-                transform: "translateZ(0)",
-                willChange: "auto",
-                contain: "layout style paint",
-              }}
-              loading="eager"
-              fetchPriority="high"
-              decoding="sync"
-              onLoad={(e) => {
-                // Mark LCP element as loaded for performance tracking
-                const target = e.target as HTMLImageElement;
-                target.setAttribute("data-lcp-loaded", "true");
-              }}
-              onError={(e) => {
-                // Fallback to default image if Strapi image fails
-                const target = e.target as HTMLImageElement;
-                target.src = "/images/main/hero.webp";
-              }}
-            />
-          </picture>
-        )}
+        <picture>
+          <img
+            src={heroData?.backgroundImage || heroData?.attributes?.backgroundImage ? (() => {
+              const imageData = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
+              const imageUrl = getImageUrl(imageData);
+              return imageUrl || "/images/main/hero.webp";
+            })() : "/images/main/hero.webp"}
+            alt={heroData?.backgroundImage?.alternativeText || heroData?.attributes?.backgroundImage?.data?.attributes?.alternativeText || "Hero Image - Drive Premium Car Platform"}
+            className="w-full object-cover h-full min-h-screen object-center rounded-3xl"
+            style={{
+              transform: "translateZ(0)",
+              willChange: "auto",
+              contain: "layout style paint",
+            }}
+            loading="eager"
+            fetchPriority="high"
+            decoding="sync"
+            onLoad={(e) => {
+              // Mark LCP element as loaded for performance tracking
+              const target = e.target as HTMLImageElement;
+              target.setAttribute("data-lcp-loaded", "true");
+            }}
+            onError={(e) => {
+              // Fallback to default image if Strapi image fails
+              const target = e.target as HTMLImageElement;
+              target.src = "/images/main/hero.webp";
+            }}
+          />
+        </picture>
       </div>
 
       <Wrapper className="hero-content py-12 absolute bottom-0 left-1/2 -translate-x-1/2 h-fit">
@@ -53,11 +56,7 @@ const Hero = () => {
               willChange: "auto",
             }}
           >
-            {loading ? (
-              <div className="h-8 bg-white/20 rounded animate-pulse w-64 mx-auto" />
-            ) : (
-              heroData?.attributes?.title || "La confiance au volant."
-            )}
+            {heroData?.title || heroData?.attributes?.title || "La confiance au volant."}
           </h1>
 
           {/* LCP supporting text - immediate render */}
@@ -69,11 +68,7 @@ const Hero = () => {
               transform: "translateZ(0)",
             }}
           >
-            {loading ? (
-              <div className="h-4 bg-white/20 rounded animate-pulse w-full" />
-            ) : (
-              heroData?.attributes?.subtitle || "Simplifiez la vente ou l'achat de votre voiture premium grâce à notre réseau de courtiers certifiés."
-            )}
+            {heroData?.subtitle || heroData?.attributes?.subtitle || "Simplifiez la vente ou l'achat de votre voiture premium grâce à notre réseau de courtiers certifiés."}
           </p>
 
           {/* Critical action buttons - defer animation for faster LCP */}
@@ -81,16 +76,16 @@ const Hero = () => {
             <LiquidGlassButton
               className="btn-primary px-8 md:px-12"
               style={{ willChange: "auto" }}
-              onClick={() => window.location.href = heroData?.attributes?.ctaLink || "/vendre"}
+              onClick={() => window.location.href = heroData?.ctaLink || heroData?.attributes?.ctaLink || "/vendre"}
             >
-              <span>{heroData?.attributes?.ctaText || "Vendre"}</span>
+              <span>{heroData?.sellButtonText || heroData?.attributes?.ctaText || "Vendre"}</span>
             </LiquidGlassButton>
             <LiquidGlassButton
               className="btn-primary px-8 md:px-12"
               style={{ willChange: "auto" }}
               onClick={() => window.location.href = "/catalogue"}
             >
-              <span>Acheter</span>
+              <span>{heroData?.buyButtonText || "Acheter"}</span>
             </LiquidGlassButton>
           </div>
 

@@ -1,3 +1,5 @@
+'use client';
+
 import CatalogueCard from "@/components/catalogue/catalogue-card";
 import CatalogueFilter from "@/components/catalogue/catalogue-filter";
 import {

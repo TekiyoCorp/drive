@@ -1,14 +1,68 @@
-import { strapi } from '@strapi/client';
+// Initialize Strapi client only on client side to prevent SSR issues
+let strapiClient: any = null;
 
-// Initialize Strapi client with configuration from environment variables
-export const strapiClient = strapi({
-  baseURL: process.env.NEXT_PUBLIC_STRAPI_URL + '/api',
-  auth: process.env.NEXT_PUBLIC_STRAPI_API_TOKEN,
-  headers: {
-    'Content-Type': 'application/json',
-    'Accept': 'application/json',
-  },
-});
+// Lazy load Strapi client with better error handling
+const getStrapiClient = async () => {
+  if (typeof window === 'undefined') {
+    // Return a mock client for SSR that provides better error messages
+    return {
+      collection: (resource: string) => ({
+        find: async (params?: any) => {
+          console.warn(`SSR: Mock collection.find called for ${resource}`, params);
+          return { data: [] };
+        },
+        findOne: async (id: any, params?: any) => {
+          console.warn(`SSR: Mock collection.findOne called for ${resource}`, id, params);
+          return { data: null };
+        },
+      }),
+      single: (resource: string) => ({
+        find: async (params?: any) => {
+          console.warn(`SSR: Mock single.find called for ${resource}`, params);
+          return { data: null };
+        },
+      }),
+    };
+  }
+
+  if (!strapiClient) {
+    try {
+      const { strapi } = await import('@strapi/client');
+      
+      const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL;
+      const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN;
+      
+      if (!baseURL) {
+        throw new Error('Missing NEXT_PUBLIC_STRAPI_URL environment variable');
+      }
+      
+      if (!apiToken) {
+        throw new Error('Missing NEXT_PUBLIC_STRAPI_API_TOKEN environment variable');
+      }
+      
+      console.log('Initializing Strapi client with baseURL:', baseURL);
+      
+      strapiClient = strapi({
+        baseURL: `${baseURL}/api`,
+        auth: apiToken,
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      });
+      
+      console.log('Strapi client initialized successfully');
+    } catch (error) {
+      console.error('Failed to initialize Strapi client:', error);
+      throw error;
+    }
+  }
+
+  return strapiClient;
+};
+
+// Export the function for use in API layer
+export { getStrapiClient };
 
 // Type definitions for Strapi responses
 export interface StrapiResponse<T> {

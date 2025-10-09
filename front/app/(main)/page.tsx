@@ -2,26 +2,26 @@ import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import Features from "@/components/main/features";
 import LazyFindDriveAgency from "@/components/optimized/lazy-find-drive-agency";
-import Hero from "@/components/main/hero";
+import HeroWrapper from "@/components/main/hero-wrapper";
 import OpenDriveAgency from "@/components/main/open-drive-agency";
-import OurCatalog from "@/components/main/our-catalog";
-import OurTestimonials from "@/components/main/our-testimonials";
+import OurCatalogWrapper from "@/components/main/our-catalog-wrapper";
+import OurTestimonialsWrapper from "@/components/main/our-testimonials-wrapper";
 import SellMyCar from "@/components/main/sell-my-car";
 
 const HomePage = () => {
   return (
     <div className="w-full relative flex flex-col">
       <SnapElement>
-        <Hero />
+        <HeroWrapper />
       </SnapElement>
       <SnapElement>
-        <OurCatalog />
+        <OurCatalogWrapper />
       </SnapElement>
       <SnapElement>
-        <OurTestimonials />
+        <OurTestimonialsWrapper />
       </SnapElement>
       <SnapElement>
         <Features />
@@ -36,7 +36,7 @@ const HomePage = () => {
         <LazyFindDriveAgency />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

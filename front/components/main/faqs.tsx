@@ -1,3 +1,5 @@
+'use client';
+
 import { MinusIcon, PlusIcon } from "lucide-react";
 import Image from "next/image";
 import * as AccordionPrimitive from "@radix-ui/react-accordion";
@@ -10,10 +12,13 @@ import {
 } from "@/components/ui/accordion";
 import { FAQ } from "@/constants/faqs";
 import Wrapper from "../global/wrapper";
-import { useFAQsOrdered } from "@/hooks/use-strapi";
 
-const FAQs = () => {
-  const { data: strapiFAQs, loading, error } = useFAQsOrdered();
+interface FAQsProps {
+  strapiFAQs?: any[];
+  error?: string | null;
+}
+
+const FAQs = ({ strapiFAQs, error = null }: FAQsProps) => {
   return (
     <div className="flex flex-col items-center justify-center w-full py-16 lg:py-24 min-h-screen h-full">
       <Wrapper>
@@ -33,60 +38,52 @@ const FAQs = () => {
                   className="w-full space-y-2"
                   defaultValue="1"
                 >
-                  {loading ? (
-                    // Loading skeleton
-                    Array.from({ length: 4 }).map((_, index) => (
-                      <Container
-                        animation="fadeUp"
-                        delay={2.5 + index * 0.1}
-                        key={`loading-${index}`}
-                        className="border-b border-[#F0F0F0]"
-                      >
-                        <div className="flex flex-1 items-center justify-between gap-4 px-0 py-6">
-                          <div className="flex-1 h-6 bg-white/20 rounded animate-pulse" />
-                          <div className="w-6 h-6 bg-white/20 rounded-full animate-pulse" />
-                        </div>
-                      </Container>
-                    ))
-                  ) : strapiFAQs && strapiFAQs.length > 0 ? (
-                    strapiFAQs.map((item, index) => (
-                      <Container
-                        animation="fadeUp"
-                        delay={2.5 + index * 0.1}
-                        key={item.id}
-                        className="border-b border-[#F0F0F0]"
-                      >
-                        <AccordionItem
-                          value={item.id.toString()}
-                          className="border-none group font-medium"
+                  {strapiFAQs && strapiFAQs.length > 0 ? (
+                    strapiFAQs.map((item, index) => {
+                      // Handle both Strapi format (item.attributes.question) and static format (item.title)
+                      const question = item.attributes?.question || item.title;
+                      const answer = item.attributes?.answer || item.content;
+                      const itemId = item.id || index.toString();
+                      
+                      return (
+                        <Container
+                          animation="fadeUp"
+                          delay={2.5 + index * 0.1}
+                          key={itemId}
+                          className="border-b border-[#F0F0F0]"
                         >
-                          <AccordionPrimitive.Header className="flex">
-                            <AccordionPrimitive.Trigger className="group-trigger flex flex-1 items-center justify-between gap-4 px-0 py-6 text-left text-base md:text-lg font-medium transition-all duration-300 cursor-pointer [&[data-state=open]]:text-white rounded-xl">
-                              <span className="flex-1 uppercase">
-                                {item.attributes.question}
-                              </span>
-                              <div className="relative w-6 h-6 flex items-center justify-center rounded-full transition-colors duration-300">
-                                <PlusIcon
-                                  size={24}
-                                  className="absolute transition-all duration-300 group-data-[state=open]:opacity-0 group-data-[state=open]:rotate-45"
-                                  aria-hidden="true"
-                                />
-                                <MinusIcon
-                                  size={24}
-                                  className="absolute transition-all duration-300 opacity-0 group-data-[state=open]:opacity-100"
-                                  aria-hidden="true"
-                                />
-                              </div>
-                            </AccordionPrimitive.Trigger>
-                          </AccordionPrimitive.Header>
-                          <AccordionContent className="text-sm md:text-base leading-relaxed px-0 pb-6 overflow-hidden">
-                            <Container animation="fadeUp" delay={0.2}>
-                              <p>{item.attributes.answer}</p>
-                            </Container>
-                          </AccordionContent>
-                        </AccordionItem>
-                      </Container>
-                    ))
+                          <AccordionItem
+                            value={itemId.toString()}
+                            className="border-none group font-medium"
+                          >
+                            <AccordionPrimitive.Header className="flex">
+                              <AccordionPrimitive.Trigger className="group-trigger flex flex-1 items-center justify-between gap-4 px-0 py-6 text-left text-base md:text-lg font-medium transition-all duration-300 cursor-pointer [&[data-state=open]]:text-white rounded-xl">
+                                <span className="flex-1 uppercase">
+                                  {question}
+                                </span>
+                                <div className="relative w-6 h-6 flex items-center justify-center rounded-full transition-colors duration-300">
+                                  <PlusIcon
+                                    size={24}
+                                    className="absolute transition-all duration-300 group-data-[state=open]:opacity-0 group-data-[state=open]:rotate-45"
+                                    aria-hidden="true"
+                                  />
+                                  <MinusIcon
+                                    size={24}
+                                    className="absolute transition-all duration-300 opacity-0 group-data-[state=open]:opacity-100"
+                                    aria-hidden="true"
+                                  />
+                                </div>
+                              </AccordionPrimitive.Trigger>
+                            </AccordionPrimitive.Header>
+                            <AccordionContent className="text-sm md:text-base leading-relaxed px-0 pb-6 overflow-hidden">
+                              <Container animation="fadeUp" delay={0.2}>
+                                <p>{answer}</p>
+                              </Container>
+                            </AccordionContent>
+                          </AccordionItem>
+                        </Container>
+                      );
+                    })
                   ) : (
                     // Fallback to static FAQ data
                     FAQ.map((item, index) => (

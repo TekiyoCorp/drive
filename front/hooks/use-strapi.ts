@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { api, queryHelpers } from '@/lib/api';
 import { Vehicle, Testimonial, FAQ, Franchise, Hero, GlobalContent, QueryParams } from '@/lib/strapi';
 
@@ -11,26 +11,49 @@ export function useStrapiData<T>(
   dependencies: any[] = []
 ) {
   const [data, setData] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false); // Start with false to prevent initial loading
   const [error, setError] = useState<string | null>(null);
 
+  // Disable automatic fetching to prevent infinite loops
+  // Components should use wrapper pattern instead
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
+      
+      // Check if we're in browser environment
+      if (typeof window === 'undefined') {
+        console.warn('useStrapiData: Running on server side, skipping fetch');
+        return;
+      }
+      
+      console.log('useStrapiData: Starting fetch with params:', params);
       const result = await fetchFn(params);
+      console.log('useStrapiData: Fetch successful, result:', result);
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      const errorMessage = err instanceof Error ? err.message : 'An error occurred';
+      setError(errorMessage);
       console.error('Strapi fetch error:', err);
+      
+      // Log additional debugging info
+      if (err instanceof Error) {
+        if (err.message.includes('Failed to fetch')) {
+          console.error('Network error detected. Check if Strapi server is running and CORS is configured.');
+          console.error('Strapi URL:', process.env.NEXT_PUBLIC_STRAPI_URL);
+        } else if (err.message.includes('Missing')) {
+          console.error('Configuration error detected. Check environment variables.');
+          console.error('NEXT_PUBLIC_STRAPI_URL:', process.env.NEXT_PUBLIC_STRAPI_URL);
+          console.error('NEXT_PUBLIC_STRAPI_API_TOKEN:', process.env.NEXT_PUBLIC_STRAPI_API_TOKEN ? 'Set' : 'Missing');
+        }
+      }
     } finally {
       setLoading(false);
     }
-  }, [fetchFn, params, ...dependencies]);
+  }, [fetchFn, JSON.stringify(params), ...dependencies]);
 
-  useEffect(() => {
-    fetchData();
-  }, [fetchData]);
+  // Remove automatic useEffect to prevent infinite loops
+  // Components should manually call refetch when needed
 
   return { data, loading, error, refetch: fetchData };
 }

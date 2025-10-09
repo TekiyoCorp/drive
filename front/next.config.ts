@@ -15,6 +15,7 @@ const nextConfig: NextConfig = {
 
   // Enhanced bundle optimization
   experimental: {
+    esmExternals: 'loose', // Allow ESM packages to be handled more leniently
     optimizePackageImports: [
       "lucide-react",
       "framer-motion",
@@ -37,7 +38,7 @@ const nextConfig: NextConfig = {
   },
 
   // External packages for server components (fixed for Next.js 15)
-  serverExternalPackages: ["leaflet", "react-leaflet", "react-leaflet-cluster"],
+  serverExternalPackages: ["leaflet", "react-leaflet", "react-leaflet-cluster", "@strapi/client"],
 
   // Modern browser targets and enhanced compiler optimizations
   compiler: {
@@ -73,7 +74,7 @@ const nextConfig: NextConfig = {
       process: false,
     };
 
-    // Production optimizations only
+    // Production optimizations only - simplified for development
     if (!dev && !isServer) {
       // Target modern browsers to reduce polyfills
       config.target = ["web", "es2020"];
@@ -168,6 +169,16 @@ const nextConfig: NextConfig = {
               process.env.NODE_ENV === "production"
                 ? "public, max-age=31536000, immutable"
                 : "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+      // Ensure proper MIME types for static assets
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },
