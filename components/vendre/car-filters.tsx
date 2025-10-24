@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Input } from "../ui/input";
 
 const CarFilters = () => {
   const brands = [
@@ -114,12 +115,11 @@ const CarFilters = () => {
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
-      <Button
-        variant="ghost"
-        className="!bg-transparent text-white border-none rounded-none lg:h-12 p-0 lg:px-6 font-medium hover:!bg-transparent !cursor-pointer min-w-[160px] flex justify-start lg:!items-center lg:!justify-center"
-      >
-        Immatriculation
-      </Button>
+      <Input
+        type="text"
+        placeholder="Immatriculation"
+        className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white focus:!ring-0 max-lg:p-0 rounded-none h-12 lg:text-center"
+      />
     </div>
   );
 };

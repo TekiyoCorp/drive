@@ -12,19 +12,19 @@ const UserInfo = () => {
     city: "",
   });
 
-  const [phoneInputWidth, setPhoneInputWidth] = useState(1);
-  const [cityInputWidth, setCityInputWidth] = useState(1);
+  // const [phoneInputWidth, setPhoneInputWidth] = useState(1);
+  // const [cityInputWidth, setCityInputWidth] = useState(1);
 
-  const calculateCharWidth = (text: string) => {
-    if (!text) return 5;
-    return Math.min(Math.max(text.length + 2, 1), 25); // Min 1ch, max 25ch with padding
-  };
+  // const calculateCharWidth = (text: string) => {
+  //   if (!text) return 5;
+  //   return Math.min(Math.max(text.length + 2, 1), 25); // Min 1ch, max 25ch with padding
+  // };
 
-  // Initialize widths on mount
-  useEffect(() => {
-    setPhoneInputWidth(calculateCharWidth(formData.phone));
-    setCityInputWidth(calculateCharWidth(formData.city));
-  }, [formData.phone, formData.city]);
+  // // Initialize widths on mount
+  // useEffect(() => {
+  //   setPhoneInputWidth(calculateCharWidth(formData.phone));
+  //   setCityInputWidth(calculateCharWidth(formData.city));
+  // }, [formData.phone, formData.city]);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -33,11 +33,11 @@ const UserInfo = () => {
     }));
 
     // Update width for phone and city inputs
-    if (field === "phone") {
-      setPhoneInputWidth(calculateCharWidth(value));
-    } else if (field === "city") {
-      setCityInputWidth(calculateCharWidth(value));
-    }
+    // if (field === "phone") {
+    //   setPhoneInputWidth(calculateCharWidth(value));
+    // } else if (field === "city") {
+    //   setCityInputWidth(calculateCharWidth(value));
+    // }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -74,19 +74,29 @@ const UserInfo = () => {
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
-      <div className="min-w-[160px] px-4 flex items-center justify-start lg:justify-center h-12">
+      <div className="min-w-[100px] flex items-center justify-start lg:justify-center h-12">
+        <Input
+          type="tel"
+          placeholder="Téléphone: +33"
+          value={formData.phone}
+          onChange={(e) => handleInputChange("phone", e.target.value)}
+          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center"
+        />
+      </div>
+
+      {/* <div className="min-w-[160px] px-4 flex items-center justify-start lg:justify-center h-12">
         <div className="flex items-center justify-center w-full">
           <span className="text-white/70 text-sm mr-2">Téléphone:</span>
           <Input
             type="tel"
-            placeholder="+33"
+            placeholder="Téléphone: +33"
             value={formData.phone}
             onChange={(e) => handleInputChange("phone", e.target.value)}
-            className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 p-0 rounded-none h-12 !bg-transparent max-w-full transition-all duration-200"
+            className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 p-0 rounded-none h-12 !bg-transparent max-w-full transition-all duration-200 text-center"
             style={{ width: `${phoneInputWidth}ch` }}
           />
         </div>
-      </div>
+      </div> */}
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
@@ -97,7 +107,7 @@ const UserInfo = () => {
           value={formData.city}
           onChange={(e) => handleInputChange("city", e.target.value)}
           className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center max-w-full transition-all duration-200 min-w-24"
-          style={{ width: `${cityInputWidth}ch` }}
+          // style={{ width: `${cityInputWidth}ch` }}
         />
         <button
           className="bg-white w-5 aspect-square rounded-full flex items-center justify-center"
