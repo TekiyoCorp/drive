@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "agencies",
+  "info": {
+    "singularName": "agency",
+    "pluralName": "agencies",
+    "displayName": "Agency",
+    "description": "Drive network agencies"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "attributes": {
+    "externalId": {
+      "type": "integer",
+      "required": true,
+      "unique": true
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "siren": {
+      "type": "string",
+      "required": false
+    },
+    "address": {
+      "type": "string",
+      "required": false
+    },
+    "postalCode": {
+      "type": "string",
+      "required": false
+    },
+    "country": {
+      "type": "string",
+      "required": false
+    },
+    "isDriveAgency": {
+      "type": "boolean",
+      "default": false
+    },
+    "team": {
+      "type": "component",
+      "repeatable": true,
+      "component": "agency.team-member"
+    }
+  }
+}
+

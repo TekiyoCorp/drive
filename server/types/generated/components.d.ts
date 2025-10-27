@@ -1,5 +1,19 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
+export interface AgencyTeamMember extends Struct.ComponentSchema {
+  collectionName: 'components_agency_team_members';
+  info: {
+    description: 'Agency team member profile';
+    displayName: 'Team Member';
+    icon: 'briefcase';
+  };
+  attributes: {
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    photo: Schema.Attribute.Media<'images'>;
+    work: Schema.Attribute.String;
+  };
+}
+
 export interface SharedLocation extends Struct.ComponentSchema {
   collectionName: 'components_shared_locations';
   info: {
@@ -27,6 +41,7 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
+      'agency.team-member': AgencyTeamMember;
       'shared.location': SharedLocation;
       'shared.social-link': SharedSocialLink;
     }
