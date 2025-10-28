@@ -1,28 +1,23 @@
 import Image from "next/image";
 import Wrapper from "../../global/wrapper";
 import Container from "../../global/container";
+import type { AgencySummary } from "@/types/agency";
 
-const OurTeam = () => {
-  const teamMembers = [
-    {
-      id: 1,
-      name: "Thomas",
-      role: "Lorem Ipsum",
-      image: "/images/franchise/team-member.jpg",
-    },
-    {
-      id: 2,
-      name: "Thomas",
-      role: "Lorem Ipsum",
-      image: "/images/franchise/team-member.jpg",
-    },
-    {
-      id: 3,
-      name: "Thomas",
-      role: "Lorem Ipsum",
-      image: "/images/franchise/team-member.jpg",
-    },
-  ];
+interface OurTeamProps {
+  agency: AgencySummary;
+}
+
+const OurTeam = ({ agency }: OurTeamProps) => {
+  const teamMembers = agency.team.length
+    ? agency.team
+    : [
+        {
+          id: 0,
+          name: "Équipe DRIVE",
+          role: "Conseiller dédié",
+          imageUrl: "/images/franchise/team-member.jpg",
+        },
+      ];
 
   return (
     <Wrapper className="flex items-center justify-center flex-col w-full">
@@ -36,14 +31,14 @@ const OurTeam = () => {
         <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-3">
           {teamMembers.map((member, index) => (
             <Container
-              key={member.id}
+              key={`${member.id}-${member.name}`}
               animation="fadeUp"
               delay={index * 0.6 + 0.3}
             >
               <div className="group cursor-pointer relative">
                 <div className="relative w-full max-md:aspect-square md:min-h-[360px] rounded-4xl overflow-hidden">
                   <Image
-                    src={member.image}
+                    src={member.imageUrl}
                     alt={`${member.name} - ${member.role}`}
                     fill
                     className="object-cover object-top transition-transform duration-300 group-hover:scale-105 w-full h-full"

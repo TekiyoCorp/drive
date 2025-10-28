@@ -11,6 +11,17 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: process.env.NEXT_PUBLIC_STRAPI_URL
+      ? [
+          {
+            protocol: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).protocol.replace(
+              ":",
+              ""
+            ) as "http" | "https",
+            hostname: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).hostname,
+          },
+        ]
+      : [],
   },
 
   // Enhanced bundle optimization
