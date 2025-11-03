@@ -7,8 +7,8 @@ import {
 } from "@/components/global/scroll-snap";
 import FAQs from "@/components/main/faqs";
 import NeedAssistance from "@/components/main/need-assistance";
-import OurCatalog from "@/components/main/our-catalog";
 import OurTestimonials from "@/components/main/our-testimonials";
+import AgencyVehiclesWrapper from "@/components/franchise/agency-vehicles-wrapper";
 import { getAgencyById } from "@/lib/agencies";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
@@ -68,7 +68,7 @@ const FranchiseDetailsPage = async ({ params }: FranchiseDetailsPageProps) => {
         <OurTestimonials />
       </SnapElement>
       <SnapElement>
-        <OurCatalog />
+        <AgencyVehiclesWrapper agencyId={agency.id} />
       </SnapElement>
       <SnapScrollContentBox>
         <FAQs />
