@@ -467,6 +467,36 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiAboutUsAboutUs extends Struct.SingleTypeSchema {
+  collectionName: 'about_us';
+  info: {
+    description: 'Contenu de la section \u00C0 propos';
+    displayName: 'About Us';
+    pluralName: 'about-sections';
+    singularName: 'about-us';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    content: Schema.Attribute.RichText & Schema.Attribute.DefaultTo<''>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::about-us.about-us'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiAgencyAgency extends Struct.CollectionTypeSchema {
   collectionName: 'agencies';
   info: {
@@ -711,6 +741,49 @@ export interface ApiOpenDriveAgencyOpenDriveAgency
     title: Schema.Attribute.String &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'Ouvrir une agence DRIVE.'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiReadyToTakeActionReadyToTakeAction
+  extends Struct.SingleTypeSchema {
+  collectionName: 'ready_to_take_actions';
+  info: {
+    description: "Contenu de la section 'Pr\u00EAt \u00E0 passer \u00E0 l'action ?'";
+    displayName: 'Ready To Take Action';
+    pluralName: 'ready-to-take-actions';
+    singularName: 'ready-to-take-action';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    leftButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'/catalogue'>;
+    leftButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Voir le catalogue'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::ready-to-take-action.ready-to-take-action'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    rightButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'/vendre'>;
+    rightButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Estimer mon v\u00E9hicule'>;
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Aucuns frais cach\u00E9s. R\u00E9ponse sous 24 h.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"Pr\u00EAt \u00E0 passer \u00E0 l'action ?">;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1304,6 +1377,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::about-us.about-us': ApiAboutUsAboutUs;
       'api::agency.agency': ApiAgencyAgency;
       'api::faq.faq': ApiFaqFaq;
       'api::feature.feature': ApiFeatureFeature;
@@ -1311,6 +1385,7 @@ declare module '@strapi/strapi' {
       'api::global-content.global-content': ApiGlobalContentGlobalContent;
       'api::hero.hero': ApiHeroHero;
       'api::open-drive-agency.open-drive-agency': ApiOpenDriveAgencyOpenDriveAgency;
+      'api::ready-to-take-action.ready-to-take-action': ApiReadyToTakeActionReadyToTakeAction;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::vehicle.vehicle': ApiVehicleVehicle;
       'plugin::content-releases.release': PluginContentReleasesRelease;
