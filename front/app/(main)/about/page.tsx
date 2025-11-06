@@ -1,9 +1,9 @@
 import AboutUs from "@/components/about/about-us";
 import Hero from "@/components/about/hero";
-import KeyFigures from "@/components/about/key-figures";
-import MaximizeYourProfitability from "@/components/about/maximize-your-profitability";
+import KeyFigures from "@/components/about/key-figures-wrapper";
+import MaximizeYourProfitability from "@/components/about/maximize-your-profitability-wrapper";
 import OurStory from "@/components/about/our-story";
-import WhyDrive from "@/components/about/why-drive";
+import WhyDrive from "@/components/about/why-drive-wrapper";
 import {
   SnapElement,
   SnapScrollContentBox,

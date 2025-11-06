@@ -1,0 +1,38 @@
+{
+  "kind": "singleType",
+  "collectionName": "why_drive_single",
+  "info": {
+    "singularName": "why-drive",
+    "pluralName": "why-drive-sections",
+    "displayName": "Why Drive",
+    "description": "Section Pourquoi Drive"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "POURQUOI DRIVE ?"
+    },
+    "items": {
+      "type": "json",
+      "required": false,
+      "default": [
+        "Marché porteur",
+        "Gagnant/Gagnant",
+        "ACCOMPAGNEMENT SUR MESURE",
+        "RENTABILITé",
+        "Réseau collaboratif",
+        "Multi-franchise",
+        "Aventure humaine",
+        "Valeurs",
+        "FORMATIONS/ANIMATIONS",
+        "Transmission de savoir faire"
+      ]
+    }
+  }
+}
+

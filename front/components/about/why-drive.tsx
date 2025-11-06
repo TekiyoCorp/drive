@@ -2,26 +2,37 @@ import Image from "next/image";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 
-const WhyDrive = () => {
-  const data = [
-    "Marché porteur",
-    "Gagnant/Gagnant",
-    "ACCOMPAGNEMENT SUR MESURE",
-    "RENTABILITé",
-    "Réseau collaboratif",
-    "Multi-franchise",
-    "Aventure humaine",
-    "Valeurs",
-    "FORMATIONS/ANIMATIONS",
-    "Transmission de savoir faire",
-  ];
+interface WhyDriveProps {
+  title?: string;
+  items?: string[];
+}
+
+const DEFAULT_TITLE = "POURQUOI DRIVE ?";
+const DEFAULT_ITEMS = [
+  "Marché porteur",
+  "Gagnant/Gagnant",
+  "ACCOMPAGNEMENT SUR MESURE",
+  "RENTABILITé",
+  "Réseau collaboratif",
+  "Multi-franchise",
+  "Aventure humaine",
+  "Valeurs",
+  "FORMATIONS/ANIMATIONS",
+  "Transmission de savoir faire",
+];
+
+const WhyDrive = ({ title, items }: WhyDriveProps) => {
+  const resolvedTitle = title || DEFAULT_TITLE;
+  const resolvedItems = (Array.isArray(items) && items.length > 0)
+    ? items
+    : DEFAULT_ITEMS;
 
   return (
     <div className="w-full py-10 lg:py-16 min-h-screen flex items-center justify-center">
       <Wrapper className="h-full flex flex-col items-center justify-center">
         <Container delay={1}>
           <h1 className="text-3xl md:text-4xl font-medium mb-10 md:mb-16 text-center">
-            POURQUOI DRIVE ?
+            {resolvedTitle}
           </h1>
         </Container>
 
@@ -29,7 +40,7 @@ const WhyDrive = () => {
           delay={0.5}
           className="relative grid grid-cols-2 md:grid-cols-4 text-center lg:grid-cols-5"
         >
-          {data.map((item, index) => (
+          {resolvedItems.map((item, index) => (
             <Container
               key={index}
               delay={1 + index * 0.5}

@@ -708,6 +708,111 @@ export interface ApiHeroHero extends Struct.SingleTypeSchema {
   };
 }
 
+export interface ApiKeyFiguresKeyFigures extends Struct.SingleTypeSchema {
+  collectionName: 'key_figures_single';
+  info: {
+    description: 'Section chiffres cl\u00E9s (titre, chiffres, b\u00E9n\u00E9fices)';
+    displayName: 'Key Figures';
+    pluralName: 'key-figures-section';
+    singularName: 'key-figures';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    benefits: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<
+        [
+          {
+            description: 'S\u00E9curisation des transactions';
+            title: 'Fiabilit\u00E9';
+          },
+          {
+            description: "Un accompagnement de bout en bout de l'estimation \u00E0 la vente finale";
+            title: 'Simplicit\u00E9';
+          },
+          {
+            description: 'Nos n\u00E9gociations et un mod\u00E8le \u00E9conomique avantageux';
+            title: 'Rentabilit\u00E9';
+          },
+        ]
+      >;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    keyFigures: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<
+        [
+          {
+            description: "62 % des ventes de v\u00E9hicules d'occasion se font entre particuliers.";
+            number: '62%';
+          },
+          {
+            description: '70 % des acheteurs privil\u00E9gient un interm\u00E9diaire fiable pour s\u00E9curiser leur achat et \u00EAtre accompagn\u00E9s pour \u00E9viter les arnaques et simplifier les d\u00E9marches administratives';
+            number: '70%';
+          },
+          {
+            description: "Plus de 5,5 millions de v\u00E9hicules d'occasion sont vendus chaque ann\u00E9e en France avec une demande constante demande.";
+            number: '5,5M';
+          },
+          {
+            description: "57 % des vendeurs rencontrent des difficult\u00E9s \u00E0 n\u00E9gocier et vendre d'un v\u00E9hicule (manque de temps, perte de la gestion des n\u00E9gociations, des d\u00E9marches administratives et du manque de confiance des acheteurs";
+            number: '57%';
+          },
+        ]
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::key-figures.key-figures'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'QUELQUES CHIFFRES'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiMaximizeYourProfitabilityMaximizeYourProfitability
+  extends Struct.SingleTypeSchema {
+  collectionName: 'maximize_your_profitability_single';
+  info: {
+    description: 'Section maximiser votre rentabilit\u00E9';
+    displayName: 'Maximize Your Profitability';
+    pluralName: 'maximize-profitability-sections';
+    singularName: 'maximize-your-profitability';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"Drive propose une approche innovante en combinant la force du digital et un r\u00E9seau physique d'agences locales, permettant ainsi d'optimiser la g\u00E9n\u00E9ration de leads et d'acc\u00E9l\u00E9rer le closing des ventes.">;
+    image: Schema.Attribute.Media<'images'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::maximize-your-profitability.maximize-your-profitability'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'MOD\u00C8LE UNIQUE POUR MAXIMISER VOTRE RENTABILIT\u00C9'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOpenDriveAgencyOpenDriveAgency
   extends Struct.SingleTypeSchema {
   collectionName: 'open_drive_agencies';
@@ -863,6 +968,52 @@ export interface ApiVehicleVehicle extends Struct.CollectionTypeSchema {
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     year: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
+export interface ApiWhyDriveWhyDrive extends Struct.SingleTypeSchema {
+  collectionName: 'why_drive_single';
+  info: {
+    description: 'Section Pourquoi Drive';
+    displayName: 'Why Drive';
+    pluralName: 'why-drive-sections';
+    singularName: 'why-drive';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    items: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<
+        [
+          'March\u00E9 porteur',
+          'Gagnant/Gagnant',
+          'ACCOMPAGNEMENT SUR MESURE',
+          'RENTABILIT\u00E9',
+          'R\u00E9seau collaboratif',
+          'Multi-franchise',
+          'Aventure humaine',
+          'Valeurs',
+          'FORMATIONS/ANIMATIONS',
+          'Transmission de savoir faire',
+        ]
+      >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::why-drive.why-drive'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'POURQUOI DRIVE ?'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -1384,10 +1535,13 @@ declare module '@strapi/strapi' {
       'api::franchise.franchise': ApiFranchiseFranchise;
       'api::global-content.global-content': ApiGlobalContentGlobalContent;
       'api::hero.hero': ApiHeroHero;
+      'api::key-figures.key-figures': ApiKeyFiguresKeyFigures;
+      'api::maximize-your-profitability.maximize-your-profitability': ApiMaximizeYourProfitabilityMaximizeYourProfitability;
       'api::open-drive-agency.open-drive-agency': ApiOpenDriveAgencyOpenDriveAgency;
       'api::ready-to-take-action.ready-to-take-action': ApiReadyToTakeActionReadyToTakeAction;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
       'api::vehicle.vehicle': ApiVehicleVehicle;
+      'api::why-drive.why-drive': ApiWhyDriveWhyDrive;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;
