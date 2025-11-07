@@ -31,6 +31,19 @@ export interface SharedContactLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedFaqItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_faq_items';
+  info: {
+    description: 'Une question et r\u00E9ponse de la FAQ';
+    displayName: 'FAQ Item';
+  };
+  attributes: {
+    content: Schema.Attribute.Text & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedLocation extends Struct.ComponentSchema {
   collectionName: 'components_shared_locations';
   info: {
@@ -72,6 +85,7 @@ declare module '@strapi/strapi' {
     export interface ComponentSchemas {
       'agency.team-member': AgencyTeamMember;
       'shared.contact-link': SharedContactLink;
+      'shared.faq-item': SharedFaqItem;
       'shared.location': SharedLocation;
       'shared.navigation-link': SharedNavigationLink;
       'shared.social-link': SharedSocialLink;

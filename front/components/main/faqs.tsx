@@ -40,7 +40,7 @@ const FAQs = ({ strapiFAQs, error = null }: FAQsProps) => {
                 >
                   {strapiFAQs && strapiFAQs.length > 0 ? (
                     strapiFAQs.map((item, index) => {
-                      // Handle both Strapi format (item.attributes.question) and static format (item.title)
+                      // Handle single type JSON format (item.title/item.content) and legacy formats
                       const question = item.attributes?.question || item.title;
                       const answer = item.attributes?.answer || item.content;
                       const itemId = item.id || index.toString();

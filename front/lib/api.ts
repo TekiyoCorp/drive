@@ -95,30 +95,37 @@ export const api = {
     },
   },
 
-  // FAQ endpoints
+  // FAQ endpoints (single type)
   faqs: {
     async findAll(params?: QueryParams): Promise<FAQ[]> {
       try {
         const client = await getStrapiClient();
-        const response = await client.collection('faqs').find(params);
-        return response.data || [];
+        // Populate components for single type
+        const populateParams = {
+          ...params,
+          populate: '*',
+        };
+        const response = await client.single('faq').find(populateParams);
+        if (!response.data) {
+          throw new Error('FAQ content not found');
+        }
+        // Extract the faqs array from the single type response
+        const attributes = response.data.attributes || response.data;
+        const faqsArray = attributes.faqs || [];
+        // Transform component format to our expected format
+        const transformedFAQs = Array.isArray(faqsArray)
+          ? faqsArray.map((item: any) => ({
+              id: item.id || item.title?.substring(0, 10) || Math.random().toString(),
+              title: item.title || '',
+              content: item.content || '',
+              order: item.order || 0,
+            }))
+          : [];
+        // Sort by order if order field exists
+        return transformedFAQs.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
       } catch (error) {
         console.error('Error fetching FAQs:', error);
         throw new Error(`Failed to fetch FAQs: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    },
-
-    async findOne(id: number, params?: QueryParams): Promise<FAQ> {
-      try {
-        const client = await getStrapiClient();
-        const response = await client.collection('faqs').findOne(id, params);
-        if (!response.data) {
-          throw new Error(`FAQ with id ${id} not found`);
-        }
-        return response.data;
-      } catch (error) {
-        console.error(`Error fetching FAQ ${id}:`, error);
-        throw new Error(`Failed to fetch FAQ: ${error instanceof Error ? error.message : 'Unknown error'}`);
       }
     },
   },
@@ -259,9 +266,8 @@ export const queryHelpers = {
     ...defaultQueries.publishedOnly,
   },
 
-  // Get FAQs sorted by order
+  // Get FAQs (single type, already sorted by order in the response)
   faqsOrdered: {
-    ...defaultQueries.sortByOrder,
     ...defaultQueries.publishedOnly,
   },
 

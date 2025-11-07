@@ -5,7 +5,7 @@ import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import NeedAssistance from "@/components/main/need-assistance";
 import OurTestimonials from "@/components/main/our-testimonials";
 import AgencyVehiclesWrapper from "@/components/franchise/agency-vehicles-wrapper";
@@ -71,7 +71,7 @@ const FranchiseDetailsPage = async ({ params }: FranchiseDetailsPageProps) => {
         <AgencyVehiclesWrapper agencyId={agency.id} />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

@@ -99,10 +99,6 @@ export function useFAQsOrdered() {
   return useStrapiData(() => api.faqs.findAll(queryHelpers.faqsOrdered));
 }
 
-export function useFAQ(id: number, params?: QueryParams) {
-  return useStrapiData(() => api.faqs.findOne(id, params), undefined, [id]);
-}
-
 // Franchises hooks
 export function useFranchises(params?: QueryParams) {
   return useStrapiData(api.franchises.findAll, params);

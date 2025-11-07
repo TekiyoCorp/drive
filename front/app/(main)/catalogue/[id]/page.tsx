@@ -4,7 +4,7 @@ import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import OurCatalog from "@/components/main/our-catalog";
 import { getAgencies } from "@/lib/agencies";
 import { fetchInfinitiaVehicleById, InfinitiaVehicle } from "@/lib/infinitia";
@@ -55,7 +55,7 @@ const CatalogueDetailsPage = async ({ params }: CatalogueDetailsPageProps) => {
         <OurCatalog />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

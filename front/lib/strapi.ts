@@ -166,15 +166,20 @@ export interface Testimonial {
 }
 
 // FAQ types based on schema
+// FAQ item type (from single type JSON array)
 export interface FAQ {
-  id: number;
-  attributes: {
-    question: string;
-    answer: string;
-    order: number;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
+  id: string | number;
+  title: string;
+  content: string;
+  order?: number;
+  // Legacy support for collection type format
+  attributes?: {
+    question?: string;
+    answer?: string;
+    order?: number;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
   };
 }
 

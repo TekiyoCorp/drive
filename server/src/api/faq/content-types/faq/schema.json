@@ -1,9 +1,9 @@
 {
-  "kind": "collectionType",
-  "collectionName": "faqs",
+  "kind": "singleType",
+  "collectionName": "faq_single",
   "info": {
     "singularName": "faq",
-    "pluralName": "faqs",
+    "pluralName": "faq-sections",
     "displayName": "FAQ",
     "description": "Questions fréquemment posées"
   },
@@ -12,17 +12,10 @@
   },
   "pluginOptions": {},
   "attributes": {
-    "title": {
-      "type": "string",
-      "required": true
-    },
-    "content": {
-      "type": "text",
-      "required": true
-    },
-    "order": {
-      "type": "integer",
-      "default": 0
+    "faqs": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.faq-item"
     }
   }
 }
