@@ -69,7 +69,7 @@ const LiquidGlassButton = ({
     >
       <LiquidGlass
         borderRadius={40}
-        blur={6}
+        blur={1}
         contrast={1}
         brightness={1.1}
         saturation={1.1}

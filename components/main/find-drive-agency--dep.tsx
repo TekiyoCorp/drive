@@ -50,7 +50,7 @@ const FindDriveAgency = () => {
             <div className="relative mb-5">
               <div className="relative">
                 <LiquidGlass
-                  blur={5}
+                  blur={2}
                   contrast={1.2}
                   className="border border-white/50 border-x-0 backdrop-blur-2xl relative"
                 >
