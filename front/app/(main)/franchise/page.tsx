@@ -5,7 +5,7 @@ import {
 } from "@/components/global/scroll-snap";
 import FAQsWrapper from "@/components/main/faqs-wrapper";
 import LazyFindDriveAgency from "@/components/optimized/lazy-find-drive-agency";
-import OurCatalog from "@/components/main/our-catalog";
+import OurCatalogWrapper from "@/components/main/our-catalog-wrapper";
 import OurTestimonials from "@/components/main/our-testimonials";
 
 const FranchisePage = () => {
@@ -23,7 +23,7 @@ const FranchisePage = () => {
         <OurTestimonials />
       </SnapElement>
       <SnapElement>
-        <OurCatalog />
+        <OurCatalogWrapper />
       </SnapElement>
       <SnapScrollContentBox>
         <FAQsWrapper />

@@ -1,5 +1,7 @@
 import { OUR_CATALOGUES } from "@/constants/catalogues";
 import OurCatalog from "./our-catalog";
+import { getAgencies } from "@/lib/agencies";
+import { fetchAllInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
 
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function OurCatalogWrapper() {
@@ -7,27 +9,32 @@ export default async function OurCatalogWrapper() {
   let error: string | null = null;
 
   try {
-    // Fetch featured vehicles from Strapi API server-side
-    const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
-    const response = await fetch(`${baseURL}/api/vehicles?filters[featured][$eq]=true&populate[0]=images`, {
-      headers: {
-        'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
-        'Content-Type': 'application/json',
-      },
-      // Enable caching for better performance
-      next: { revalidate: 1800 }, // Revalidate every 30 minutes
-    });
+    // Get all agencies
+    const agencies = await getAgencies();
+    const agencyIds = agencies.map(agency => agency.id);
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch featured vehicles: ${response.status}`);
+    if (agencyIds.length === 0) {
+      // Fallback to static data if no agencies
+      featuredVehicles = OUR_CATALOGUES;
+    } else {
+      // Fetch vehicles from all agencies (like catalogue page)
+      const allVehicles = await fetchAllInfinitiaVehicles(agencyIds, {
+        pageSize: 100, // Fetch more vehicles per agency
+        revalidateSeconds: 300, // Revalidate every 5 minutes
+      });
+
+      // Filter vehicles that are for sale and transform them
+      const vehiclesForSale = allVehicles
+        .filter(vehicle => vehicle.status === 'FOR_SALE')
+        .map(transformInfinitiaVehicleToCatalogueCard);
+
+      featuredVehicles = vehiclesForSale.length > 0 ? vehiclesForSale : OUR_CATALOGUES;
     }
-
-    const result = await response.json();
-    featuredVehicles = result.data || [];
   } catch (err) {
-    console.error('Error fetching featured vehicles:', err);
+    console.error('Error fetching vehicles from Infinitia API:', err);
     error = err instanceof Error ? err.message : 'Failed to load vehicles';
-    featuredVehicles = OUR_CATALOGUES; // Fallback to static data
+    // Fallback to static data if API fails
+    featuredVehicles = OUR_CATALOGUES;
   }
 
   return (

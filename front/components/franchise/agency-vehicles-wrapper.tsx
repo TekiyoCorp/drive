@@ -1,4 +1,3 @@
-import { OUR_CATALOGUES } from "@/constants/catalogues";
 import OurCatalog from "@/components/main/our-catalog";
 import { fetchInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
 
@@ -28,14 +27,15 @@ export default async function AgencyVehiclesWrapper({ agencyId }: AgencyVehicles
   } catch (err) {
     console.error('Error fetching vehicles from Infinitia API:', err);
     error = err instanceof Error ? err.message : 'Failed to load vehicles';
-    // Fallback to static data if API fails
-    featuredVehicles = OUR_CATALOGUES;
+    // Don't fallback to static data for franchise pages - show empty state instead
+    featuredVehicles = [];
   }
 
   return (
     <OurCatalog 
       featuredVehicles={featuredVehicles}
       error={error}
+      isFranchisePage={true}
     />
   );
 }
