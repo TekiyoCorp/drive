@@ -9,9 +9,120 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import React from "react";
+import { InfinitiaVehicle } from "@/lib/infinitia";
 
-const VehicleDetails = () => {
+interface VehicleDetailsProps {
+  vehicle: InfinitiaVehicle;
+}
+
+const VehicleDetails = ({ vehicle }: VehicleDetailsProps) => {
   const isMobile = useIsMobile();
+
+  // Format vehicle data
+  const formattedYear = vehicle.year 
+    ? String(vehicle.year)
+    : vehicle.data?.debut_modele 
+      ? String(vehicle.data.debut_modele).split('-')[0]
+      : null;
+
+  const energyMap: Record<string, string> = {
+    'DIESEL': 'Diesel',
+    'ESSENCE': 'Essence',
+    'ELECTRIC': 'Électrique',
+    'HYBRID': 'Hybride',
+  };
+  const formattedFuel = vehicle.energy 
+    ? energyMap[vehicle.energy] || vehicle.energy
+    : vehicle.data?.energieNGC 
+      ? energyMap[vehicle.data.energieNGC as string] || String(vehicle.data.energieNGC)
+      : null;
+
+  const transmissionMap: Record<string, string> = {
+    'A': 'Automatique',
+    'M': 'Manuelle',
+    'AUTO': 'Automatique',
+    'MANUAL': 'Manuelle',
+  };
+  const formattedTrans = vehicle.transmission 
+    ? transmissionMap[vehicle.transmission] || vehicle.transmission
+    : vehicle.data?.boite_vitesse 
+      ? transmissionMap[vehicle.data.boite_vitesse as string] || String(vehicle.data.boite_vitesse)
+      : null;
+
+  // Build characteristics section
+  const characteristicsItems: Array<{ label: string; value: string | number | null }> = [];
+  
+  if (vehicle.data?.motorisation) {
+    characteristicsItems.push({ label: 'Motorisation', value: String(vehicle.data.motorisation) });
+  }
+  if (vehicle.data?.puissance) {
+    characteristicsItems.push({ label: 'Puissance', value: `${vehicle.data.puissance} ch` });
+  }
+  if (vehicle.data?.couple) {
+    characteristicsItems.push({ label: 'Couple', value: `${vehicle.data.couple} Nm` });
+  }
+  if (vehicle.data?.acceleration_0_100) {
+    characteristicsItems.push({ label: '0-100 km/h', value: `${vehicle.data.acceleration_0_100} s` });
+  }
+  if (vehicle.data?.vitesse_max) {
+    characteristicsItems.push({ label: 'Vitesse max', value: `${vehicle.data.vitesse_max} km/h` });
+  }
+  if (formattedTrans) {
+    characteristicsItems.push({ label: 'Transmission', value: formattedTrans });
+  }
+  if (vehicle.data?.traction) {
+    characteristicsItems.push({ label: 'Traction', value: String(vehicle.data.traction) });
+  }
+  if (vehicle.data?.consommation) {
+    characteristicsItems.push({ label: 'Consommation mixte WLTP', value: `${vehicle.data.consommation} L/100 km` });
+  }
+  if (vehicle.data?.emissions_co2) {
+    characteristicsItems.push({ label: 'Émissions CO₂', value: `${vehicle.data.emissions_co2} g/km` });
+  }
+  if (vehicle.data?.dimensions) {
+    characteristicsItems.push({ label: 'Dimensions (L x l x H)', value: String(vehicle.data.dimensions) });
+  }
+  if (vehicle.data?.poids) {
+    characteristicsItems.push({ label: 'Poids à vide', value: `${vehicle.data.poids} kg` });
+  }
+  if (vehicle.color) {
+    characteristicsItems.push({ label: 'Couleur extérieure', value: vehicle.color });
+  }
+  if (vehicle.data?.interieur) {
+    characteristicsItems.push({ label: 'Intérieur', value: String(vehicle.data.interieur) });
+  }
+
+  // Build history section
+  const historyContent: React.ReactNode[] = [];
+  
+  if (vehicle.data?.nb_proprietaires) {
+    const nbProprietaires = vehicle.data.nb_proprietaires;
+    historyContent.push(
+      <div key="proprietaires" className="flex max-md:flex-col max-md:mb-2">
+        <p className="text-white/80">
+          {nbProprietaires === 1 ? '1er' : `${nbProprietaires}e`} propriétaire{nbProprietaires > 1 ? 's' : ''}
+          {vehicle.data.factures_disponibles ? ', factures d\'achat et d\'entretien disponibles.' : '.'}
+        </p>
+      </div>
+    );
+  }
+  
+  if (vehicle.comment) {
+    historyContent.push(
+      <div key="comment" className="flex max-md:flex-col max-md:mb-2">
+        <p className="text-white/80">{vehicle.comment}</p>
+      </div>
+    );
+  }
+
+  // Build options section
+  const optionsItems: Array<{ name: string; price?: number | string }> = [];
+  
+  if (vehicle.carEquipements && vehicle.carEquipements.length > 0) {
+    vehicle.carEquipements.forEach((equipment) => {
+      optionsItems.push({ name: equipment.name });
+    });
+  }
 
   const sections = [
     {
@@ -19,62 +130,18 @@ const VehicleDetails = () => {
       title: "1. Caractéristiques",
       content: (
         <div className="flex flex-col gap-1 text-left text-lg text-white">
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Motorisation</span>
-            <span className="text-white/80">6 cyl. 3.0 L Biturbo</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Puissance</span>
-            <span className="text-white/80">510 ch / 375 kW</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Couple</span>
-            <span className="text-white/80">470 Nm</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">0-100 km/h</span>
-            <span className="text-white/80">3.4 s (Launch Control)</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Vitesse max</span>
-            <span className="text-white/80">308 km/h</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Transmission</span>
-            <span className="text-white/80">
-              Boîte PDK automatique 8 rapports
-            </span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Traction</span>
-            <span className="text-white/80">Propulsion</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Consommation mixte WLTP</span>
-            <span className="text-white/80">10.8 L/100 km</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Émissions CO₂</span>
-            <span className="text-white/80">224 g/km</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Dimensions (L x l x H)</span>
-            <span className="text-white/80">4 519 x 1 852 x 1 298 mm</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Poids à vide</span>
-            <span className="text-white/80">1 580 kg</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Couleur extérieure</span>
-            <span className="text-white/80">Gris Dolomite métallisé</span>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <span className="mr-3 font-medium">Intérieur</span>
-            <span className="text-white/80">
-              Cuir noir pleine fleur, surpiqûres argent
-            </span>
-          </div>
+          {characteristicsItems.length > 0 ? (
+            characteristicsItems.map((item, index) => (
+              <div key={index} className="flex max-md:flex-col max-md:mb-2">
+                <span className="mr-3 font-medium">{item.label}</span>
+                <span className="text-white/80">{item.value || 'Non renseigné'}</span>
+              </div>
+            ))
+          ) : (
+            <div className="flex max-md:flex-col max-md:mb-2">
+              <p className="text-white/80">Informations non disponibles</p>
+            </div>
+          )}
         </div>
       ),
     },
@@ -83,36 +150,13 @@ const VehicleDetails = () => {
       title: "2. Historique & entretien",
       content: (
         <div className="flex flex-col gap-1 text-lg">
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <p className="text-white/80">
-              1er propriétaire, factures d&apos;achat et d&apos;entretien
-              disponibles.
-            </p>
-          </div>
-          <div className="max-md:flex max-md:flex-col max-md:mb-2">
-            <p className="text-white/80">
-              Carnet d&apos;entretien 100 % Porsche Center, dernières révisions
-              :
-            </p>
-            <div className="mt-2 space-y-1">
-              <p className="ml-4 text-white/80">
-                • 18 000 km : vidange + filtres (07/2023)
-              </p>
-              <p className="ml-4 text-white/80">
-                • 24 000 km : remplacement plaquettes AV (02/2024)
-              </p>
+          {historyContent.length > 0 ? (
+            historyContent
+          ) : (
+            <div className="flex max-md:flex-col max-md:mb-2">
+              <p className="text-white/80">Informations non disponibles</p>
             </div>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <p className="text-white/80">
-              Aucun sinistre déclaré (rapport Histovec + CarVertical clean).
-            </p>
-          </div>
-          <div className="flex max-md:flex-col max-md:mb-2">
-            <p className="text-white/80">
-              Pneus Michelin Pilot Sport 4S neufs (&lt; 500 km).
-            </p>
-          </div>
+          )}
         </div>
       ),
     },
@@ -121,53 +165,20 @@ const VehicleDetails = () => {
       title: "3. Options & packs",
       content: (
         <div className="space-y-1 text-lg">
-          <div>
-            <span className="mr-3 font-medium">Pack Sport Chrono</span>
-            <span className="text-right text-white/80">2 580 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">
-              Échappement Sport (commande variable)
-            </span>
-            <span className="text-right text-white/80">3 300 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">Toit vitré panoramique</span>
-            <span className="text-right text-white/80">1 990 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">
-              Sièges Adaptive Sports Plus 18 voies
-            </span>
-            <span className="text-right text-white/80">3 420 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">
-              Système audio Bose® Surround
-            </span>
-            <span className="text-right text-white/80">1 290 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">
-              Jantes Carrera Classic 20&quot; / 21&quot;
-            </span>
-            <span className="text-right text-white/80">2 150 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">
-              Peinture métallisée spéciale
-            </span>
-            <span className="text-right text-white/80">1 380 €</span>
-          </div>
-          <div>
-            <span className="mr-3 font-medium">Intérieur</span>
-            <span className="text-right text-white/80">
-              Cuir noir pleine fleur, surpiqûres argent
-            </span>
-          </div>
-          <div className="flex justify-between items-center mt-4">
-            <p>Total options : ≈ 16 110 €</p>
-          </div>
+          {optionsItems.length > 0 ? (
+            optionsItems.map((option, index) => (
+              <div key={index}>
+                <span className="mr-3 font-medium">{option.name}</span>
+                {option.price && (
+                  <span className="text-right text-white/80">{option.price}</span>
+                )}
+              </div>
+            ))
+          ) : (
+            <div>
+              <p className="text-white/80">Aucune option renseignée</p>
+            </div>
+          )}
         </div>
       ),
     },

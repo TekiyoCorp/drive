@@ -237,3 +237,30 @@ export async function fetchAllInfinitiaVehicles(
 
   return allVehicles;
 }
+
+/**
+ * Fetch a single vehicle by ID from Infinitia API
+ * Since Infinitia doesn't have a direct endpoint for a single vehicle,
+ * we search through all agencies to find the vehicle
+ */
+export async function fetchInfinitiaVehicleById(
+  vehicleId: number,
+  agencyIds: number[],
+  options: Omit<FetchInfinitiaVehiclesOptions, 'page' | 'pageSize'> = {}
+): Promise<InfinitiaVehicle | null> {
+  if (!Number.isFinite(vehicleId)) {
+    throw new Error("Invalid vehicleId provided to fetchInfinitiaVehicleById");
+  }
+
+  if (!agencyIds || agencyIds.length === 0) {
+    return null;
+  }
+
+  // Fetch vehicles from all agencies and find the one with matching ID
+  const allVehicles = await fetchAllInfinitiaVehicles(agencyIds, {
+    ...options,
+    pageSize: 1000, // Fetch a large number to ensure we find the vehicle
+  });
+
+  return allVehicles.find(vehicle => vehicle.id === vehicleId) || null;
+}

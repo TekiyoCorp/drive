@@ -11,11 +11,17 @@ import {
 } from "@/components/ui/carousel";
 import { HeartIcon } from "lucide-react";
 import Image from "next/image";
-import { redirect, useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect, useCallback } from "react";
+import { InfinitiaVehicle } from "@/lib/infinitia";
 
-const Hero = () => {
+interface HeroProps {
+  vehicle: InfinitiaVehicle;
+}
+
+const Hero = ({ vehicle }: HeroProps) => {
   const { id } = useParams<{ id: string }>();
+  const router = useRouter();
   const [isReserved, setIsReserved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [api, setApi] = useState<CarouselApi>();
@@ -25,32 +31,64 @@ const Hero = () => {
   const handleReserve = () => {
     setIsReserved(!isReserved);
     if (!isReserved) {
-      redirect(`/order/${id}`);
+      router.push(`/order/${id}`);
     }
   };
 
-  const carImages = [
-    {
-      src: "/images/catalogue/hero.jpg",
-      alt: "Porsche 911 Carrera - Front View",
-    },
-    {
-      src: "/images/catalogue/hero.jpg",
-      alt: "Porsche 911 Carrera - Side View",
-    },
-    {
-      src: "/images/catalogue/hero.jpg",
-      alt: "Porsche 911 Carrera - Rear View",
-    },
-    {
-      src: "/images/catalogue/hero.jpg",
-      alt: "Porsche 911 Carrera - Interior View",
-    },
-    {
-      src: "/images/catalogue/hero.jpg",
-      alt: "Porsche 911 Carrera - Engine View",
-    },
-  ];
+  // Get images from vehicle
+  const carImages = vehicle.carMedias && vehicle.carMedias.length > 0
+    ? vehicle.carMedias.map((media, index) => ({
+        src: media.url,
+        alt: `${vehicle.brand} ${vehicle.model} - Image ${index + 1}`,
+      }))
+    : [
+        {
+          src: "/images/catalogue/hero.jpg",
+          alt: `${vehicle.brand} ${vehicle.model}`,
+        },
+      ];
+
+  // Format vehicle data
+  const formattedPrice = vehicle.price 
+    ? `${vehicle.price.toLocaleString('fr-FR')} €`
+    : 'Prix sur demande';
+
+  const formattedKm = vehicle.km 
+    ? `${vehicle.km.toLocaleString('fr-FR')} km`
+    : 'Kilométrage non renseigné';
+
+  const formattedYear = vehicle.year 
+    ? String(vehicle.year)
+    : vehicle.data?.debut_modele 
+      ? String(vehicle.data.debut_modele).split('-')[0]
+      : 'Année non renseignée';
+
+  const energyMap: Record<string, string> = {
+    'DIESEL': 'Diesel',
+    'ESSENCE': 'Essence',
+    'ELECTRIC': 'Électrique',
+    'HYBRID': 'Hybride',
+  };
+  const formattedFuel = vehicle.energy 
+    ? energyMap[vehicle.energy] || vehicle.energy
+    : vehicle.data?.energieNGC 
+      ? energyMap[vehicle.data.energieNGC as string] || String(vehicle.data.energieNGC)
+      : 'Non renseigné';
+
+  const transmissionMap: Record<string, string> = {
+    'A': 'Automatique',
+    'M': 'Manuelle',
+    'AUTO': 'Automatique',
+    'MANUAL': 'Manuelle',
+  };
+  const formattedTrans = vehicle.transmission 
+    ? transmissionMap[vehicle.transmission] || vehicle.transmission
+    : vehicle.data?.boite_vitesse 
+      ? transmissionMap[vehicle.data.boite_vitesse as string] || String(vehicle.data.boite_vitesse)
+      : 'Non renseigné';
+
+  const title = vehicle.brand || 'Marque non renseignée';
+  const subtitle = vehicle.model || 'Modèle non renseigné';
 
   // Auto-play functionality
   const scrollNext = useCallback(() => {
@@ -90,41 +128,45 @@ const Hero = () => {
       <div className="lg:hidden">
         <Container delay={0.1}>
           <h2 className="text-balance !leading-[1.25] text-[48px] md:text-[60px] font-normal tracking-tight mt-6 w-full">
-            PORSCHE 911 <br /> CARRERA
+            {title.toUpperCase()} <br /> {subtitle.toUpperCase()}
           </h2>
         </Container>
         <Container delay={0.2}>
           <p className="text-[28px] font-normal text-balance text-white mt-2">
-            169 000€
+            {formattedPrice}
           </p>
         </Container>
 
         <Container delay={0.4} className="lg:hidden">
           <div className="grid grid-cols-2 gap-8 text-white pb-10 pt-5">
             <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">Essence</span>
+              <span className="text-lg font-medium">{formattedFuel}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">Automatique</span>
+              <span className="text-lg font-medium">{formattedTrans}</span>
             </div>
 
             <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">2021</span>
+              <span className="text-lg font-medium">{formattedYear}</span>
             </div>
 
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">510 ch</span>
-            </div>
+            {vehicle.data?.puissance && (
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-medium">{vehicle.data.puissance} ch</span>
+              </div>
+            )}
+
+            {vehicle.data?.nb_proprietaires && (
+              <div className="flex items-center gap-2">
+                <span className="text-lg font-medium">
+                  {vehicle.data.nb_proprietaires === 1 ? '1' : vehicle.data.nb_proprietaires}<sup>{vehicle.data.nb_proprietaires === 1 ? 'er' : 'e'}</sup> proprio
+                </span>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">
-                1<sup>er</sup> proprio
-              </span>
-            </div>
-
-            <div className="flex items-center gap-2">
-              <span className="text-lg font-medium">25 000 km</span>
+              <span className="text-lg font-medium">{formattedKm}</span>
             </div>
           </div>
         </Container>
@@ -168,12 +210,12 @@ const Hero = () => {
           <div className="max-lg:hidden">
             <Container delay={0.1}>
               <h2 className="text-balance !leading-[1.25] text-[60px] font-normal tracking-tight mt-6 w-full">
-                PORSCHE 911 <br /> CARRERA
+                {title.toUpperCase()} <br /> {subtitle.toUpperCase()}
               </h2>
             </Container>
             <Container delay={0.2}>
               <p className="text-[28px] font-normal text-balance text-white mt-2">
-                169 000€
+                {formattedPrice}
               </p>
             </Container>
           </div>
@@ -225,46 +267,52 @@ const Hero = () => {
 
             <Container delay={0.2}>
               <p className="text-base font-normal text-center text-balance text-white/70 max-w-3xl mx-auto mt-4">
-                Fiche vérifiée par DRIVE Lyon
+                Fiche vérifiée par DRIVE {vehicle.business?.name || 'Lyon'}
               </p>
             </Container>
 
             <Container delay={0.4} className="max-lg:hidden">
-              <div className="flex items-center justify-center gap-8 text-white mt-2">
+              <div className="flex items-center justify-center gap-8 text-white mt-2 flex-wrap">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">Essence</span>
+                  <span className="text-lg font-medium">{formattedFuel}</span>
                 </div>
 
                 <div className="w-px h-4 bg-white/40"></div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">Automatique</span>
+                  <span className="text-lg font-medium">{formattedTrans}</span>
                 </div>
 
                 <div className="w-px h-4 bg-white/40"></div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">2021</span>
+                  <span className="text-lg font-medium">{formattedYear}</span>
                 </div>
+
+                {vehicle.data?.puissance && (
+                  <>
+                    <div className="w-px h-4 bg-white/40"></div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-medium">{vehicle.data.puissance} ch</span>
+                    </div>
+                  </>
+                )}
+
+                {vehicle.data?.nb_proprietaires && (
+                  <>
+                    <div className="w-px h-4 bg-white/40"></div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-lg font-medium">
+                        {vehicle.data.nb_proprietaires === 1 ? '1' : vehicle.data.nb_proprietaires}<sup>{vehicle.data.nb_proprietaires === 1 ? 'er' : 'e'}</sup> proprio
+                      </span>
+                    </div>
+                  </>
+                )}
 
                 <div className="w-px h-4 bg-white/40"></div>
 
                 <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">510 ch</span>
-                </div>
-
-                <div className="w-px h-4 bg-white/40"></div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">
-                    1<sup>er</sup> proprio
-                  </span>
-                </div>
-
-                <div className="w-px h-4 bg-white/40"></div>
-
-                <div className="flex items-center gap-2">
-                  <span className="text-lg font-medium">25 000 km</span>
+                  <span className="text-lg font-medium">{formattedKm}</span>
                 </div>
               </div>
             </Container>
