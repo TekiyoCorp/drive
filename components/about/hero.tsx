@@ -15,7 +15,7 @@ const Hero = () => {
           alt="Hero Image"
           width={1024}
           height={1024}
-          className="object-bottom absolute bottom-0 z-10 rounded-3xl w-full h-screen"
+          className="object-bottom object-cover md:absolute md:bottom-0 z-10 rounded-3xl w-full h-screen min-h-screen"
         />
         <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-t from-black/80 via-black/30 to-transparent rounded-3xl z-20" />
       </Container>
