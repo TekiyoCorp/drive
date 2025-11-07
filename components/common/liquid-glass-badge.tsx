@@ -34,7 +34,7 @@ const LiquidGlassBadge = ({ children, className }: LiquidGlassBadgeProps) => {
     >
       <LiquidGlass
         borderRadius={40}
-        blur={1}
+        blur={6}
         contrast={1}
         brightness={1.1}
         saturation={1.1}

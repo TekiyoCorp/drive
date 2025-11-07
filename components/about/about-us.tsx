@@ -31,15 +31,15 @@ const AboutUs = () => {
 
         <Container
           delay={0.4}
-          className="relative max-sm:aspect-square lg:min-h-screen"
+          className="relative max-sm:aspect-square min-h-72 lg:min-h-screen"
         >
-          <div className="absolute top-0 left-0 w-full bg-black/20 rounded-3xl lg:min-h-screen h-full z-10" />
+          <div className="absolute top-0 left-0 w-full bg-black/20 rounded-3xl lg:min-h-screen h-full z-10 min-h-72" />
           <Image
             src="/images/about/about-us-banner.webp"
             alt="About Us Banner"
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover object-center rounded-3xl"
+            className="object-cover object-bottom md:object-center rounded-3xl"
           />
         </Container>
       </Wrapper>

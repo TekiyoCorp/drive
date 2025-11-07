@@ -33,14 +33,14 @@ const WhyDrive = () => {
             <Container
               key={index}
               delay={1 + index * 0.5}
-              className="relative flex flex-col items-center"
+              className="relative flex flex-col items-center bg-[#181818]"
             >
               <Image
                 src={`/images/why-drive/${index + 1}.svg`}
                 alt={`Why Drive Image ${index + 1}`}
                 width={500}
                 height={500}
-                className="object-contain aspect-square !mix-blend-lighten"
+                className="object-contain aspect-square mix-blend-lighten"
               />
               <p className="text-white text-[12px] font-semibold">{item}</p>
             </Container>

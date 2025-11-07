@@ -43,7 +43,7 @@ const KeyFigures = () => {
   ];
 
   return (
-    <div className="w-full min-h-screen text-white py-16 flex items-center justify-center">
+    <div className="w-full min-h-screen h-full text-white py-16 flex items-center justify-center">
       <Wrapper className="h-full flex flex-col">
         <Container animation="scaleUp" delay={1}>
           <h1 className="text-3xl md:text-4xl font-medium mb-10 md:mb-16 text-center">

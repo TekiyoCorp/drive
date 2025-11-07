@@ -6,13 +6,13 @@ const MaximizeYourProfitability = () => {
   return (
     <div className="w-full py-10 lg:py-16 h-screen">
       <Wrapper className="grid lg:grid-cols-2 gap-10 h-full">
-        <Container delay={1} className="relative">
+        <Container delay={1} className="relative h-full flex items-center justify-center">
           <Image
             src="/images/about/maximize-your-profitablity-banner.webp"
             alt="About Us Banner"
             width={1024}
             height={1024}
-            className="object-cover object-left rounded-3xl w-full h-full max-sm:aspect-square"
+            className="object-cover object-left rounded-3xl w-full h-full aspect-square"
           />
         </Container>
 
