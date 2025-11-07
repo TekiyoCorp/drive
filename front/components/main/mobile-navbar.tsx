@@ -15,11 +15,52 @@ import Wrapper from "../global/wrapper";
 const MobileNavbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const [content, setContent] = useState<any>(null);
   const pathname = usePathname();
 
   // Handle hydration mismatch for pathname-based styling
   useEffect(() => {
     setIsClient(true);
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchContent = async () => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+        const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
+
+        const response = await fetch(
+          `${baseURL}/api/header?populate=*`,
+          {
+            headers: {
+              ...(apiToken ? { Authorization: `Bearer ${apiToken}` } : {}),
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = await response.json();
+        const node = result?.data;
+        const attributes = node ? node.attributes ?? node : null;
+
+        if (!isMounted) return;
+
+        setContent(attributes);
+      } catch (_err) {
+        // Ignore errors, fall back to defaults
+      }
+    };
+
+    fetchContent();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Close menu when navigating to a new page
@@ -28,6 +69,28 @@ const MobileNavbar = () => {
   }, [pathname]);
 
   const isHomePage = isClient ? pathname === "/" : false;
+
+  // Parse navigation links - handle different Strapi data structures
+  let navigationLinks = NAV_LINKS;
+  if (content?.navigationLinks) {
+    if (Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0) {
+      navigationLinks = content.navigationLinks
+        .map((link: any) => {
+          if (link.name && link.link) {
+            return { name: link.name, link: link.link };
+          }
+          if (link.attributes?.name && link.attributes?.link) {
+            return { name: link.attributes.name, link: link.attributes.link };
+          }
+          return { name: link.name || link.attributes?.name, link: link.link || link.attributes?.link };
+        })
+        .filter((link: any) => link && link.name && link.link);
+      
+      if (navigationLinks.length === 0) {
+        navigationLinks = NAV_LINKS;
+      }
+    }
+  }
 
   return (
     <header
@@ -85,7 +148,7 @@ const MobileNavbar = () => {
               )}
             >
               <AnimatePresence>
-                {NAV_LINKS.map((link, index) => (
+                {navigationLinks.map((link: { name: string; link: string }, index: number) => (
                   <Container
                     key={index}
                     animation="fadeDown"

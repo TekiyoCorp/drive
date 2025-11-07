@@ -291,6 +291,149 @@ export interface GlobalContent {
   };
 }
 
+// Header content types
+export interface Header {
+  id: number;
+  attributes: {
+    logo?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          alternativeText?: string;
+          caption?: string;
+          width: number;
+          height: number;
+          formats: any;
+          hash: string;
+          ext: string;
+          mime: string;
+          size: number;
+          url: string;
+          previewUrl?: string;
+          provider: string;
+          provider_metadata?: any;
+          createdAt: string;
+          updatedAt: string;
+        };
+      } | null;
+    };
+    logoSmall?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          alternativeText?: string;
+          caption?: string;
+          width: number;
+          height: number;
+          formats: any;
+          hash: string;
+          ext: string;
+          mime: string;
+          size: number;
+          url: string;
+          previewUrl?: string;
+          provider: string;
+          provider_metadata?: any;
+          createdAt: string;
+          updatedAt: string;
+        };
+      } | null;
+    };
+    navigationLinks?: Array<{
+      id: number;
+      name: string;
+      link: string;
+    }>;
+    openAgencyButtonText?: string;
+    openAgencyButtonLink?: string;
+    appointmentButtonText?: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+}
+
+// Footer content types
+export interface Footer {
+  id: number;
+  attributes: {
+    logo?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          alternativeText?: string;
+          caption?: string;
+          width: number;
+          height: number;
+          formats: any;
+          hash: string;
+          ext: string;
+          mime: string;
+          size: number;
+          url: string;
+          previewUrl?: string;
+          provider: string;
+          provider_metadata?: any;
+          createdAt: string;
+          updatedAt: string;
+        };
+      } | null;
+    };
+    navigationTitle?: string;
+    navigationLinks?: Array<{
+      id: number;
+      name: string;
+      link: string;
+    }>;
+    contactTitle?: string;
+    contactLinks?: Array<{
+      id: number;
+      name: string;
+      link: string;
+      type?: string;
+      disabled?: boolean;
+    }>;
+    socialTitle?: string;
+    socialLinks?: Array<{
+      id: number;
+      platform: string;
+      url: string;
+    }>;
+    legalTitle?: string;
+    copyrightText?: string;
+    tekiyoLogo?: {
+      data: {
+        id: number;
+        attributes: {
+          name: string;
+          alternativeText?: string;
+          caption?: string;
+          width: number;
+          height: number;
+          formats: any;
+          hash: string;
+          ext: string;
+          mime: string;
+          size: number;
+          url: string;
+          previewUrl?: string;
+          provider: string;
+          provider_metadata?: any;
+          createdAt: string;
+          updatedAt: string;
+        };
+      } | null;
+    };
+    tekiyoCopyright?: string;
+    createdAt: string;
+    updatedAt: string;
+    publishedAt: string;
+  };
+}
+
 // Query parameters for filtering and sorting
 export interface QueryParams {
   populate?: string | string[];

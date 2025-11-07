@@ -596,6 +596,49 @@ export interface ApiFeatureFeature extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiFooterFooter extends Struct.SingleTypeSchema {
+  collectionName: 'footers';
+  info: {
+    description: 'Footer configuration';
+    displayName: 'Footer';
+    pluralName: 'footers';
+    singularName: 'footer';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    contactLinks: Schema.Attribute.Component<'shared.contact-link', true>;
+    contactTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Contact'>;
+    copyrightText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'\u00A9 2025 DRIVE - Tous droits r\u00E9serv\u00E9s Propuls\u00E9 par Tekiyo'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    legalTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'L\u00E9gal'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::footer.footer'
+    > &
+      Schema.Attribute.Private;
+    navigationLinks: Schema.Attribute.Component<'shared.navigation-link', true>;
+    navigationTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Navigation'>;
+    publishedAt: Schema.Attribute.DateTime;
+    socialLinks: Schema.Attribute.Component<'shared.social-link', true>;
+    socialTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'R\u00E9seaux'>;
+    tekiyoCopyright: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'\u00A9 2025 Maison Tekiyo\u2122 - Tous droits r\u00E9serv\u00E9s.'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiFranchiseFranchise extends Struct.CollectionTypeSchema {
   collectionName: 'franchises';
   info: {
@@ -664,6 +707,41 @@ export interface ApiGlobalContentGlobalContent extends Struct.SingleTypeSchema {
       Schema.Attribute.DefaultTo<'Plateforme de vente et achat de voitures premium'>;
     siteName: Schema.Attribute.String & Schema.Attribute.DefaultTo<'DRIVE'>;
     socialMedia: Schema.Attribute.Component<'shared.social-link', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiHeaderHeader extends Struct.SingleTypeSchema {
+  collectionName: 'headers';
+  info: {
+    description: 'Header navigation configuration';
+    displayName: 'Header';
+    pluralName: 'headers';
+    singularName: 'header';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    appointmentButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Prendre rendez-vous'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::header.header'
+    > &
+      Schema.Attribute.Private;
+    navigationLinks: Schema.Attribute.Component<'shared.navigation-link', true>;
+    openAgencyButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'/open-agency'>;
+    openAgencyButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Ouvrir une agence'>;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1532,8 +1610,10 @@ declare module '@strapi/strapi' {
       'api::agency.agency': ApiAgencyAgency;
       'api::faq.faq': ApiFaqFaq;
       'api::feature.feature': ApiFeatureFeature;
+      'api::footer.footer': ApiFooterFooter;
       'api::franchise.franchise': ApiFranchiseFranchise;
       'api::global-content.global-content': ApiGlobalContentGlobalContent;
+      'api::header.header': ApiHeaderHeader;
       'api::hero.hero': ApiHeroHero;
       'api::key-figures.key-figures': ApiKeyFiguresKeyFigures;
       'api::maximize-your-profitability.maximize-your-profitability': ApiMaximizeYourProfitabilityMaximizeYourProfitability;

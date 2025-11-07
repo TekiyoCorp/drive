@@ -14,6 +14,23 @@ export interface AgencyTeamMember extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedContactLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_contact_links';
+  info: {
+    description: 'Contact link component';
+    displayName: 'Contact Link';
+  };
+  attributes: {
+    disabled: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    link: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<
+      ['email', 'phone', 'whatsapp', 'other']
+    > &
+      Schema.Attribute.DefaultTo<'other'>;
+  };
+}
+
 export interface SharedLocation extends Struct.ComponentSchema {
   collectionName: 'components_shared_locations';
   info: {
@@ -23,6 +40,18 @@ export interface SharedLocation extends Struct.ComponentSchema {
   attributes: {
     latitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
     longitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedNavigationLink extends Struct.ComponentSchema {
+  collectionName: 'components_shared_navigation_links';
+  info: {
+    description: 'Navigation link component';
+    displayName: 'Navigation Link';
+  };
+  attributes: {
+    link: Schema.Attribute.String & Schema.Attribute.Required;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -42,7 +71,9 @@ declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'agency.team-member': AgencyTeamMember;
+      'shared.contact-link': SharedContactLink;
       'shared.location': SharedLocation;
+      'shared.navigation-link': SharedNavigationLink;
       'shared.social-link': SharedSocialLink;
     }
   }

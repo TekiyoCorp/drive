@@ -13,9 +13,81 @@ import {
 } from "../../constants/links";
 import { usePathname } from "next/navigation";
 import { SnapElement } from "../global/scroll-snap";
+import { useEffect, useState } from "react";
 
 const Footer = () => {
   const pathname = usePathname();
+  const [content, setContent] = useState<any>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchContent = async () => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+        const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
+
+        const response = await fetch(
+          `${baseURL}/api/footer?populate=*`,
+          {
+            headers: {
+              ...(apiToken ? { Authorization: `Bearer ${apiToken}` } : {}),
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = await response.json();
+        const node = result?.data;
+        const attributes = node ? node.attributes ?? node : null;
+
+        if (!isMounted) return;
+
+        setContent(attributes);
+      } catch (_err) {
+        // Ignore errors, fall back to defaults
+      }
+    };
+
+    fetchContent();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const navigationTitle = content?.navigationTitle ?? "Navigation";
+  const navigationLinks = content?.navigationLinks && Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0
+    ? content.navigationLinks.map((link: any) => ({
+        name: link.name || link.attributes?.name,
+        link: link.link || link.attributes?.link,
+      })).filter((link: any) => link.name && link.link)
+    : FOOTER_NAVIGATION_LINKS;
+
+  const contactTitle = content?.contactTitle ?? "Contact";
+  const contactLinks = content?.contactLinks && Array.isArray(content.contactLinks) && content.contactLinks.length > 0
+    ? content.contactLinks.map((link: any) => ({
+        name: link.name || link.attributes?.name,
+        link: link.link || link.attributes?.link,
+        type: link.type || link.attributes?.type,
+        disabled: link.disabled !== undefined ? link.disabled : (link.attributes?.disabled || false),
+      })).filter((link: any) => link.name)
+    : FOOTER_CONTACT_LINKS;
+
+  const socialTitle = content?.socialTitle ?? "Réseaux";
+  const socialLinks = content?.socialLinks && Array.isArray(content.socialLinks) && content.socialLinks.length > 0
+    ? content.socialLinks.map((link: any) => ({
+        name: link.platform || link.attributes?.platform || link.name || link.attributes?.name,
+        link: link.url || link.attributes?.url || link.link || link.attributes?.link || "#",
+      })).filter((link: any) => link.name)
+    : FOOTER_SOCIAL_LINKS;
+
+  const legalTitle = content?.legalTitle ?? "Légal";
+  const copyrightText = content?.copyrightText ?? "© 2025 DRIVE - Tous droits réservés Propulsé par Tekiyo";
+  const tekiyoCopyright = content?.tekiyoCopyright ?? "© 2025 Maison Tekiyo™ - Tous droits réservés.";
 
   return (
     <>
@@ -37,9 +109,9 @@ const Footer = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                   <Container animation="fadeLeft" delay={0.2}>
                     <div>
-                      <h3 className="text-2xl font-medium mb-3">Navigation</h3>
+                      <h3 className="text-2xl font-medium mb-3">{navigationTitle}</h3>
                       <div className="space-y-2">
-                        {FOOTER_NAVIGATION_LINKS.map((link, index) => (
+                        {navigationLinks.map((link: { name: string; link: string }, index: number) => (
                           <Container
                             key={index}
                             animation="fadeUp"
@@ -59,9 +131,9 @@ const Footer = () => {
 
                   <Container animation="fadeUp" delay={0.5}>
                     <div>
-                      <h3 className="text-2xl font-medium mb-3">Contact</h3>
+                      <h3 className="text-2xl font-medium mb-3">{contactTitle}</h3>
                       <div className="space-y-2">
-                        {FOOTER_CONTACT_LINKS.map((contact, index) => (
+                        {contactLinks.map((contact: { name: string; link: string; disabled?: boolean }, index: number) => (
                           <Container
                             key={index}
                             animation="fadeUp"
@@ -87,9 +159,9 @@ const Footer = () => {
 
                   <Container animation="fadeRight" delay={1}>
                     <div>
-                      <h3 className="text-2xl font-medium mb-3">Réseaux</h3>
+                      <h3 className="text-2xl font-medium mb-3">{socialTitle}</h3>
                       <div className="space-y-2">
-                        {FOOTER_SOCIAL_LINKS.map((social, index) => (
+                        {socialLinks.map((social: { name: string; link: string }, index: number) => (
                           <Container
                             key={index}
                             animation="scaleUp"
@@ -109,9 +181,9 @@ const Footer = () => {
 
                   <Container animation="fadeUp" delay={2}>
                     <div>
-                      <h3 className="text-2xl font-medium mb-3">Légal</h3>
+                      <h3 className="text-2xl font-medium mb-3">{legalTitle}</h3>
                       <p className="text-lg">
-                        © 2025 DRIVE - Tous droits réservés Propulsé par Tekiyo
+                        {copyrightText}
                       </p>
                     </div>
                   </Container>
@@ -141,7 +213,7 @@ const Footer = () => {
                   </Container>
                   <Container animation="fadeUp" delay={1.8}>
                     <p className="text-sm font-medium">
-                      © 2025 Maison Tekiyo™ - Tous droits réservés.
+                      {tekiyoCopyright}
                     </p>
                   </Container>
                 </div>

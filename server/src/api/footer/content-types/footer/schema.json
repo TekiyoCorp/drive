@@ -1,0 +1,56 @@
+{
+  "kind": "singleType",
+  "collectionName": "footers",
+  "info": {
+    "singularName": "footer",
+    "pluralName": "footers",
+    "displayName": "Footer",
+    "description": "Footer configuration"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "navigationTitle": {
+      "type": "string",
+      "default": "Navigation"
+    },
+    "navigationLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.navigation-link"
+    },
+    "contactTitle": {
+      "type": "string",
+      "default": "Contact"
+    },
+    "contactLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.contact-link"
+    },
+    "socialTitle": {
+      "type": "string",
+      "default": "Réseaux"
+    },
+    "socialLinks": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.social-link"
+    },
+    "legalTitle": {
+      "type": "string",
+      "default": "Légal"
+    },
+    "copyrightText": {
+      "type": "string",
+      "default": "© 2025 DRIVE - Tous droits réservés Propulsé par Tekiyo"
+    },
+    "tekiyoCopyright": {
+      "type": "string",
+      "default": "© 2025 Maison Tekiyo™ - Tous droits réservés."
+    }
+  }
+}
+
