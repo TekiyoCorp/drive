@@ -103,7 +103,7 @@ const Navbar = () => {
       >
         <div>
           <LiquidGlass
-            blur={2}
+            blur={1}
             elasticity={0.8}
             className="border border-white/50 max-md:border-none border-r-0 border-l-0 rounded-[40px] !w-fit !h-fit"
           >

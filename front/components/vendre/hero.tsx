@@ -60,7 +60,7 @@ const Hero = () => {
             className="!w-fit max-w-2xl flex items-center justify-center mx-auto max-lg:hidden"
           >
             <LiquidGlass
-              blur={12}
+              blur={2}
               brightness={1.5}
               contrast={1.2}
               className="border border-white/50 border-x-0 relative mt-6 !w-full lg:!w-fit mx-auto"
@@ -74,7 +74,7 @@ const Hero = () => {
             className="w-full max-lg:max-w-lg px-4 mx-auto max-lg:hidden"
           >
             <LiquidGlass
-              blur={8}
+              blur={2}
               brightness={1.5}
               className="border border-white/50 border-x-0 relative mt-6 !w-full lg:!w-fit mx-auto"
             >

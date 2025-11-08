@@ -47,7 +47,7 @@ const SpotlightSearch = ({ open, setOpen }: SpotlightSearchProps) => {
       showCloseButton={false}
     >
       <LiquidGlass
-        blur={8}
+        blur={2}
         className={cn(
           "border border-white/30 border-x-white/20 w-full max-sm:h-full backdrop-blur-2xl flex flex-col",
           searchQuery && "pt-2 pb-3"

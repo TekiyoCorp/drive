@@ -27,7 +27,7 @@ const MaximizeYourProfitability = ({
   return (
     <div className="w-full py-10 lg:py-16 h-screen">
       <Wrapper className="grid lg:grid-cols-2 gap-10 h-full">
-        <Container delay={1} className="relative">
+        <Container delay={1} className="relative h-full flex items-center justify-center">
           <Image
             src={resolvedImageUrl}
             alt="About Us Banner"
