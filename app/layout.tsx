@@ -173,10 +173,6 @@ export default function RootLayout({
           }}
         />
 
-        {/* Favicon and manifest */}
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="apple-touch-icon" href="/logo.svg" />
-
         {/* Open Graph tags for social sharing */}
         <meta property="og:type" content="website" />
         <meta property="og:locale" content="fr_FR" />
