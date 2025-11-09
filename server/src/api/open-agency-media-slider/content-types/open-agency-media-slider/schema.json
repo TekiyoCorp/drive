@@ -1,0 +1,27 @@
+{
+  "kind": "singleType",
+  "collectionName": "open_agency_media_sliders",
+  "info": {
+    "singularName": "open-agency-media-slider",
+    "pluralName": "open-agency-media-sliders",
+    "displayName": "Open Agency Media Slider",
+    "description": "Carrousel média de la page Ouvrir une agence"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "default": "iOS 26. Nouveau look. <br /> Nouvelle magie."
+    },
+    "slides": {
+      "type": "component",
+      "repeatable": true,
+      "component": "shared.media-slide"
+    }
+  }
+}
+

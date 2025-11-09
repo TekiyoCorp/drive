@@ -44,6 +44,20 @@ export interface SharedFaqItem extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedFeatureItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_feature_items';
+  info: {
+    description: '\u00C9l\u00E9ment de feature avec titre, description et ic\u00F4ne';
+    displayName: 'Feature Item';
+  };
+  attributes: {
+    description: Schema.Attribute.Text;
+    icon: Schema.Attribute.Media<'images'>;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    title: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedLocation extends Struct.ComponentSchema {
   collectionName: 'components_shared_locations';
   info: {
@@ -53,6 +67,18 @@ export interface SharedLocation extends Struct.ComponentSchema {
   attributes: {
     latitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
     longitude: Schema.Attribute.Decimal & Schema.Attribute.Required;
+  };
+}
+
+export interface SharedMediaSlide extends Struct.ComponentSchema {
+  collectionName: 'components_shared_media_slides';
+  info: {
+    description: 'Slide pour le carrousel m\u00E9dia';
+    displayName: 'Media Slide';
+  };
+  attributes: {
+    image: Schema.Attribute.Media<'images'> & Schema.Attribute.Required;
+    text: Schema.Attribute.Text;
   };
 }
 
@@ -68,6 +94,18 @@ export interface SharedNavigationLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedSelectOption extends Struct.ComponentSchema {
+  collectionName: 'components_shared_select_options';
+  info: {
+    description: 'Option pour un champ select';
+    displayName: 'Select Option';
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    value: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface SharedSocialLink extends Struct.ComponentSchema {
   collectionName: 'components_shared_social_links';
   info: {
@@ -80,15 +118,33 @@ export interface SharedSocialLink extends Struct.ComponentSchema {
   };
 }
 
+export interface SharedStatItem extends Struct.ComponentSchema {
+  collectionName: 'components_shared_stat_items';
+  info: {
+    description: '\u00C9l\u00E9ment de statistique avec valeur et label';
+    displayName: 'Stat Item';
+  };
+  attributes: {
+    label: Schema.Attribute.String & Schema.Attribute.Required;
+    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    showStar: Schema.Attribute.Boolean & Schema.Attribute.DefaultTo<false>;
+    value: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'agency.team-member': AgencyTeamMember;
       'shared.contact-link': SharedContactLink;
       'shared.faq-item': SharedFaqItem;
+      'shared.feature-item': SharedFeatureItem;
       'shared.location': SharedLocation;
+      'shared.media-slide': SharedMediaSlide;
       'shared.navigation-link': SharedNavigationLink;
+      'shared.select-option': SharedSelectOption;
       'shared.social-link': SharedSocialLink;
+      'shared.stat-item': SharedStatItem;
     }
   }
 }

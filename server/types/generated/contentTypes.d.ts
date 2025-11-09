@@ -918,6 +918,202 @@ export interface ApiMaximizeYourProfitabilityMaximizeYourProfitability
   };
 }
 
+export interface ApiOpenAgencyApplicationFormOpenAgencyApplicationForm
+  extends Struct.SingleTypeSchema {
+  collectionName: 'open_agency_application_forms';
+  info: {
+    description: 'Formulaire de candidature de la page Ouvrir une agence';
+    displayName: 'Open Agency Application Form';
+    pluralName: 'open-agency-application-forms';
+    singularName: 'open-agency-application-form';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    apportOptions: Schema.Attribute.Component<'shared.select-option', true>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Envoyez votre candidature en \u00E9valuant support, zone et dispo, puis on vous rappelle sous 24 h si \u00E7a marche.'>;
+    experienceOptions: Schema.Attribute.Component<'shared.select-option', true>;
+    fieldLabels: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<{
+        apport: 'Apport';
+        commentaires: 'Commentaires';
+        email: 'Email';
+        experience: 'Exp\u00E9rience pro';
+        nomComplet: 'Nom complet';
+        telephone: 'Num\u00E9ro de t\u00E9l\u00E9phone';
+        ville: 'Ville';
+      }>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::open-agency-application-form.open-agency-application-form'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    submitButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'ENVOYER'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Candidature'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOpenAgencyFeaturesOpenAgencyFeatures
+  extends Struct.SingleTypeSchema {
+  collectionName: 'open_agency_features';
+  info: {
+    description: 'Section features de la page Ouvrir une agence';
+    displayName: 'Open Agency Features';
+    pluralName: 'open-agency-features-sections';
+    singularName: 'open-agency-features';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    bannerImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    features: Schema.Attribute.Component<'shared.feature-item', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::open-agency-features.open-agency-features'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Vehicle Features'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOpenAgencyHeroOpenAgencyHero
+  extends Struct.SingleTypeSchema {
+  collectionName: 'open_agency_heros';
+  info: {
+    description: 'Section hero de la page Ouvrir une agence';
+    displayName: 'Open Agency Hero';
+    pluralName: 'open-agency-heros';
+    singularName: 'open-agency-hero';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    backgroundImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::open-agency-hero.open-agency-hero'
+    > &
+      Schema.Attribute.Private;
+    primaryButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#application-form'>;
+    primaryButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Je candidate'>;
+    publishedAt: Schema.Attribute.DateTime;
+    secondaryButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#'>;
+    secondaryButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'T\u00E9l\u00E9charger le dossier PDF'>;
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'M\u00E9thode cl\u00E9 en main, r\u00E9seau premium, retour sur investissement rapide.'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'Ouvrez votre agence <br /> DRIVE en 90 jours'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOpenAgencyMediaSliderOpenAgencyMediaSlider
+  extends Struct.SingleTypeSchema {
+  collectionName: 'open_agency_media_sliders';
+  info: {
+    description: 'Carrousel m\u00E9dia de la page Ouvrir une agence';
+    displayName: 'Open Agency Media Slider';
+    pluralName: 'open-agency-media-sliders';
+    singularName: 'open-agency-media-slider';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::open-agency-media-slider.open-agency-media-slider'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    slides: Schema.Attribute.Component<'shared.media-slide', true>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'iOS 26. Nouveau look. <br /> Nouvelle magie.'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiOpenAgencyShowcaseOpenAgencyShowcase
+  extends Struct.SingleTypeSchema {
+  collectionName: 'open_agency_showcases';
+  info: {
+    description: 'Section showcase de la page Ouvrir une agence';
+    displayName: 'Open Agency Showcase';
+    pluralName: 'open-agency-showcases';
+    singularName: 'open-agency-showcase';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    buttonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'#application-form'>;
+    buttonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Commen\u00E7ons ensemble.'>;
+    carImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.Text &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"En rejoignant le r\u00E9seau DRIVE, vous profitez d'un business model d\u00E9j\u00E0 \u00E9prouv\u00E9 : plateforme catalogue connect\u00E9e, paiement Stripe s\u00E9curis\u00E9 et flux de leads qualifi\u00E9s g\u00E9n\u00E9r\u00E9s en continu. Nous vous accompagnons d\u00E8s la signature, 10 jours d'onboarding intensif, kit marketing complet, hotline d\u00E9di\u00E9e 6 j/7, puis nous suivons vos indicateurs en temps r\u00E9el pour optimiser vos performances. Investissement ma\u00EEtris\u00E9, marge moyenne 18 %, retour sur investissement estim\u00E9 \u00E0 moins de douze mois.">;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::open-agency-showcase.open-agency-showcase'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    stats: Schema.Attribute.Component<'shared.stat-item', true>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiOpenDriveAgencyOpenDriveAgency
   extends Struct.SingleTypeSchema {
   collectionName: 'open_drive_agencies';
@@ -1645,6 +1841,11 @@ declare module '@strapi/strapi' {
       'api::hero.hero': ApiHeroHero;
       'api::key-figures.key-figures': ApiKeyFiguresKeyFigures;
       'api::maximize-your-profitability.maximize-your-profitability': ApiMaximizeYourProfitabilityMaximizeYourProfitability;
+      'api::open-agency-application-form.open-agency-application-form': ApiOpenAgencyApplicationFormOpenAgencyApplicationForm;
+      'api::open-agency-features.open-agency-features': ApiOpenAgencyFeaturesOpenAgencyFeatures;
+      'api::open-agency-hero.open-agency-hero': ApiOpenAgencyHeroOpenAgencyHero;
+      'api::open-agency-media-slider.open-agency-media-slider': ApiOpenAgencyMediaSliderOpenAgencyMediaSlider;
+      'api::open-agency-showcase.open-agency-showcase': ApiOpenAgencyShowcaseOpenAgencyShowcase;
       'api::open-drive-agency.open-drive-agency': ApiOpenDriveAgencyOpenDriveAgency;
       'api::ready-to-take-action.ready-to-take-action': ApiReadyToTakeActionReadyToTakeAction;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
