@@ -1,0 +1,61 @@
+{
+  "kind": "singleType",
+  "collectionName": "secure_intermediations",
+  "info": {
+    "singularName": "secure-intermediation",
+    "pluralName": "secure-intermediations",
+    "displayName": "Secure Intermediation",
+    "description": "Contenu de la section 'Intermédiation sécurisée'"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "infoTitle": {
+      "type": "string",
+      "required": false,
+      "default": "Besoin de plus d'infos ?"
+    },
+    "whatsappButtonText": {
+      "type": "string",
+      "required": false,
+      "default": "Whatsapp Business"
+    },
+    "whatsappButtonLink": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "mainTitle": {
+      "type": "string",
+      "required": false,
+      "default": "Intermédiation sécurisée, pas Leboncoin."
+    },
+    "subtitle": {
+      "type": "text",
+      "required": false,
+      "default": "On ne poste pas une annonce, on orchestre la vente. Tu gardes le contrôle, nous on accélère."
+    },
+    "features": {
+      "type": "json",
+      "required": false,
+      "default": [
+        "Estimation basée sur ventes réelles locales.",
+        "Check visuel guidé en 5 photos.",
+        "Mise en avant réseau + acheteurs qualifiés.",
+        "Acompte Stripe pour bloquer l'acheteur.",
+        "Essai encadré en agence.",
+        "Fonds virés avant remise des clés."
+      ]
+    },
+    "carImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}
+
+

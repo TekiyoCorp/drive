@@ -52,7 +52,8 @@ export interface SharedFeatureItem extends Struct.ComponentSchema {
   };
   attributes: {
     description: Schema.Attribute.Text;
-    icon: Schema.Attribute.Media<'images'>;
+    icon: Schema.Attribute.Enumeration<['1', '2', '3', '4']> &
+      Schema.Attribute.DefaultTo<'1'>;
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     title: Schema.Attribute.String & Schema.Attribute.Required;
   };

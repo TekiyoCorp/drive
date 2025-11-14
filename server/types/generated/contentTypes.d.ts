@@ -1196,6 +1196,134 @@ export interface ApiReadyToTakeActionReadyToTakeAction
   };
 }
 
+export interface ApiSecureIntermediationSecureIntermediation
+  extends Struct.SingleTypeSchema {
+  collectionName: 'secure_intermediations';
+  info: {
+    description: "Contenu de la section 'Interm\u00E9diation s\u00E9curis\u00E9e'";
+    displayName: 'Secure Intermediation';
+    pluralName: 'secure-intermediations';
+    singularName: 'secure-intermediation';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    carImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    features: Schema.Attribute.JSON &
+      Schema.Attribute.DefaultTo<
+        [
+          'Estimation bas\u00E9e sur ventes r\u00E9elles locales.',
+          'Check visuel guid\u00E9 en 5 photos.',
+          'Mise en avant r\u00E9seau + acheteurs qualifi\u00E9s.',
+          "Acompte Stripe pour bloquer l'acheteur.",
+          'Essai encadr\u00E9 en agence.',
+          'Fonds vir\u00E9s avant remise des cl\u00E9s.',
+        ]
+      >;
+    infoTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<"Besoin de plus d'infos ?">;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::secure-intermediation.secure-intermediation'
+    > &
+      Schema.Attribute.Private;
+    mainTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Interm\u00E9diation s\u00E9curis\u00E9e, pas Leboncoin.'>;
+    publishedAt: Schema.Attribute.DateTime;
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'On ne poste pas une annonce, on orchestre la vente. Tu gardes le contr\u00F4le, nous on acc\u00E9l\u00E8re.'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    whatsappButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<''>;
+    whatsappButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Whatsapp Business'>;
+  };
+}
+
+export interface ApiSellMyCarSellMyCar extends Struct.SingleTypeSchema {
+  collectionName: 'sell_my_cars';
+  info: {
+    description: "Contenu de la section 'Vendre ma voiture'";
+    displayName: 'Sell My Car';
+    pluralName: 'sell-my-cars';
+    singularName: 'sell-my-car';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    badgeText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Vendre ma voiture \u2192'>;
+    bottomText: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Nous g\u00E9rons chaque \u00E9tape :\n\u00E9valuation, visibilit\u00E9, r\u00E9servation et transfert d'argent sans frais cach\u00E9s, sans stress.">;
+    carImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    features: Schema.Attribute.Component<'shared.feature-item', true>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::sell-my-car.sell-my-car'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Nous estimons la valeur de votre voiture,\npuis nous s\u00E9curisons l'acheteur pour vous.">;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiSellingFeeSellingFee extends Struct.SingleTypeSchema {
+  collectionName: 'selling_fees';
+  info: {
+    description: "Contenu de la section 'La vente sereine, z\u00E9ro frais'";
+    displayName: 'Selling Fee';
+    pluralName: 'selling-fees';
+    singularName: 'selling-fee';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    appointmentButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<''>;
+    appointmentButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Prendre rendez-vous'>;
+    callbackButtonLink: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<''>;
+    callbackButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'\u00CAtre rappel\u00E9 dans 30 min'>;
+    carImage: Schema.Attribute.Media<'images'>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::selling-fee.selling-fee'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    subtitle: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'97 % de ventes conclues \u00B7 0 \u20AC frais cach\u00E9s \u00B7 12 agences actives'>;
+    title: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'La vente sereine, z\u00E9ro frais.'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
   collectionName: 'testimonials';
   info: {
@@ -1223,6 +1351,55 @@ export interface ApiTestimonialTestimonial extends Struct.CollectionTypeSchema {
     order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     quote: Schema.Attribute.Text & Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
+export interface ApiVehicleConditionVehicleCondition
+  extends Struct.SingleTypeSchema {
+  collectionName: 'vehicle_conditions';
+  info: {
+    description: "Contenu de la section 'Condition du v\u00E9hicule'";
+    displayName: 'Vehicle Condition';
+    pluralName: 'vehicle-conditions';
+    singularName: 'vehicle-condition';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    estimationDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Entrez votre immatriculation et votre kilom\u00E9trage : nous comparons des milliers de ventes r\u00E9centes pour g\u00E9n\u00E9rer une fourchette fiable. Ajoutez 10 photos guid\u00E9es pour affiner. R\u00E9sultat imm\u00E9diat, sans engagement.'>;
+    estimationImage: Schema.Attribute.Media<'images'>;
+    estimationTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Estimation'>;
+    inspectionDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"30 minutes \u00E0 l'agence ou chez vous. Contr\u00F4le de 100 points, v\u00E9rification du VIN et des documents, mini-essai si n\u00E9cessaire. Rapport photo horodat\u00E9 envoy\u00E9 avant d\u00E9cision.">;
+    inspectionImage: Schema.Attribute.Media<'images'>;
+    inspectionTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Inspection'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::vehicle-condition.vehicle-condition'
+    > &
+      Schema.Attribute.Private;
+    offerDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Prix garanti apr\u00E8s inspection, valable 48 h.'>;
+    offerImage: Schema.Attribute.Media<'images'>;
+    offerTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Offre ferme'>;
+    paymentDescription: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Virement instantan\u00E9 confirm\u00E9 avant remise des cl\u00E9s. Nous g\u00E9rons carte grise, certificat de cession et logistique d'enl\u00E8vement. Z\u00E9ro avance, z\u00E9ro paperasse, tout simplement.">;
+    paymentImage: Schema.Attribute.Media<'images'>;
+    paymentTitle: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Paiement & cession'>;
+    publishedAt: Schema.Attribute.DateTime;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1848,7 +2025,11 @@ declare module '@strapi/strapi' {
       'api::open-agency-showcase.open-agency-showcase': ApiOpenAgencyShowcaseOpenAgencyShowcase;
       'api::open-drive-agency.open-drive-agency': ApiOpenDriveAgencyOpenDriveAgency;
       'api::ready-to-take-action.ready-to-take-action': ApiReadyToTakeActionReadyToTakeAction;
+      'api::secure-intermediation.secure-intermediation': ApiSecureIntermediationSecureIntermediation;
+      'api::sell-my-car.sell-my-car': ApiSellMyCarSellMyCar;
+      'api::selling-fee.selling-fee': ApiSellingFeeSellingFee;
       'api::testimonial.testimonial': ApiTestimonialTestimonial;
+      'api::vehicle-condition.vehicle-condition': ApiVehicleConditionVehicleCondition;
       'api::vehicle.vehicle': ApiVehicleVehicle;
       'api::why-drive.why-drive': ApiWhyDriveWhyDrive;
       'plugin::content-releases.release': PluginContentReleasesRelease;

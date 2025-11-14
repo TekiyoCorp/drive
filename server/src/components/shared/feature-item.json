@@ -15,10 +15,10 @@
       "required": false
     },
     "icon": {
-      "type": "media",
-      "multiple": false,
+      "type": "enumeration",
+      "enum": ["1", "2", "3", "4"],
       "required": false,
-      "allowedTypes": ["images"]
+      "default": "1"
     },
     "order": {
       "type": "integer",

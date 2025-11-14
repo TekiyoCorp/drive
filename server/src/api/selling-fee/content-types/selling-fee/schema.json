@@ -1,0 +1,54 @@
+{
+  "kind": "singleType",
+  "collectionName": "selling_fees",
+  "info": {
+    "singularName": "selling-fee",
+    "pluralName": "selling-fees",
+    "displayName": "Selling Fee",
+    "description": "Contenu de la section 'La vente sereine, zéro frais'"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": false,
+      "default": "La vente sereine, zéro frais."
+    },
+    "subtitle": {
+      "type": "text",
+      "required": false,
+      "default": "97 % de ventes conclues · 0 € frais cachés · 12 agences actives"
+    },
+    "appointmentButtonText": {
+      "type": "string",
+      "required": false,
+      "default": "Prendre rendez-vous"
+    },
+    "appointmentButtonLink": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "callbackButtonText": {
+      "type": "string",
+      "required": false,
+      "default": "Être rappelé dans 30 min"
+    },
+    "callbackButtonLink": {
+      "type": "string",
+      "required": false,
+      "default": ""
+    },
+    "carImage": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": ["images"]
+    }
+  }
+}
+
+
