@@ -5,21 +5,60 @@ import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import NeedAssistance from "@/components/main/need-assistance";
-import OurCatalog from "@/components/main/our-catalog";
 import OurTestimonials from "@/components/main/our-testimonials";
+import AgencyVehiclesWrapper from "@/components/franchise/agency-vehicles-wrapper";
+import { getAgencyById } from "@/lib/agencies";
+import { notFound } from "next/navigation";
+import type { Metadata } from "next";
 
-const FranchiseDetailsPage = () => {
+interface FranchiseDetailsPageProps {
+  params: Promise<{ id: string }>;
+}
+
+export async function generateMetadata(
+  props: FranchiseDetailsPageProps
+): Promise<Metadata> {
+  const params = await props.params;
+  const id = Number.parseInt(params.id, 10);
+  const agency = await getAgencyById(id);
+
+  if (!agency) {
+    return {
+      title: "Agence DRIVE",
+    };
+  }
+
+  return {
+    title: `${agency.name} | DRIVE`,
+    description: `${agency.name} - ${agency.displayAddress}`,
+  };
+}
+
+const FranchiseDetailsPage = async ({ params }: FranchiseDetailsPageProps) => {
+  const resolvedParams = await params;
+  const id = Number.parseInt(resolvedParams.id, 10);
+
+  if (!Number.isFinite(id)) {
+    notFound();
+  }
+
+  const agency = await getAgencyById(id);
+
+  if (!agency) {
+    notFound();
+  }
+
   return (
     <div className="w-full relative flex flex-col">
       <SnapElement>
-        <Hero />
+        <Hero agency={agency} />
       </SnapElement>
       <SnapScrollContentBox>
         <div className="flex flex-col w-full min-h-screen md:gap-20 pt-20">
-          <OurTeam />
-          <AboutUs />
+          <OurTeam agency={agency} />
+          <AboutUs agency={agency} />
         </div>
       </SnapScrollContentBox>
       <SnapElement>
@@ -29,10 +68,10 @@ const FranchiseDetailsPage = () => {
         <OurTestimonials />
       </SnapElement>
       <SnapElement>
-        <OurCatalog />
+        <AgencyVehiclesWrapper agencyId={agency.id} />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

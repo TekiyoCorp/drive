@@ -2,7 +2,7 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import "../../styles/map-markers.css";
 import Image from "next/image";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, startTransition } from "react";
 import {
   Circle,
   MapContainer,
@@ -386,7 +386,9 @@ export const AdvancedMap: React.FC<AdvancedMapProps> = ({
 
   // Ensure component only renders on client side
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   // Handle layer toggling

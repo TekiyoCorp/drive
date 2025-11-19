@@ -3,8 +3,14 @@ import Link from "next/link";
 import LiquidGlassButton from "../../common/liquid-glass-button";
 import Container from "../../global/container";
 import Wrapper from "../../global/wrapper";
+import type { AgencySummary } from "@/types/agency";
 
-const Hero = () => {
+interface FranchiseHeroProps {
+  agency: AgencySummary;
+}
+
+const FranchiseHero = ({ agency }: FranchiseHeroProps) => {
+
   return (
     <div className="relative z-0 w-full h-screen p-2.5 md:p-4">
       <Container
@@ -14,8 +20,8 @@ const Hero = () => {
       >
         <div className="w-full h-full bg-gradient-to-t from-black/70 to-transparent absolute top-0 left-0"></div>
         <Image
-          src="/images/franchise/franchise1.png"
-          alt="Hero Image"
+          src={agency.imageUrl}
+          alt={agency.name}
           width={1024}
           height={1024}
           className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
@@ -26,13 +32,13 @@ const Hero = () => {
 
       <Wrapper className="absolute bottom-0 left-0 w-full h-full md:h-fit py-6 z-10 flex items-center md:items-end justify-between !px-12 flex-col md:flex-row max-md:text-center">
         <div className="flex flex-col md:justify-end gap-2">
-          <h3 className="text-2xl font-medium">Drive Paris</h3>
+          <h3 className="text-2xl font-medium">{agency.name}</h3>
           <div>
             <p className="text-lg font-medium text-[#CBCBCB]">
-              12 Rue de la Boulnay, Paris
+              {agency.displayAddress}
             </p>
             <p className="text-lg font-medium text-[#CBCBCB]">
-              +33 6 53 95 53 12
+              {agency.phone}
             </p>
           </div>
           <div className="w-fit max-md:mx-auto">
@@ -72,4 +78,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default FranchiseHero;

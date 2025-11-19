@@ -3,7 +3,7 @@
  * Used to detect specific browsers for applying conditional styles
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 
 /**
  * Detects if the current browser is Safari
@@ -80,7 +80,9 @@ export const useSafariDetection = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   if (typeof window === "undefined" || !isClient) {

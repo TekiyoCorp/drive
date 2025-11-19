@@ -1,10 +1,65 @@
+"use client";
+
 import Image from "next/image";
 import Wrapper from "../global/wrapper";
 import Container from "../global/container";
 import { StarIcon } from "lucide-react";
+import { getImageUrl } from "@/lib/strapi";
 
-const Features = () => {
-  const features = [
+type FeatureRecord = {
+  id: number | string;
+  title: string;
+  description: string;
+  image?: string;
+  alt?: string;
+};
+
+export interface StrapiFeatureItem {
+  id?: number | string;
+  title?: string;
+  description?: string;
+  image?: string | unknown;
+  alt?: string;
+  attributes?: {
+    title?: string;
+    description?: string;
+    image?: string | unknown;
+    alt?: string;
+  };
+}
+
+interface FeaturesProps {
+  features?: StrapiFeatureItem[]; // Accept Strapi format or plain array
+  error?: string | null;
+}
+
+const normalizeFeatures = (items: StrapiFeatureItem[] = []): FeatureRecord[] => {
+  return items.map((item, idx) => {
+    const id = item.id ?? idx;
+    const attributes = item.attributes ?? item;
+
+    const imageField = attributes.image ?? item.image;
+    const image = typeof imageField === "string" 
+      ? imageField 
+      : (imageField && typeof imageField === "object" && ("data" in imageField || "attributes" in imageField))
+        ? getImageUrl(imageField as Parameters<typeof getImageUrl>[0])
+        : "";
+
+    return {
+      id,
+      title: attributes.title,
+      description: attributes.description,
+      image: image || "/images/main/features/feature-1.jpg",
+      alt: attributes.alt || attributes.title || "Feature",
+    } as FeatureRecord;
+  });
+};
+
+const Features = ({ features = [] }: FeaturesProps) => {
+  const records = normalizeFeatures(features);
+
+  // Fallback static content if no data from Strapi
+  const fallback: FeatureRecord[] = [
     {
       id: 1,
       title: "24h",
@@ -28,11 +83,13 @@ const Features = () => {
     },
   ];
 
+  const list = records.length > 0 ? records : fallback;
+
   return (
     <div className="flex flex-col items-center justify-center w-full py-8 md:py-16 lg:py-24 min-h-screen">
       <Wrapper className="px-2.5 lg:px-4 xl:!px-24">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-          {features.map((feature, index) => (
+          {list.map((feature, index) => (
             <Container
               key={feature.id}
               animation="fadeUp"
@@ -41,16 +98,17 @@ const Features = () => {
               <div
                 className={`relative overflow-hidden rounded-4xl flex flex-col justify-end h-[247px] md:h-[550px]`}
               >
-                <Image
-                  src={feature.image}
-                  alt={feature.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover object-center"
-                  priority={index === 0}
-                />
+                {feature.image && (
+                  <Image
+                    src={feature.image as string}
+                    alt={feature.alt || "Feature image"}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover object-center"
+                    priority={index === 0}
+                  />
+                )}
 
-                {/* Gradient overlay for better text readability */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent z-[1]" />
 
                 <div className="z-10 text-white absolute inset-0 flex justify-end flex-col p-6 md:p-8">

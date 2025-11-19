@@ -2,7 +2,7 @@ import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import OurCatalog from "@/components/main/our-catalog";
 import OurTestimonials from "@/components/main/our-testimonials";
 import Hero from "@/components/vendre/hero";
@@ -36,7 +36,7 @@ const SellYourCarPage = () => {
         <OurCatalog />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

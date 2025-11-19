@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/select";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ArrowUpRightIcon } from "lucide-react";
 import { SnapElement } from "@/components/global/scroll-snap";
 
@@ -27,6 +27,77 @@ const ContactUsPage = () => {
     experience: "",
     commentaires: "",
   });
+
+  const [contactLinks, setContactLinks] = useState<Array<{ name: string; link: string; disabled?: boolean }>>([
+    { name: "Mail", link: "mailto:contact@example.com" },
+    { name: "Instagram", link: "https://instagram.com" },
+    { name: "WhatsApp Business", link: "https://wa.me" },
+  ]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchContactLinks = async () => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+        const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
+
+        const response = await fetch(
+          `${baseURL}/api/contact?populate=*`,
+          {
+            headers: {
+              ...(apiToken ? { Authorization: `Bearer ${apiToken}` } : {}),
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          // Silently keep fallbacks on failure
+          return;
+        }
+
+        const result = await response.json();
+        const node = result?.data;
+        const attributes = node ? node.attributes ?? node : null;
+
+        if (!isMounted) return;
+
+        if (attributes?.contactLinks && Array.isArray(attributes.contactLinks) && attributes.contactLinks.length > 0) {
+          interface ContactLinkItem {
+            name?: string;
+            link?: string;
+            disabled?: boolean;
+            attributes?: {
+              name?: string;
+              link?: string;
+              disabled?: boolean;
+            };
+          }
+          
+          const links = attributes.contactLinks
+            .filter((item: ContactLinkItem) => item && !(item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false)))
+            .map((item: ContactLinkItem) => ({
+              name: item.name || item.attributes?.name || "",
+              link: item.link || item.attributes?.link || "#",
+              disabled: item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false),
+            }))
+            .filter((item: { name: string; link: string; disabled: boolean }) => item.name && item.link);
+          
+          if (links.length > 0) {
+            setContactLinks(links);
+          }
+        }
+      } catch {
+        // Ignore errors, fall back to defaults
+      }
+    };
+
+    fetchContactLinks();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({
@@ -59,31 +130,21 @@ const ContactUsPage = () => {
             delay={0.2}
             className="hidden md:flex flex-col gap-6 items-start"
           >
-            <Link
-              href="#"
-              className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-            >
-              <span className="text-lg font-regular">Mail</span>
-              <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-            </Link>
-
-            <Link
-              href="#"
-              target="_blank"
-              className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-            >
-              <span className="text-lg font-regular">Instagram</span>
-              <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-            </Link>
-
-            <Link
-              href="#"
-              target="_blank"
-              className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-            >
-              <span className="text-lg font-regular">WhatsApp Business</span>
-              <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-            </Link>
+            {contactLinks.map((item, index) => {
+              const isExternal = item.link.startsWith("http") || item.link.startsWith("//");
+              return (
+                <Link
+                  key={index}
+                  href={item.link}
+                  target={isExternal ? "_blank" : undefined}
+                  rel={isExternal ? "noopener noreferrer" : undefined}
+                  className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
+                >
+                  <span className="text-lg font-regular">{item.name}</span>
+                  <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
+                </Link>
+              );
+            })}
           </Container>
           <Container
             animation="fadeLeft"
@@ -189,33 +250,21 @@ const ContactUsPage = () => {
                 delay={0.6}
                 className="flex md:hidden flex-col gap-6 items-start"
               >
-                <Link
-                  href="#"
-                  className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-                >
-                  <span className="text-lg font-regular">Mail</span>
-                  <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-                </Link>
-
-                <Link
-                  href="#"
-                  target="_blank"
-                  className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-                >
-                  <span className="text-lg font-regular">Instagram</span>
-                  <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-                </Link>
-
-                <Link
-                  href="#"
-                  target="_blank"
-                  className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
-                >
-                  <span className="text-lg font-regular">
-                    WhatsApp Business
-                  </span>
-                  <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
-                </Link>
+                {contactLinks.map((item, index) => {
+                  const isExternal = item.link.startsWith("http") || item.link.startsWith("//");
+                  return (
+                    <Link
+                      key={index}
+                      href={item.link}
+                      target={isExternal ? "_blank" : undefined}
+                      rel={isExternal ? "noopener noreferrer" : undefined}
+                      className="flex items-center gap-1 text-white hover:text-white/80 transition-all hover:gap-2"
+                    >
+                      <span className="text-lg font-regular">{item.name}</span>
+                      <ArrowUpRightIcon className="size-6 stroke-[1.5px]" />
+                    </Link>
+                  );
+                })}
               </Container>
             </form>
           </Container>

@@ -3,8 +3,12 @@
 import dynamic from "next/dynamic";
 
 // Create a client-side wrapper specifically for the map component
+// Using explicit default export handling to avoid webpack resolution issues
 const LazyFindDriveAgency = dynamic(
-  () => import("@/components/main/find-drive-agency"),
+  () =>
+    import("@/components/main/find-drive-agency").then((module) => ({
+      default: module.default,
+    })),
   {
     loading: () => (
       <div className="min-h-screen flex items-center justify-center">

@@ -2,57 +2,82 @@ import React from "react";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 
-const KeyFigures = () => {
-  const keyFigures = [
-    {
-      number: "62%",
-      description:
-        "62 % des ventes de véhicules d'occasion se font entre particuliers.",
-    },
-    {
-      number: "70%",
-      description:
-        "70 % des acheteurs privilégient un intermédiaire fiable pour sécuriser leur achat et être accompagnés pour éviter les arnaques et simplifier les démarches administratives",
-    },
-    {
-      number: "5,5M",
-      description:
-        "Plus de 5,5 millions de véhicules d'occasion sont vendus chaque année en France avec une demande constante demande.",
-    },
-    {
-      number: "57%",
-      description:
-        "57 % des vendeurs rencontrent des difficultés à négocier et vendre d'un véhicule (manque de temps, perte de la gestion des négociations, des démarches administratives et du manque de confiance des acheteurs",
-    },
-  ];
+interface KeyFigureItem {
+  number: string;
+  description: string;
+}
 
-  const benefits = [
-    {
-      title: "Fiabilité",
-      description: "Sécurisation des transactions",
-    },
-    {
-      title: "Simplicité",
-      description:
-        "Un accompagnement de bout en bout de l'estimation à la vente finale",
-    },
-    {
-      title: "Rentabilité",
-      description: "Nos négociations et un modèle économique avantageux",
-    },
-  ];
+interface BenefitItem {
+  title: string;
+  description: string;
+}
+
+interface KeyFiguresProps {
+  title?: string;
+  keyFigures?: KeyFigureItem[];
+  benefits?: BenefitItem[];
+}
+
+const DEFAULT_TITLE = "QUELQUES CHIFFRES";
+const DEFAULT_KEY_FIGURES: KeyFigureItem[] = [
+  {
+    number: "62%",
+    description:
+      "62 % des ventes de véhicules d'occasion se font entre particuliers.",
+  },
+  {
+    number: "70%",
+    description:
+      "70 % des acheteurs privilégient un intermédiaire fiable pour sécuriser leur achat et être accompagnés pour éviter les arnaques et simplifier les démarches administratives",
+  },
+  {
+    number: "5,5M",
+    description:
+      "Plus de 5,5 millions de véhicules d'occasion sont vendus chaque année en France avec une demande constante demande.",
+  },
+  {
+    number: "57%",
+    description:
+      "57 % des vendeurs rencontrent des difficultés à négocier et vendre d'un véhicule (manque de temps, perte de la gestion des négociations, des démarches administratives et du manque de confiance des acheteurs",
+  },
+];
+
+const DEFAULT_BENEFITS: BenefitItem[] = [
+  {
+    title: "Fiabilité",
+    description: "Sécurisation des transactions",
+  },
+  {
+    title: "Simplicité",
+    description:
+      "Un accompagnement de bout en bout de l'estimation à la vente finale",
+  },
+  {
+    title: "Rentabilité",
+    description: "Nos négociations et un modèle économique avantageux",
+  },
+];
+
+const KeyFigures = ({ title, keyFigures, benefits }: KeyFiguresProps) => {
+  const resolvedTitle = title || DEFAULT_TITLE;
+  const resolvedKeyFigures = (Array.isArray(keyFigures) && keyFigures.length > 0)
+    ? keyFigures
+    : DEFAULT_KEY_FIGURES;
+  const resolvedBenefits = (Array.isArray(benefits) && benefits.length > 0)
+    ? benefits
+    : DEFAULT_BENEFITS;
 
   return (
     <div className="w-full min-h-screen h-full text-white py-16 flex items-center justify-center">
       <Wrapper className="h-full flex flex-col">
         <Container animation="scaleUp" delay={1}>
           <h1 className="text-3xl md:text-4xl font-medium mb-10 md:mb-16 text-center">
-            QUELQUES CHIFFRES
+            {resolvedTitle}
           </h1>
         </Container>
 
         <div className="flex flex-col md:flex-row items-start justify-center mb-14 md:mb-28 max-md:gap-5">
-          {keyFigures.map((figure, index) => (
+          {resolvedKeyFigures.map((figure, index) => (
             <React.Fragment key={index}>
               <Container
                 animation="fadeUp"
@@ -67,7 +92,7 @@ const KeyFigures = () => {
                 </p>
               </Container>
 
-              {index < keyFigures.length - 1 && (
+              {index < resolvedKeyFigures.length - 1 && (
                 <Container
                   animation="scaleUp"
                   delay={3 + index * 0.5}
@@ -87,7 +112,7 @@ const KeyFigures = () => {
         </Container>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 md:gap-32 max-w-4xl mx-auto">
-          {benefits.map((benefit, index) => (
+          {resolvedBenefits.map((benefit, index) => (
             <Container
               key={index}
               animation={index % 2 === 0 ? "fadeLeft" : "fadeRight"}

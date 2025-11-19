@@ -1,41 +1,59 @@
-import CatalogueCard from "@/components/catalogue/catalogue-card";
-import CatalogueFilter from "@/components/catalogue/catalogue-filter";
+import CatalogueContent from "@/components/catalogue/catalogue-content";
 import {
   SnapElement,
   SnapScrollContentBox,
 } from "@/components/global/scroll-snap";
-import Wrapper from "@/components/global/wrapper";
-import FAQs from "@/components/main/faqs";
+import FAQsWrapper from "@/components/main/faqs-wrapper";
 import OurTestimonials from "@/components/main/our-testimonials";
+import { getAgencies } from "@/lib/agencies";
+import { fetchAllInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
+import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
 
-const CataloguePage = () => {
+const CataloguePage = async () => {
+  let vehicles: CatalogueCardData[] = [];
+  let error: string | null = null;
+
+  try {
+    // Get all agencies
+    const agencies = await getAgencies();
+    const agencyIds = agencies.map(agency => agency.id);
+
+    if (agencyIds.length === 0) {
+      // Fallback to static data if no agencies
+      vehicles = OUR_CATALOGUES;
+    } else {
+      // Fetch vehicles from all agencies
+      const allVehicles = await fetchAllInfinitiaVehicles(agencyIds, {
+        pageSize: 100, // Fetch more vehicles per agency
+        revalidateSeconds: 300, // Revalidate every 5 minutes
+      });
+
+      // Filter vehicles that are for sale and transform them
+      const vehiclesForSale = allVehicles
+        .filter(vehicle => vehicle.status === 'FOR_SALE')
+        .map(transformInfinitiaVehicleToCatalogueCard);
+
+      vehicles = vehiclesForSale.length > 0 ? vehiclesForSale : OUR_CATALOGUES;
+    }
+  } catch (err) {
+    console.error('Error fetching vehicles from Infinitia API:', err);
+    error = err instanceof Error ? err.message : 'Failed to load vehicles';
+    // Fallback to static data if API fails
+    vehicles = OUR_CATALOGUES;
+  }
+
   return (
     <div className="w-full relative flex flex-col">
       <SnapScrollContentBox>
-        <Wrapper className="pt-24 md:pt-32 w-full px-2.5 md:px-8 lg:px-24 flex flex-col gap-4 md:gap-8">
-          <CatalogueFilter />
-
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-6">
-            {OUR_CATALOGUES.map((card, idx) => (
-              <CatalogueCard
-                key={idx}
-                data={card}
-                animation="fadeUp"
-                delay={0.3 + idx * 0.5}
-                priority={idx === 0}
-                className="snap-start max-w-full md:h-[500px] md:rounded-4xl"
-              />
-            ))}
-          </div>
-        </Wrapper>
+        <CatalogueContent vehicles={vehicles} error={error} />
       </SnapScrollContentBox>
 
       <SnapElement>
         <OurTestimonials />
       </SnapElement>
       <SnapScrollContentBox>
-        <FAQs />
+        <FAQsWrapper />
       </SnapScrollContentBox>
     </div>
   );

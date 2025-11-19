@@ -3,18 +3,72 @@
 import { ArrowRight } from "lucide-react";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Wrapper from "../global/wrapper";
+import { getImageUrl } from "@/lib/strapi";
 
-const Hero = () => {
+interface HeroData {
+  id?: number;
+  attributes?: {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: unknown;
+    ctaText?: string;
+    ctaLink?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
+  };
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: unknown;
+  ctaText?: string;
+  ctaLink?: string;
+  sellButtonText?: string;
+  buyButtonText?: string;
+}
+
+interface HeroProps {
+  heroData?: HeroData | null;
+  error?: string | null;
+}
+
+const Hero = ({ heroData }: HeroProps) => {
   return (
     <div className="hero-container relative z-0 w-full !p-2.5 md:!p-4 min-h-screen h-full">
       {/* Critical LCP image - optimized for immediate loading */}
       <div className="-z-10 rounded-3xl overflow-hidden">
         <picture>
-          <source srcSet="/images/main/hero.avif" type="image/avif" />
-          <source srcSet="/images/main/hero.webp" type="image/webp" />
           <img
-            src="/images/main/hero.webp"
-            alt="Hero Image - Drive Premium Car Platform"
+            src={heroData?.backgroundImage || heroData?.attributes?.backgroundImage ? (() => {
+              const imageData = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
+              if (imageData && typeof imageData === "object" && ("data" in imageData || "attributes" in imageData)) {
+                const imageUrl = getImageUrl(imageData as Parameters<typeof getImageUrl>[0]);
+                return imageUrl || "/images/main/hero.webp";
+              }
+              return "/images/main/hero.webp";
+            })() : "/images/main/hero.webp"}
+            alt={(() => {
+              const bgImage = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
+              if (bgImage && typeof bgImage === "object") {
+                // Check for direct alternativeText
+                if ("alternativeText" in bgImage && typeof bgImage.alternativeText === "string") {
+                  return bgImage.alternativeText;
+                }
+                // Check for nested data.attributes.alternativeText
+                if ("data" in bgImage && bgImage.data && typeof bgImage.data === "object") {
+                  if ("attributes" in bgImage.data && bgImage.data.attributes && typeof bgImage.data.attributes === "object") {
+                    const attrs = bgImage.data.attributes as { alternativeText?: string };
+                    if (attrs.alternativeText) return attrs.alternativeText;
+                  }
+                }
+                // Check for attributes.alternativeText (alternative structure)
+                if ("attributes" in bgImage && bgImage.attributes && typeof bgImage.attributes === "object") {
+                  const attrs = bgImage.attributes as { alternativeText?: string };
+                  if (attrs.alternativeText) return attrs.alternativeText;
+                }
+              }
+              return "Hero Image - Drive Premium Car Platform";
+            })()}
             className="w-full object-cover h-full min-h-screen object-center rounded-3xl"
             style={{
               transform: "translateZ(0)",
@@ -30,14 +84,9 @@ const Hero = () => {
               target.setAttribute("data-lcp-loaded", "true");
             }}
             onError={(e) => {
-              // Fallback to WebP if AVIF fails
+              // Fallback to default image if Strapi image fails
               const target = e.target as HTMLImageElement;
-              if (target.src.includes("avif")) {
-                target.src = "/images/main/hero.webp";
-              } else {
-                // Final fallback to JPEG
-                target.src = "/images/main/hero.jpg";
-              }
+              target.src = "/images/main/hero.webp";
             }}
           />
         </picture>
@@ -53,7 +102,7 @@ const Hero = () => {
               willChange: "auto",
             }}
           >
-            La confiance au volant.
+            {heroData?.title || heroData?.attributes?.title || "La confiance au volant."}
           </h1>
 
           {/* LCP supporting text - immediate render */}
@@ -65,8 +114,7 @@ const Hero = () => {
               transform: "translateZ(0)",
             }}
           >
-            Simplifiez la vente ou l&apos;achat de votre voiture premium grâce à
-            notre réseau de courtiers certifiés.
+            {heroData?.subtitle || heroData?.attributes?.subtitle || "Simplifiez la vente ou l'achat de votre voiture premium grâce à notre réseau de courtiers certifiés."}
           </p>
 
           {/* Critical action buttons - defer animation for faster LCP */}
@@ -74,14 +122,16 @@ const Hero = () => {
             <LiquidGlassButton
               className="btn-primary px-8 md:px-12"
               style={{ willChange: "auto" }}
+              onClick={() => window.location.href = heroData?.ctaLink || heroData?.attributes?.ctaLink || "/vendre"}
             >
-              <span>Vendre</span>
+              <span>{heroData?.sellButtonText || heroData?.attributes?.ctaText || "Vendre"}</span>
             </LiquidGlassButton>
             <LiquidGlassButton
               className="btn-primary px-8 md:px-12"
               style={{ willChange: "auto" }}
+              onClick={() => window.location.href = "/catalogue"}
             >
-              <span>Acheter</span>
+              <span>{heroData?.buyButtonText || "Acheter"}</span>
             </LiquidGlassButton>
           </div>
 

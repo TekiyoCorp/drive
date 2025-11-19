@@ -11,10 +11,37 @@ const nextConfig: NextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    remotePatterns: [
+      // Localhost for development (Strapi)
+      {
+        protocol: "http" as const,
+        hostname: "localhost",
+        pathname: "/uploads/**",
+      },
+      // Strapi images
+      ...(process.env.NEXT_PUBLIC_STRAPI_URL
+        ? [
+            {
+              protocol: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).protocol.replace(
+                ":",
+                ""
+              ) as "http" | "https",
+              hostname: new URL(process.env.NEXT_PUBLIC_STRAPI_URL).hostname,
+            },
+          ]
+        : []),
+      // Infinitia API images
+      {
+        protocol: "https" as const,
+        hostname: "api.infinitia.fr",
+        pathname: "/car/documents/**",
+      },
+    ],
   },
 
   // Enhanced bundle optimization
   experimental: {
+    esmExternals: 'loose', // Allow ESM packages to be handled more leniently
     optimizePackageImports: [
       "lucide-react",
       "framer-motion",
@@ -37,7 +64,7 @@ const nextConfig: NextConfig = {
   },
 
   // External packages for server components (fixed for Next.js 15)
-  serverExternalPackages: ["leaflet", "react-leaflet", "react-leaflet-cluster"],
+  serverExternalPackages: ["leaflet", "react-leaflet", "react-leaflet-cluster", "@strapi/client"],
 
   // Modern browser targets and enhanced compiler optimizations
   compiler: {
@@ -53,6 +80,19 @@ const nextConfig: NextConfig = {
 
   // Enhanced webpack configuration for better minification
   webpack: (config, { dev, isServer }) => {
+    // Ensure leaflet and react-leaflet are properly resolved for client-side dynamic imports
+    if (!isServer) {
+      // Don't externalize leaflet for client-side bundles
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals = config.externals.filter(
+          (external: unknown) =>
+            typeof external !== "string" ||
+            !["leaflet", "react-leaflet", "react-leaflet-cluster"].includes(external)
+        );
+      }
+    }
+
     // Disable polyfills for modern browsers to reduce bundle size
     config.resolve.fallback = {
       ...config.resolve.fallback,
@@ -73,7 +113,7 @@ const nextConfig: NextConfig = {
       process: false,
     };
 
-    // Production optimizations only
+    // Production optimizations only - simplified for development
     if (!dev && !isServer) {
       // Target modern browsers to reduce polyfills
       config.target = ["web", "es2020"];
@@ -168,6 +208,16 @@ const nextConfig: NextConfig = {
               process.env.NODE_ENV === "production"
                 ? "public, max-age=31536000, immutable"
                 : "no-cache, no-store, must-revalidate",
+          },
+        ],
+      },
+      // Ensure proper MIME types for static assets
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=31536000, immutable",
           },
         ],
       },

@@ -5,7 +5,7 @@ import { HeartIcon, SearchIcon, VideoIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import LiquidGlass from "../common/liquid-glass";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import SpotlightSearch from "../common/spotlight-search";
@@ -14,23 +14,108 @@ import { Button } from "../ui/button";
 import { NAV_LINKS } from "@/constants/links";
 
 const Navbar = () => {
+  interface NavigationLink {
+    name?: string;
+    link?: string;
+    attributes?: {
+      name?: string;
+      link?: string;
+    };
+  }
+
+  interface HeaderContent {
+    navigationLinks?: NavigationLink[];
+    openAgencyButtonText?: string;
+    openAgencyButtonLink?: string;
+    appointmentButtonText?: string;
+  }
+
   const [isClient, setIsClient] = useState(false);
   const [open, setOpen] = useState(false);
+  const [content, setContent] = useState<HeaderContent | null>(null);
   const pathname = usePathname();
 
   // Handle hydration mismatch for pathname-based styling
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchContent = async () => {
+      try {
+        const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+        const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
+
+        const response = await fetch(
+          `${baseURL}/api/header?populate=*`,
+          {
+            headers: {
+              ...(apiToken ? { Authorization: `Bearer ${apiToken}` } : {}),
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          return;
+        }
+
+        const result = await response.json();
+        const node = result?.data;
+        const attributes = node ? node.attributes ?? node : null;
+
+        if (!isMounted) return;
+
+        setContent(attributes);
+      } catch {
+        // Ignore errors, fall back to defaults
+      }
+    };
+
+    fetchContent();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // Prevent hydration mismatch by ensuring consistent rendering
-  const isHomePage = isClient ? pathname === "/" : true; // Default to home page styling for SSR
+  const isHomePage = isClient ? pathname === "/" : true;
+
+  // Parse navigation links - handle different Strapi data structures
+  let navigationLinks: { name: string; link: string }[] = NAV_LINKS;
+  if (content?.navigationLinks) {
+    if (Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0) {
+      const mappedLinks = content.navigationLinks
+        .map((link: NavigationLink) => {
+          if (link.name && link.link) {
+            return { name: link.name, link: link.link };
+          }
+          if (link.attributes?.name && link.attributes?.link) {
+            return { name: link.attributes.name, link: link.attributes.link };
+          }
+          return null;
+        })
+        .filter((link): link is { name: string; link: string } => link !== null && typeof link.name === "string" && typeof link.link === "string");
+      
+      if (mappedLinks.length > 0) {
+        navigationLinks = mappedLinks;
+      }
+    }
+  }
+
+  const openAgencyButtonText = content?.openAgencyButtonText ?? "Ouvrir une agence";
+  const openAgencyButtonLink = content?.openAgencyButtonLink ?? "/open-agency";
+  const appointmentButtonText = content?.appointmentButtonText ?? "Prendre rendez-vous";
 
   return (
-    <header className="relative top-24 inset-x-0 z-50 w-full h-16 max-xl:hidden">
+    <header className="relative top-24 inset-x-0 z-50 w-full h-16 hidden xl:block pointer-events-none">
       <Wrapper
         className={cn(
-          "flex items-center justify-between gap-2",
+          "flex items-center justify-between gap-2 pointer-events-auto",
           isHomePage ? "px-8 lg:px-16" : "px-8 lg:px-24"
         )}
       >
@@ -65,7 +150,7 @@ const Navbar = () => {
               </Link>
               {/* </motion.div> */}
 
-              {NAV_LINKS.map((link, index) => (
+              {navigationLinks.map((link: { name: string; link: string }, index: number) => (
                 // <Container animation="fadeDown" delay={0.1 * index}>
                 <Link
                   key={index}
@@ -89,7 +174,7 @@ const Navbar = () => {
           >
             {isClient && pathname === "/vendre" && (
               <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden bg-white text-black">
-                Prendre rendez-vous <VideoIcon className="fill-black size-5" />
+                {appointmentButtonText} <VideoIcon className="fill-black size-5" />
               </Button>
             )}
 
@@ -103,9 +188,9 @@ const Navbar = () => {
               <SearchIcon className="size-5" />
             </LiquidGlassButton>
             <SpotlightSearch open={open} setOpen={setOpen} />
-            <Link href="/open-agency">
+            <Link href={openAgencyButtonLink}>
               <LiquidGlassButton className="px-8 text-base h-[45px]">
-                <span>Ouvrir une agence</span>
+                <span>{openAgencyButtonText}</span>
               </LiquidGlassButton>
             </Link>
           </div>
