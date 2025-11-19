@@ -77,7 +77,7 @@ const NeedAssistance = () => {
                 </p>
                 <ChatBubble variant="sent">
                   <ChatBubbleMessage variant="sent">
-                    {userMessage.split('\n').map((line, idx) => (
+                    {userMessage.split('\n').map((line: string, idx: number) => (
                       <span key={idx}>
                         {line}
                         {idx < userMessage.split('\n').length - 1 && <br />}
@@ -94,7 +94,7 @@ const NeedAssistance = () => {
                 </p>
                 <ChatBubble variant="received">
                   <ChatBubbleMessage>
-                    {driveMessage.split('\n').map((line, idx) => (
+                    {driveMessage.split('\n').map((line: string, idx: number) => (
                       <span key={idx}>
                         {line}
                         {idx < driveMessage.split('\n').length - 1 && <br />}

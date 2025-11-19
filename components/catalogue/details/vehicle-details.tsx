@@ -95,7 +95,7 @@ const VehicleDetails = ({ vehicle }: VehicleDetailsProps) => {
   // Build history section
   const historyContent: React.ReactNode[] = [];
   
-  if (vehicle.data?.nb_proprietaires) {
+  if (vehicle.data?.nb_proprietaires && typeof vehicle.data.nb_proprietaires === 'number') {
     const nbProprietaires = vehicle.data.nb_proprietaires;
     historyContent.push(
       <div key="proprietaires" className="flex max-md:flex-col max-md:mb-2">

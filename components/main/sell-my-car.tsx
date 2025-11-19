@@ -222,7 +222,7 @@ const SellMyCar = () => {
                     )}
                   >
                     <Image
-                      src={feature.icon}
+                      src={feature.icon || getLocalIconPath(null, index)}
                       alt=""
                       width={25}
                       height={25}

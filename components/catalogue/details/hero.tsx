@@ -87,6 +87,14 @@ const Hero = ({ vehicle }: HeroProps) => {
       ? transmissionMap[vehicle.data.boite_vitesse as string] || String(vehicle.data.boite_vitesse)
       : 'Non renseigné';
 
+  const puissance = vehicle.data?.puissance && typeof vehicle.data.puissance !== 'undefined'
+    ? String(vehicle.data.puissance)
+    : null;
+
+  const nbProprietaires = vehicle.data?.nb_proprietaires && typeof vehicle.data.nb_proprietaires !== 'undefined'
+    ? vehicle.data.nb_proprietaires
+    : null;
+
   const title = vehicle.brand || 'Marque non renseignée';
   const subtitle = vehicle.model || 'Modèle non renseigné';
 
@@ -151,16 +159,16 @@ const Hero = ({ vehicle }: HeroProps) => {
               <span className="text-lg font-medium">{formattedYear}</span>
             </div>
 
-            {vehicle.data?.puissance && (
+            {puissance && (
               <div className="flex items-center gap-2">
-                <span className="text-lg font-medium">{vehicle.data.puissance} ch</span>
+                <span className="text-lg font-medium">{puissance} ch</span>
               </div>
             )}
 
-            {vehicle.data?.nb_proprietaires && (
+            {nbProprietaires !== null && (
               <div className="flex items-center gap-2">
                 <span className="text-lg font-medium">
-                  {vehicle.data.nb_proprietaires === 1 ? '1' : vehicle.data.nb_proprietaires}<sup>{vehicle.data.nb_proprietaires === 1 ? 'er' : 'e'}</sup> proprio
+                  {nbProprietaires === 1 ? '1' : String(nbProprietaires)}<sup>{nbProprietaires === 1 ? 'er' : 'e'}</sup> proprio
                 </span>
               </div>
             )}
@@ -289,21 +297,21 @@ const Hero = ({ vehicle }: HeroProps) => {
                   <span className="text-lg font-medium">{formattedYear}</span>
                 </div>
 
-                {vehicle.data?.puissance && (
+                {puissance && (
                   <>
                     <div className="w-px h-4 bg-white/40"></div>
                     <div className="flex items-center gap-2">
-                      <span className="text-lg font-medium">{vehicle.data.puissance} ch</span>
+                      <span className="text-lg font-medium">{puissance} ch</span>
                     </div>
                   </>
                 )}
 
-                {vehicle.data?.nb_proprietaires && (
+                {nbProprietaires !== null && (
                   <>
                     <div className="w-px h-4 bg-white/40"></div>
                     <div className="flex items-center gap-2">
                       <span className="text-lg font-medium">
-                        {vehicle.data.nb_proprietaires === 1 ? '1' : vehicle.data.nb_proprietaires}<sup>{vehicle.data.nb_proprietaires === 1 ? 'er' : 'e'}</sup> proprio
+                        {nbProprietaires === 1 ? '1' : String(nbProprietaires)}<sup>{nbProprietaires === 1 ? 'er' : 'e'}</sup> proprio
                       </span>
                     </div>
                   </>
