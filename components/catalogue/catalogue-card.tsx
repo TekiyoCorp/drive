@@ -46,7 +46,7 @@ const CatalogueCard = ({
   // Extract data based on type
   const getCardData = () => {
     if (isVehicle(data)) {
-      const images = getImageUrls(data.attributes.images);
+      const images = data.attributes.images ? getImageUrls(data.attributes.images) : [];
       return {
         id: data.id,
         title: data.attributes.title,
