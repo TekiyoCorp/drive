@@ -7,20 +7,35 @@ import { MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 import LiquidGlass from "../common/liquid-glass";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 
+interface NavigationLink {
+  name?: string;
+  link?: string;
+  attributes?: {
+    name?: string;
+    link?: string;
+  };
+}
+
+interface HeaderContent {
+  navigationLinks?: NavigationLink[];
+}
+
 const MobileNavbar = () => {
   const [toggleMenu, setToggleMenu] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<HeaderContent | null>(null);
   const pathname = usePathname();
 
   // Handle hydration mismatch for pathname-based styling
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   useEffect(() => {
@@ -65,7 +80,9 @@ const MobileNavbar = () => {
 
   // Close menu when navigating to a new page
   useEffect(() => {
-    setToggleMenu(false);
+    startTransition(() => {
+      setToggleMenu(false);
+    });
   }, [pathname]);
 
   const isHomePage = isClient ? pathname === "/" : false;
@@ -75,7 +92,7 @@ const MobileNavbar = () => {
   if (content?.navigationLinks) {
     if (Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0) {
       navigationLinks = content.navigationLinks
-        .map((link: any) => {
+        .map((link: NavigationLink) => {
           if (link.name && link.link) {
             return { name: link.name, link: link.link };
           }
@@ -84,7 +101,7 @@ const MobileNavbar = () => {
           }
           return { name: link.name || link.attributes?.name, link: link.link || link.attributes?.link };
         })
-        .filter((link: any) => link && link.name && link.link);
+        .filter((link) => link && link.name && link.link);
       
       if (navigationLinks.length === 0) {
         navigationLinks = NAV_LINKS;

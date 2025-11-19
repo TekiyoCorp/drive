@@ -1,5 +1,6 @@
 import OurCatalog from "@/components/main/our-catalog";
 import { fetchInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
+import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
 
 interface AgencyVehiclesWrapperProps {
   agencyId: number;
@@ -7,7 +8,7 @@ interface AgencyVehiclesWrapperProps {
 
 // Server Component wrapper that fetches vehicles from Infinitia API and passes them to the client component
 export default async function AgencyVehiclesWrapper({ agencyId }: AgencyVehiclesWrapperProps) {
-  let featuredVehicles: any[] = [];
+  let featuredVehicles: CatalogueCardData[] = [];
   let error: string | null = null;
 
   try {

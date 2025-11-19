@@ -10,16 +10,30 @@ type FeatureRecord = {
   id: number | string;
   title: string;
   description: string;
-  image?: string | any;
+  image?: string;
   alt?: string;
 };
 
+interface StrapiFeatureItem {
+  id?: number | string;
+  title?: string;
+  description?: string;
+  image?: string | unknown;
+  alt?: string;
+  attributes?: {
+    title?: string;
+    description?: string;
+    image?: string | unknown;
+    alt?: string;
+  };
+}
+
 interface FeaturesProps {
-  features?: any[]; // Accept Strapi format or plain array
+  features?: StrapiFeatureItem[]; // Accept Strapi format or plain array
   error?: string | null;
 }
 
-const normalizeFeatures = (items: any[] = []): FeatureRecord[] => {
+const normalizeFeatures = (items: StrapiFeatureItem[] = []): FeatureRecord[] => {
   return items.map((item, idx) => {
     const id = item.id ?? idx;
     const attributes = item.attributes ?? item;

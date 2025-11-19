@@ -8,9 +8,10 @@ import OurTestimonials from "@/components/main/our-testimonials";
 import { getAgencies } from "@/lib/agencies";
 import { fetchAllInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
+import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
 
 const CataloguePage = async () => {
-  let vehicles: any[] = [];
+  let vehicles: CatalogueCardData[] = [];
   let error: string | null = null;
 
   try {

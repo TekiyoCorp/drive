@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { LiquidGlass } from "@liquidglass/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import { useSafariDetection } from "@/lib/browser-detection";
 
 interface LiquidGlassBadgeProps {
@@ -16,7 +16,9 @@ const LiquidGlassBadge = ({ children, className }: LiquidGlassBadgeProps) => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   return (

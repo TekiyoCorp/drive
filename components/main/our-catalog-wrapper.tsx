@@ -2,10 +2,11 @@ import { OUR_CATALOGUES } from "@/constants/catalogues";
 import OurCatalog from "./our-catalog";
 import { getAgencies } from "@/lib/agencies";
 import { fetchAllInfinitiaVehicles, transformInfinitiaVehicleToCatalogueCard } from "@/lib/infinitia";
+import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
 
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function OurCatalogWrapper() {
-  let featuredVehicles: any[] = [];
+  let featuredVehicles: CatalogueCardData[] = [];
   let error: string | null = null;
 
   try {

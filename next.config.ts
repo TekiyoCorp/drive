@@ -12,6 +12,12 @@ const nextConfig: NextConfig = {
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
     remotePatterns: [
+      // Localhost for development (Strapi)
+      {
+        protocol: "http" as const,
+        hostname: "localhost",
+        pathname: "/uploads/**",
+      },
       // Strapi images
       ...(process.env.NEXT_PUBLIC_STRAPI_URL
         ? [
@@ -74,6 +80,19 @@ const nextConfig: NextConfig = {
 
   // Enhanced webpack configuration for better minification
   webpack: (config, { dev, isServer }) => {
+    // Ensure leaflet and react-leaflet are properly resolved for client-side dynamic imports
+    if (!isServer) {
+      // Don't externalize leaflet for client-side bundles
+      config.externals = config.externals || [];
+      if (Array.isArray(config.externals)) {
+        config.externals = config.externals.filter(
+          (external) =>
+            typeof external !== "string" ||
+            !["leaflet", "react-leaflet", "react-leaflet-cluster"].includes(external)
+        );
+      }
+    }
+
     // Disable polyfills for modern browsers to reduce bundle size
     config.resolve.fallback = {
       ...config.resolve.fallback,

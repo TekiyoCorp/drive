@@ -8,8 +8,22 @@ import { Button } from "../ui/button";
 import { useEffect, useState } from "react";
 import { getImageUrl } from "@/lib/strapi";
 
+interface Stat {
+  label: string;
+  value: string;
+  showStar?: boolean;
+}
+
+interface VehicleShowcaseContent {
+  description?: string;
+  buttonText?: string;
+  buttonLink?: string;
+  carImage?: unknown;
+  stats?: Stat[];
+}
+
 const VehicleShowcase = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<VehicleShowcaseContent | null>(null);
   const [carImageUrl, setCarImageUrl] = useState<string>("/images/main/car.svg");
 
   useEffect(() => {
@@ -114,7 +128,7 @@ const VehicleShowcase = () => {
           </Container>
 
           <div className="flex flex-wrap sm:justify-center sm:items-center gap-8 mb-8">
-            {stats.map((stat: any, index: number) => (
+            {stats.map((stat: Stat, index: number) => (
               <Container 
                 key={index}
                 animation={index === 0 ? "fadeLeft" : index === 1 ? "fadeUp" : "fadeRight"} 

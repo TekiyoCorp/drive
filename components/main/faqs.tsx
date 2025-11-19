@@ -13,8 +13,22 @@ import {
 import { FAQ } from "@/constants/faqs";
 import Wrapper from "../global/wrapper";
 
+interface FAQItem {
+  id?: string | number;
+  title?: string;
+  content?: string;
+  question?: string;
+  answer?: string;
+  attributes?: {
+    question?: string;
+    answer?: string;
+    title?: string;
+    content?: string;
+  };
+}
+
 interface FAQsProps {
-  strapiFAQs?: any[];
+  strapiFAQs?: FAQItem[];
   error?: string | null;
 }
 

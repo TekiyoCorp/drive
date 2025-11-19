@@ -9,7 +9,6 @@ import Hero from "@/components/open-agency/hero";
 import MediaCardSlider from "@/components/open-agency/media-card-slider";
 import VehicleFeatures from "@/components/open-agency/vehicle-features";
 import VehicleShowcase from "@/components/open-agency/vehicle-showcase";
-import { MEDIA_CARD_SLIDER } from "@/constants/media-card-slider";
 
 const OpenAgencyPage = () => {
   return (

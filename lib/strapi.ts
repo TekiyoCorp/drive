@@ -1,23 +1,48 @@
+// Types for Strapi client
+interface StrapiClientParams {
+  populate?: string | string[];
+  filters?: Record<string, unknown>;
+  sort?: string | string[];
+  pagination?: {
+    page?: number;
+    pageSize?: number;
+  };
+}
+
+interface StrapiCollection {
+  find: (params?: StrapiClientParams) => Promise<{ data: unknown[] }>;
+  findOne: (id: string | number, params?: StrapiClientParams) => Promise<{ data: unknown | null }>;
+}
+
+interface StrapiSingle {
+  find: (params?: StrapiClientParams) => Promise<{ data: unknown | null }>;
+}
+
+interface StrapiClient {
+  collection: (resource: string) => StrapiCollection;
+  single: (resource: string) => StrapiSingle;
+}
+
 // Initialize Strapi client only on client side to prevent SSR issues
-let strapiClient: any = null;
+let strapiClient: StrapiClient | null = null;
 
 // Lazy load Strapi client with better error handling
-const getStrapiClient = async () => {
+const getStrapiClient = async (): Promise<StrapiClient> => {
   if (typeof window === 'undefined') {
     // Return a mock client for SSR that provides better error messages
     return {
       collection: (resource: string) => ({
-        find: async (params?: any) => {
+        find: async (params?: StrapiClientParams) => {
           console.warn(`SSR: Mock collection.find called for ${resource}`, params);
           return { data: [] };
         },
-        findOne: async (id: any, params?: any) => {
+        findOne: async (id: string | number, params?: StrapiClientParams) => {
           console.warn(`SSR: Mock collection.findOne called for ${resource}`, id, params);
           return { data: null };
         },
       }),
       single: (resource: string) => ({
-        find: async (params?: any) => {
+        find: async (params?: StrapiClientParams) => {
           console.warn(`SSR: Mock single.find called for ${resource}`, params);
           return { data: null };
         },
@@ -79,7 +104,7 @@ export interface StrapiResponse<T> {
 
 export interface StrapiEntity {
   id: number;
-  attributes: Record<string, any>;
+  attributes: Record<string, unknown>;
 }
 
 // Vehicle types based on schema
@@ -102,7 +127,7 @@ export interface Vehicle {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -110,15 +135,15 @@ export interface Vehicle {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
       }>;
     };
     description?: string;
-    features?: any;
-    specifications?: any;
+    features?: Record<string, unknown>;
+    specifications?: Record<string, unknown>;
     status: 'available' | 'sold' | 'reserved';
     featured: boolean;
     order: number;
@@ -144,7 +169,7 @@ export interface Testimonial {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -152,7 +177,7 @@ export interface Testimonial {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -199,7 +224,7 @@ export interface Hero {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -207,7 +232,7 @@ export interface Hero {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -236,7 +261,7 @@ export interface GlobalContent {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -244,14 +269,14 @@ export interface GlobalContent {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
       } | null;
     };
     footerText: string;
-    socialLinks: any;
+    socialLinks?: Record<string, unknown>;
     createdAt: string;
     updatedAt: string;
     publishedAt: string;
@@ -271,7 +296,7 @@ export interface Header {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -279,7 +304,7 @@ export interface Header {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -294,7 +319,7 @@ export interface Header {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -302,7 +327,7 @@ export interface Header {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -335,7 +360,7 @@ export interface Footer {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -343,7 +368,7 @@ export interface Footer {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -380,7 +405,7 @@ export interface Footer {
           caption?: string;
           width: number;
           height: number;
-          formats: any;
+          formats?: StrapiImageFormat;
           hash: string;
           ext: string;
           mime: string;
@@ -388,7 +413,7 @@ export interface Footer {
           url: string;
           previewUrl?: string;
           provider: string;
-          provider_metadata?: any;
+          provider_metadata?: Record<string, unknown>;
           createdAt: string;
           updatedAt: string;
         };
@@ -404,7 +429,7 @@ export interface Footer {
 // Query parameters for filtering and sorting
 export interface QueryParams {
   populate?: string | string[];
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   sort?: string | string[];
   pagination?: {
     page?: number;
@@ -413,11 +438,50 @@ export interface QueryParams {
   locale?: string;
 }
 
+// Types for Strapi image data
+interface StrapiImageFormat {
+  [key: string]: unknown;
+}
+
+interface StrapiImageAttributes {
+  name: string;
+  alternativeText?: string;
+  caption?: string;
+  width: number;
+  height: number;
+  formats?: StrapiImageFormat;
+  hash: string;
+  ext: string;
+  mime: string;
+  size: number;
+  url: string;
+  previewUrl?: string;
+  provider: string;
+  provider_metadata?: Record<string, unknown>;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface StrapiImageData {
+  id: number;
+  attributes: StrapiImageAttributes;
+}
+
+interface StrapiImageResponse {
+  data: StrapiImageData | StrapiImageData[] | null;
+}
+
 // Helper function to get full image URL
-export const getImageUrl = (imageData: any, baseUrl?: string): string => {
-  if (!imageData?.data?.attributes?.url) return '';
+export const getImageUrl = (imageData: StrapiImageResponse | { data?: StrapiImageData }, baseUrl?: string): string => {
+  const data = 'data' in imageData ? imageData.data : null;
+  if (!data || (Array.isArray(data) && data.length === 0) || (!Array.isArray(data) && !data.attributes?.url)) {
+    return '';
+  }
   
-  const url = imageData.data.attributes.url;
+  const image = Array.isArray(data) ? data[0] : data;
+  const url = image.attributes?.url;
+  if (!url) return '';
+  
   if (url.startsWith('http')) return url;
   
   const strapiUrl = baseUrl || process.env.NEXT_PUBLIC_STRAPI_URL || 'http://localhost:1337';
@@ -425,8 +489,8 @@ export const getImageUrl = (imageData: any, baseUrl?: string): string => {
 };
 
 // Helper function to get multiple image URLs
-export const getImageUrls = (imagesData: any, baseUrl?: string): string[] => {
+export const getImageUrls = (imagesData: StrapiImageResponse, baseUrl?: string): string[] => {
   if (!imagesData?.data || !Array.isArray(imagesData.data)) return [];
   
-  return imagesData.data.map((image: any) => getImageUrl({ data: image }, baseUrl));
+  return imagesData.data.map((image) => getImageUrl({ data: image }, baseUrl));
 };

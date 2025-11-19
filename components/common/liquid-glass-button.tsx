@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { LiquidGlass } from "@liquidglass/react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, startTransition } from "react";
 import React from "react";
 import { useSafariDetection } from "@/lib/browser-detection";
 
@@ -29,7 +29,9 @@ const LiquidGlassButton = ({
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   // Extract text content for accessibility if no ariaLabel is provided

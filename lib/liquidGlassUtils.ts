@@ -2,7 +2,7 @@
  * Utility functions for LiquidGlass component responsiveness
  */
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 
 // Hook to detect screen size
 export const useScreenSize = () => {
@@ -12,7 +12,9 @@ export const useScreenSize = () => {
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
 
     const checkScreenSize = () => {
       if (typeof window === "undefined") return;

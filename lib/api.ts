@@ -113,8 +113,15 @@ export const api = {
         const attributes = response.data.attributes || response.data;
         const faqsArray = attributes.faqs || [];
         // Transform component format to our expected format
+        interface FAQItem {
+          id?: string | number;
+          title?: string;
+          content?: string;
+          order?: number;
+        }
+        
         const transformedFAQs = Array.isArray(faqsArray)
-          ? faqsArray.map((item: any) => ({
+          ? faqsArray.map((item: FAQItem) => ({
               id: item.id || item.title?.substring(0, 10) || Math.random().toString(),
               title: item.title || '',
               content: item.content || '',
@@ -122,7 +129,7 @@ export const api = {
             }))
           : [];
         // Sort by order if order field exists
-        return transformedFAQs.sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+        return transformedFAQs.sort((a, b) => (a.order || 0) - (b.order || 0));
       } catch (error) {
         console.error('Error fetching FAQs:', error);
         throw new Error(`Failed to fetch FAQs: ${error instanceof Error ? error.message : 'Unknown error'}`);

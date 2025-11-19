@@ -18,24 +18,7 @@ interface VehicleDetailsProps {
 const VehicleDetails = ({ vehicle }: VehicleDetailsProps) => {
   const isMobile = useIsMobile();
 
-  // Format vehicle data
-  const formattedYear = vehicle.year 
-    ? String(vehicle.year)
-    : vehicle.data?.debut_modele 
-      ? String(vehicle.data.debut_modele).split('-')[0]
-      : null;
-
-  const energyMap: Record<string, string> = {
-    'DIESEL': 'Diesel',
-    'ESSENCE': 'Essence',
-    'ELECTRIC': 'Électrique',
-    'HYBRID': 'Hybride',
-  };
-  const formattedFuel = vehicle.energy 
-    ? energyMap[vehicle.energy] || vehicle.energy
-    : vehicle.data?.energieNGC 
-      ? energyMap[vehicle.data.energieNGC as string] || String(vehicle.data.energieNGC)
-      : null;
+  // Format vehicle data (removed unused formattedYear and formattedFuel)
 
   const transmissionMap: Record<string, string> = {
     'A': 'Automatique',

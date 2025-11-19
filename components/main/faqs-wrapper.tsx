@@ -1,9 +1,16 @@
 import { FAQ } from "@/constants/faqs";
 import FAQs from "./faqs";
 
+interface FAQItem {
+  id?: string | number;
+  title?: string;
+  content?: string;
+  order?: number;
+}
+
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function FAQsWrapper() {
-  let strapiFAQs: any[] = [];
+  let strapiFAQs: FAQItem[] = [];
   let error: string | null = null;
 
   try {
@@ -33,13 +40,13 @@ export default async function FAQsWrapper() {
     // Components have id, title, content, order directly
     strapiFAQs = Array.isArray(faqsData) 
       ? faqsData
-          .map((item: any) => ({
+          .map((item: FAQItem) => ({
             id: item.id || item.title?.substring(0, 10) || Math.random().toString(),
             title: item.title || '',
             content: item.content || '',
             order: item.order || 0,
           }))
-          .sort((a: any, b: any) => (a.order || 0) - (b.order || 0))
+          .sort((a, b) => (a.order || 0) - (b.order || 0))
       : [];
   } catch (err) {
     console.error('Error fetching FAQs:', err);

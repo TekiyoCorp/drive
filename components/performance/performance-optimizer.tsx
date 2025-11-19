@@ -179,11 +179,11 @@ const PerformanceOptimizer: React.FC<PerformanceOptimizerProps> = ({
           // Add error handling for AVIF fallbacks
           img.addEventListener(
             "error",
-            function (this: HTMLImageElement) {
-              if (this.src.includes(".avif")) {
-                this.src = this.src.replace(".avif", ".webp");
-              } else if (this.src.includes(".webp")) {
-                this.src = this.src.replace(".webp", ".jpg");
+            () => {
+              if (img.src.includes(".avif")) {
+                img.src = img.src.replace(".avif", ".webp");
+              } else if (img.src.includes(".webp")) {
+                img.src = img.src.replace(".webp", ".jpg");
               }
             },
             { once: true }

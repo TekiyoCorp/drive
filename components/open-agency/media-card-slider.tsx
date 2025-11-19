@@ -4,11 +4,42 @@ import { MEDIA_CARD_SLIDER } from "@/constants/media-card-slider";
 import useEmblaCarousel, { UseEmblaCarouselType } from "embla-carousel-react";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { getImageUrl } from "@/lib/strapi";
+
+interface SlideImage {
+  id: string;
+  url: string;
+  alt: string;
+}
+
+interface Slide {
+  id: string;
+  image: SlideImage | null;
+  text: string;
+}
+
+interface StrapiSlide {
+  id?: string | number;
+  text?: string;
+  image?: {
+    data?: {
+      attributes?: {
+        url?: string;
+        alternativeText?: string;
+      };
+      url?: string;
+    };
+    attributes?: {
+      url?: string;
+      alternativeText?: string;
+    };
+    url?: string;
+    alternativeText?: string;
+  };
+}
 
 function MediaCardSlider() {
   const [title, setTitle] = useState<string>("iOS 26. Nouveau look. <br /> Nouvelle magie.");
-  const [slides, setSlides] = useState<any[]>(MEDIA_CARD_SLIDER);
+  const [slides, setSlides] = useState<Slide[]>(MEDIA_CARD_SLIDER);
 
   useEffect(() => {
     let isMounted = true;
@@ -48,7 +79,7 @@ function MediaCardSlider() {
           // Handle slides - components can be in different formats
           if (attributes?.slides && Array.isArray(attributes.slides)) {
             console.log("Processing slides:", attributes.slides); // Debug log
-            const processedSlides = attributes.slides.map((slide: any) => {
+            const processedSlides = attributes.slides.map((slide: StrapiSlide) => {
               // Handle image data - can be in different formats
               let imageUrl = null;
               let altText = "";
@@ -87,7 +118,7 @@ function MediaCardSlider() {
                 } : null,
                 text: slide.text || "",
               };
-            }).filter((slide: any) => slide.image); // Filter out slides without images
+            }).filter((slide) => slide.image); // Filter out slides without images
 
             console.log("Processed slides:", processedSlides); // Debug log
             if (processedSlides.length > 0) {

@@ -76,7 +76,7 @@ function normalizeTeam(
   }));
 }
 
-function normalizeAgency(agency: StrapiAgency | any): AgencySummary {
+function normalizeAgency(agency: StrapiAgency | Record<string, unknown>): AgencySummary {
   // Defensive check for missing or malformed agency data
   if (!agency || typeof agency !== 'object') {
     console.warn('Invalid agency data:', agency);
@@ -97,7 +97,7 @@ function normalizeAgency(agency: StrapiAgency | any): AgencySummary {
     attrs.country
   );
 
-  const team = (attrs as any).team || [];
+  const team = (attrs as { team?: unknown[] }).team || [];
 
   return {
     id: attrs.externalId,

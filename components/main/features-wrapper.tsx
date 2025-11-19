@@ -1,8 +1,9 @@
 import Features from "./features";
+import type { StrapiFeatureItem } from "./features";
 
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function FeaturesWrapper() {
-  let features: any[] = [];
+  let features: StrapiFeatureItem[] = [];
   let error: string | null = null;
 
   try {

@@ -3,7 +3,7 @@
 import { useSafariDetection } from "@/lib/browser-detection";
 import { cn } from "@/lib/utils";
 import { LiquidGlass as LiquidGlassDisplay } from "@liquidglass/react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, startTransition } from "react";
 
 interface LiquidGlassProps {
   children: React.ReactNode;
@@ -39,13 +39,17 @@ const LiquidGlass = ({
   const { isSafari, isSafariIOS, isSafariMacOS } = useSafariDetection();
 
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   // Apply Safari-specific styles only after client hydration
   useEffect(() => {
     if (isClient && (isSafari || isSafariIOS || isSafariMacOS)) {
-      setSafariStyles({ backdropFilter: "blur(12px)" });
+      startTransition(() => {
+        setSafariStyles({ backdropFilter: "blur(12px)" });
+      });
     }
   }, [isClient, isSafari, isSafariIOS, isSafariMacOS]);
 

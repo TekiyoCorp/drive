@@ -64,14 +64,25 @@ const ContactUsPage = () => {
         if (!isMounted) return;
 
         if (attributes?.contactLinks && Array.isArray(attributes.contactLinks) && attributes.contactLinks.length > 0) {
+          interface ContactLinkItem {
+            name?: string;
+            link?: string;
+            disabled?: boolean;
+            attributes?: {
+              name?: string;
+              link?: string;
+              disabled?: boolean;
+            };
+          }
+          
           const links = attributes.contactLinks
-            .filter((item: any) => item && !(item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false)))
-            .map((item: any) => ({
+            .filter((item: ContactLinkItem) => item && !(item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false)))
+            .map((item: ContactLinkItem) => ({
               name: item.name || item.attributes?.name || "",
               link: item.link || item.attributes?.link || "#",
               disabled: item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false),
             }))
-            .filter((item: any) => item.name && item.link);
+            .filter((item) => item.name && item.link);
           
           if (links.length > 0) {
             setContactLinks(links);

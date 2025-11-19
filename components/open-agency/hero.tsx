@@ -6,10 +6,15 @@ import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { useEffect, useState } from "react";
-import { getImageUrl } from "@/lib/strapi";
+
+interface HeroContent {
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: unknown;
+}
 
 const Hero = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<HeroContent | null>(null);
   const [bgUrl, setBgUrl] = useState<string>("/images/open-agency/hero.webp");
 
   useEffect(() => {

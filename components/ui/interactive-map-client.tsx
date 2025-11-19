@@ -2,7 +2,7 @@
 
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, startTransition } from "react";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 
 // Minimal types for essential functionality only
@@ -87,7 +87,9 @@ const InteractiveMapClient: React.FC<MinimalMapProps> = ({
 
   // Ensure component only renders on client side
   useEffect(() => {
-    setIsClient(true);
+    startTransition(() => {
+      setIsClient(true);
+    });
   }, []);
 
   // Show loading state during SSR

@@ -7,9 +7,11 @@ import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
+import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
+import type { Vehicle } from "@/lib/strapi";
 
 interface OurCatalogProps {
-  featuredVehicles?: any[];
+  featuredVehicles?: (CatalogueCardData | Vehicle)[];
   error?: string | null;
   isFranchisePage?: boolean;
 }

@@ -14,8 +14,21 @@ import { useState, useEffect } from "react";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+interface ApplicationFormContent {
+  title?: string;
+  description?: string;
+  fieldLabels?: Record<string, string>;
+  apportOptions?: SelectOption[];
+  experienceOptions?: SelectOption[];
+}
+
 const ApplicationForm = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<ApplicationFormContent | null>(null);
   const [formData, setFormData] = useState({
     nomComplet: "",
     telephone: "",
@@ -196,7 +209,7 @@ const ApplicationForm = () => {
                       />
                     </SelectTrigger>
                     <SelectContent className="!bg-[#1C1C1C] border-[#BFBFBF]/20 text-white">
-                      {apportOptions.map((option: any) => (
+                      {apportOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
                         </SelectItem>
@@ -220,7 +233,7 @@ const ApplicationForm = () => {
                       />
                     </SelectTrigger>
                     <SelectContent className="!bg-[#1C1C1C] border-[#BFBFBF]/20 text-white">
-                      {experienceOptions.map((option: any) => (
+                      {experienceOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
                           {option.label}
                         </SelectItem>

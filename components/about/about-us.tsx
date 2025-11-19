@@ -7,7 +7,6 @@ import { useEffect, useState } from "react";
 import { getImageUrl } from "@/lib/strapi";
 
 const AboutUs = () => {
-  const [content, setContent] = useState<any>(null);
   const [contentHtml, setContentHtml] = useState<string>("");
   const [bgUrl, setBgUrl] = useState<string>("/images/about/about-us-banner.webp");
 
@@ -36,7 +35,6 @@ const AboutUs = () => {
         const attributes = node ? node.attributes ?? node : null;
         if (!isMounted) return;
 
-        setContent(attributes);
         if (typeof attributes?.content === "string") {
           setContentHtml(attributes.content);
         }

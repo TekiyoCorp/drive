@@ -5,14 +5,13 @@ import Wrapper from "../global/wrapper";
 import Container from "../global/container";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { getImageUrl } from "@/lib/strapi";
 
 interface Feature {
   id: number;
   title: string;
   description: string;
   icon?: string;
-  iconImage?: any;
+  iconImage?: unknown;
 }
 
 // Liste des noms d'icônes disponibles (correspond aux fichiers SVG dans /images/main/sell-my-car/)
@@ -29,8 +28,17 @@ const getLocalIconPath = (iconName: string | null | undefined, fallbackIndex: nu
   return `/images/main/sell-my-car/${fallbackIcon}.svg`;
 };
 
+interface SellMyCarContent {
+  carImage?: unknown;
+  features?: Array<{
+    title?: string;
+    icon?: string;
+    description?: string;
+  }>;
+}
+
 const SellMyCar = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<SellMyCarContent | null>(null);
   const [carImageUrl, setCarImageUrl] = useState<string>("/images/main/car.svg");
   const defaultFeatures: Feature[] = [
     {
@@ -123,7 +131,13 @@ const SellMyCar = () => {
 
         // Handle features
         if (attributes?.features && Array.isArray(attributes.features) && attributes.features.length > 0) {
-          const mappedFeatures = attributes.features.map((feature: any, index: number) => {
+          interface StrapiFeature {
+            title?: string;
+            icon?: string;
+            description?: string;
+          }
+          
+          const mappedFeatures = attributes.features.map((feature: StrapiFeature, index: number) => {
             const featureTitle = feature.title || defaultFeatures[index]?.title || "";
             
             // Récupérer le nom de l'icône depuis Strapi (string)
@@ -151,7 +165,7 @@ const SellMyCar = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [defaultFeatures]);
 
   return (
     <div className="flex flex-col items-center justify-center w-full py-16 lg:py-24 text-white">

@@ -41,7 +41,20 @@ const VehicleFeatures = () => {
     },
   ];
 
-  const [content, setContent] = useState<any>(null);
+  interface StrapiFeature {
+    title?: string;
+    description?: string;
+    icon?: {
+      data?: unknown;
+    } | unknown;
+  }
+  
+  interface VehicleFeaturesContent {
+    features?: StrapiFeature[];
+    bannerImage?: unknown;
+  }
+  
+  const [content, setContent] = useState<VehicleFeaturesContent | null>(null);
   const [features, setFeatures] = useState(defaultFeatures);
   const [bannerUrl, setBannerUrl] = useState<string>("/images/open-agency/banner.webp");
 
@@ -77,7 +90,7 @@ const VehicleFeatures = () => {
 
         // Process features
         if (attributes?.features && Array.isArray(attributes.features)) {
-          const processedFeatures = attributes.features.map((feature: any, index: number) => {
+          const processedFeatures = attributes.features.map((feature: StrapiFeature, index: number) => {
             const iconData = feature.icon?.data || feature.icon;
             let iconUrl = iconData ? getImageUrl({ data: iconData }) : null;
             
@@ -112,7 +125,7 @@ const VehicleFeatures = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [defaultFeatures]);
 
   const title = content?.title ?? "Vehicle Features";
 
