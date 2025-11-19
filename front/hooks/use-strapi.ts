@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { api, queryHelpers } from '@/lib/api';
-import { Vehicle, Testimonial, FAQ, Franchise, Hero, GlobalContent, QueryParams } from '@/lib/strapi';
+import { Vehicle, Testimonial, FAQ, Hero, GlobalContent, QueryParams } from '@/lib/strapi';
 
 // Generic hook for fetching Strapi data
 export function useStrapiData<T>(
@@ -99,19 +99,6 @@ export function useFAQsOrdered() {
   return useStrapiData(() => api.faqs.findAll(queryHelpers.faqsOrdered));
 }
 
-// Franchises hooks
-export function useFranchises(params?: QueryParams) {
-  return useStrapiData(api.franchises.findAll, params);
-}
-
-export function useFranchisesWithImages() {
-  return useStrapiData(() => api.franchises.findAll(queryHelpers.franchisesWithImages));
-}
-
-export function useFranchise(id: number, params?: QueryParams) {
-  return useStrapiData(() => api.franchises.findOne(id, params), undefined, [id]);
-}
-
 // Hero content hooks
 export function useHero(params?: QueryParams) {
   return useStrapiData(api.hero.find, params);
@@ -200,13 +187,5 @@ export function useCatalogData(pageSize = 12) {
   return useMultipleStrapiData({
     vehicles: () => api.vehicles.findByStatus('available', queryHelpers.availableVehicles(pageSize)),
     featuredVehicles: () => api.vehicles.findFeatured(queryHelpers.featuredVehicles),
-  });
-}
-
-// Hook for franchise page data
-export function useFranchisePageData() {
-  return useMultipleStrapiData({
-    franchises: () => api.franchises.findAll(queryHelpers.franchisesWithImages),
-    hero: () => api.hero.find({ populate: ['backgroundImage'] }),
   });
 }

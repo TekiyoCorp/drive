@@ -1,4 +1,4 @@
-import { getStrapiClient, QueryParams, Vehicle, Testimonial, FAQ, Franchise, Hero, GlobalContent } from './strapi';
+import { getStrapiClient, QueryParams, Vehicle, Testimonial, FAQ, Hero, GlobalContent } from './strapi';
 
 // API functions for fetching data from Strapi
 
@@ -130,34 +130,6 @@ export const api = {
     },
   },
 
-  // Franchise endpoints
-  franchises: {
-    async findAll(params?: QueryParams): Promise<Franchise[]> {
-      try {
-        const client = await getStrapiClient();
-        const response = await client.collection('franchises').find(params);
-        return response.data || [];
-      } catch (error) {
-        console.error('Error fetching franchises:', error);
-        throw new Error(`Failed to fetch franchises: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    },
-
-    async findOne(id: number, params?: QueryParams): Promise<Franchise> {
-      try {
-        const client = await getStrapiClient();
-        const response = await client.collection('franchises').findOne(id, params);
-        if (!response.data) {
-          throw new Error(`Franchise with id ${id} not found`);
-        }
-        return response.data;
-      } catch (error) {
-        console.error(`Error fetching franchise ${id}:`, error);
-        throw new Error(`Failed to fetch franchise: ${error instanceof Error ? error.message : 'Unknown error'}`);
-      }
-    },
-  },
-
   // Hero content endpoints
   hero: {
     async find(params?: QueryParams): Promise<Hero> {
@@ -268,13 +240,6 @@ export const queryHelpers = {
 
   // Get FAQs (single type, already sorted by order in the response)
   faqsOrdered: {
-    ...defaultQueries.publishedOnly,
-  },
-
-  // Get franchises with images
-  franchisesWithImages: {
-    ...defaultQueries.populateImages,
-    ...defaultQueries.sortByOrder,
     ...defaultQueries.publishedOnly,
   },
 };

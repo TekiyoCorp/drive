@@ -666,42 +666,6 @@ export interface ApiFooterFooter extends Struct.SingleTypeSchema {
   };
 }
 
-export interface ApiFranchiseFranchise extends Struct.CollectionTypeSchema {
-  collectionName: 'franchises';
-  info: {
-    description: 'Franchise locations';
-    displayName: 'Franchise';
-    pluralName: 'franchises';
-    singularName: 'franchise';
-  };
-  options: {
-    draftAndPublish: true;
-  };
-  attributes: {
-    address: Schema.Attribute.String & Schema.Attribute.Required;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    email: Schema.Attribute.Email;
-    image: Schema.Attribute.Media<'images'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::franchise.franchise'
-    > &
-      Schema.Attribute.Private;
-    location: Schema.Attribute.Component<'shared.location', false>;
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    order: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
-    phone: Schema.Attribute.String & Schema.Attribute.Required;
-    publishedAt: Schema.Attribute.DateTime;
-    services: Schema.Attribute.JSON;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-  };
-}
-
 export interface ApiGlobalContentGlobalContent extends Struct.SingleTypeSchema {
   collectionName: 'global_contents';
   info: {
@@ -2055,7 +2019,6 @@ declare module '@strapi/strapi' {
       'api::faq.faq': ApiFaqFaq;
       'api::feature.feature': ApiFeatureFeature;
       'api::footer.footer': ApiFooterFooter;
-      'api::franchise.franchise': ApiFranchiseFranchise;
       'api::global-content.global-content': ApiGlobalContentGlobalContent;
       'api::header.header': ApiHeaderHeader;
       'api::hero.hero': ApiHeroHero;

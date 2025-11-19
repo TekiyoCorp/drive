@@ -183,44 +183,6 @@ export interface FAQ {
   };
 }
 
-// Franchise types based on schema
-export interface Franchise {
-  id: number;
-  attributes: {
-    title: string;
-    description: string;
-    location: string;
-    contact: string;
-    image?: {
-      data: {
-        id: number;
-        attributes: {
-          name: string;
-          alternativeText?: string;
-          caption?: string;
-          width: number;
-          height: number;
-          formats: any;
-          hash: string;
-          ext: string;
-          mime: string;
-          size: number;
-          url: string;
-          previewUrl?: string;
-          provider: string;
-          provider_metadata?: any;
-          createdAt: string;
-          updatedAt: string;
-        };
-      } | null;
-    };
-    order: number;
-    createdAt: string;
-    updatedAt: string;
-    publishedAt: string;
-  };
-}
-
 // Hero content types
 export interface Hero {
   id: number;
