@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath } from 'next/cache';
+import { revalidatePath, revalidateTag } from 'next/cache';
 
 /**
  * API Route pour la revalidation ISR via webhooks Strapi
@@ -270,11 +270,26 @@ export async function POST(request: NextRequest) {
     const entryId = payload.entry?.id || payload.entry?.documentId;
     const pagesToRevalidate = getPagesToRevalidate(payload.model, entryId);
 
-    // Revalider toutes les pages concernées
+    // Revalider toutes les pages concernées ET les tags de cache
     const revalidatedPages: string[] = [];
+    
+    // Créer un tag basé sur le modèle pour revalider tous les fetch de ce content type
+    const contentTag = `strapi-${payload.model}`;
+    
+    // Revalider le tag de contenu (invalide tous les fetch avec ce tag)
+    try {
+      revalidateTag(contentTag);
+      console.log(`✅ Tag revalidé: ${contentTag}`);
+    } catch (error) {
+      console.error(`❌ Erreur lors de la revalidation du tag ${contentTag}:`, error);
+    }
+    
+    // Revalider les pages spécifiques avec type explicite
     for (const page of pagesToRevalidate) {
       try {
-        revalidatePath(page);
+        // Revalider la page et le layout
+        revalidatePath(page, 'page');
+        revalidatePath(page, 'layout');
         revalidatedPages.push(page);
         console.log(`✅ Page revalidée: ${page} (modèle: ${payload.model}, événement: ${payload.event})`);
       } catch (error) {

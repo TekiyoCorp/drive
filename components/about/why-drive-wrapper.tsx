@@ -17,7 +17,10 @@ export default async function WhyDriveWrapper() {
         'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 },
+      next: { 
+        revalidate: 3600,
+        tags: ['strapi-api::why-drive.why-drive']
+      },
       signal: AbortSignal.timeout(10000),
     });
 

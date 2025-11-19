@@ -18,7 +18,10 @@ export default async function KeyFiguresWrapper() {
         'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 },
+      next: { 
+        revalidate: 3600,
+        tags: ['strapi-api::key-figures.key-figures']
+      },
       signal: AbortSignal.timeout(10000),
     });
 

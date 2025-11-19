@@ -28,8 +28,11 @@ export default async function OurTestimonialsWrapper() {
         'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      // Enable caching for better performance
-      next: { revalidate: 3600 }, // Revalidate every hour
+      // Enable caching with tag for on-demand revalidation
+      next: { 
+        revalidate: 3600, // Revalidate every hour
+        tags: ['strapi-api::testimonial.testimonial'] // Tag pour revalidation à la demande
+      },
     });
 
     if (!response.ok) {

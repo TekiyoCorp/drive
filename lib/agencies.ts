@@ -124,9 +124,15 @@ async function fetchStrapi<T>(path: string, revalidateSeconds = 900): Promise<T>
     headers["Authorization"] = `Bearer ${STRAPI_TOKEN}`;
   }
 
+  // Déterminer le tag basé sur le path
+  const tag = path.includes('/agencies') ? 'strapi-api::agency.agency' : 'strapi-agencies';
+  
   const response = await fetch(url, {
     headers,
-    next: { revalidate: revalidateSeconds },
+    next: { 
+      revalidate: revalidateSeconds,
+      tags: [tag]
+    },
   });
 
   if (!response.ok) {

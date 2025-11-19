@@ -19,7 +19,10 @@ export default async function MaximizeYourProfitabilityWrapper() {
         'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 },
+      next: { 
+        revalidate: 3600,
+        tags: ['strapi-api::maximize-your-profitability.maximize-your-profitability']
+      },
       signal: AbortSignal.timeout(10000),
     });
 

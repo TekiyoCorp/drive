@@ -21,8 +21,11 @@ export default async function FAQsWrapper() {
         'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      // Enable caching for better performance
-      next: { revalidate: 7200 }, // Revalidate every 2 hours
+      // Enable caching with tag for on-demand revalidation
+      next: { 
+        revalidate: 7200, // Revalidate every 2 hours
+        tags: ['strapi-api::faq.faq'] // Tag pour revalidation à la demande
+      },
     });
 
     if (!response.ok) {

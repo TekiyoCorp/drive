@@ -41,8 +41,11 @@ export default async function HeroWrapper() {
         'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
       },
-      // Enable caching for better performance
-      next: { revalidate: 3600 }, // Revalidate every hour
+      // Enable caching with tag for on-demand revalidation
+      next: { 
+        revalidate: 3600, // Revalidate every hour
+        tags: ['strapi-api::hero.hero'] // Tag pour revalidation à la demande
+      },
       // Add timeout to prevent hanging requests
       signal: AbortSignal.timeout(10000), // 10 second timeout
     });

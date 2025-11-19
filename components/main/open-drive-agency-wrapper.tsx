@@ -21,7 +21,10 @@ export default async function OpenDriveAgencyWrapper() {
         'Authorization': `Bearer ${apiToken}`,
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 },
+      next: { 
+        revalidate: 3600,
+        tags: ['strapi-api::open-drive-agency.open-drive-agency']
+      },
       signal: AbortSignal.timeout(10000),
     });
 

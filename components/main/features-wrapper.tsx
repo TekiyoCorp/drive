@@ -13,7 +13,10 @@ export default async function FeaturesWrapper() {
         'Authorization': `Bearer ${process.env.STRAPI_API_TOKEN}`,
         'Content-Type': 'application/json',
       },
-      next: { revalidate: 3600 }, // Revalidate every hour
+      next: { 
+        revalidate: 3600, // Revalidate every hour
+        tags: ['strapi-api::feature.feature'] // Tag pour revalidation à la demande
+      },
     });
 
     if (!response.ok) {
