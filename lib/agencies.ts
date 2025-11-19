@@ -84,7 +84,7 @@ function normalizeAgency(agency: StrapiAgency | Record<string, unknown>): Agency
   }
 
   // Handle both Strapi v4 (with attributes) and v5 (flat) formats
-  const attrs = agency.attributes || agency;
+  const attrs = (agency.attributes || agency) as NonNullable<StrapiAgency['attributes']> & Pick<StrapiAgency, 'externalId' | 'name' | 'address' | 'postalCode' | 'country' | 'phone' | 'email' | 'team'>;
   
   if (!attrs || typeof attrs !== 'object') {
     console.warn('Invalid agency attributes:', agency);
@@ -97,7 +97,7 @@ function normalizeAgency(agency: StrapiAgency | Record<string, unknown>): Agency
     attrs.country
   );
 
-  const team = (attrs as { team?: unknown[] }).team || [];
+  const team = attrs.team || [];
 
   return {
     id: attrs.externalId,

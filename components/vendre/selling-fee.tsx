@@ -21,6 +21,10 @@ interface SellingFeeContent {
     };
     url?: string;
   };
+  appointmentButtonLink?: string;
+  appointmentButtonText?: string;
+  callbackButtonLink?: string;
+  callbackButtonText?: string;
 }
 
 const SellingFee = () => {

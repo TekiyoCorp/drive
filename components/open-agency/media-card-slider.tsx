@@ -118,7 +118,7 @@ function MediaCardSlider() {
                 } : null,
                 text: slide.text || "",
               };
-            }).filter((slide) => slide.image); // Filter out slides without images
+            }).filter((slide: Slide) => slide.image); // Filter out slides without images
 
             console.log("Processed slides:", processedSlides); // Debug log
             if (processedSlides.length > 0) {

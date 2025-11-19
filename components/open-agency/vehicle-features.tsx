@@ -5,7 +5,7 @@ import Image from "next/image";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { useEffect, useState, useMemo } from "react";
-import { getImageUrl } from "@/lib/strapi";
+import { getImageUrl, type StrapiImageData } from "@/lib/strapi";
 
 const VehicleFeatures = () => {
   const defaultFeatures = useMemo(() => [
@@ -42,6 +42,7 @@ const VehicleFeatures = () => {
   ], []);
 
   interface StrapiFeature {
+    id?: string | number;
     title?: string;
     description?: string;
     icon?: {
@@ -50,6 +51,7 @@ const VehicleFeatures = () => {
   }
   
   interface VehicleFeaturesContent {
+    title?: string;
     features?: StrapiFeature[];
     bannerImage?: unknown;
   }
@@ -91,8 +93,10 @@ const VehicleFeatures = () => {
         // Process features
         if (attributes?.features && Array.isArray(attributes.features)) {
           const processedFeatures = attributes.features.map((feature: StrapiFeature, index: number) => {
-            const iconData = feature.icon?.data || feature.icon;
-            let iconUrl = iconData ? getImageUrl({ data: iconData }) : null;
+            const iconData = (feature.icon && typeof feature.icon === 'object' && 'data' in feature.icon) 
+              ? feature.icon.data 
+              : feature.icon;
+            let iconUrl = iconData ? getImageUrl({ data: iconData as unknown as StrapiImageData }) : null;
             
             // Fallback to default icon if URL is empty or invalid
             if (!iconUrl || iconUrl.trim() === "") {

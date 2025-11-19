@@ -86,7 +86,7 @@ const nextConfig: NextConfig = {
       config.externals = config.externals || [];
       if (Array.isArray(config.externals)) {
         config.externals = config.externals.filter(
-          (external) =>
+          (external: unknown) =>
             typeof external !== "string" ||
             !["leaflet", "react-leaflet", "react-leaflet-cluster"].includes(external)
         );

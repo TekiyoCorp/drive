@@ -9,7 +9,7 @@ export const api = {
       try {
         const client = await getStrapiClient();
         const response = await client.collection('vehicles').find(params);
-        return response.data || [];
+        return (response.data || []) as Vehicle[];
       } catch (error) {
         console.error('Error fetching vehicles:', error);
         throw new Error(`Failed to fetch vehicles: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -19,11 +19,11 @@ export const api = {
     async findOne(id: number, params?: QueryParams): Promise<Vehicle> {
       try {
         const client = await getStrapiClient();
-        const response = await client.collection('vehicles').findOne(id, params);
+        const response = await client.collection('vehicles').findOne(String(id), params);
         if (!response.data) {
           throw new Error(`Vehicle with id ${id} not found`);
         }
-        return response.data;
+        return response.data as Vehicle;
       } catch (error) {
         console.error(`Error fetching vehicle ${id}:`, error);
         throw new Error(`Failed to fetch vehicle: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -41,7 +41,7 @@ export const api = {
           },
         };
         const response = await client.collection('vehicles').find(featuredParams);
-        return response.data || [];
+        return (response.data || []) as Vehicle[];
       } catch (error) {
         console.error('Error fetching featured vehicles:', error);
         throw new Error(`Failed to fetch featured vehicles: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -59,7 +59,7 @@ export const api = {
           },
         };
         const response = await client.collection('vehicles').find(statusParams);
-        return response.data || [];
+        return (response.data || []) as Vehicle[];
       } catch (error) {
         console.error(`Error fetching vehicles with status ${status}:`, error);
         throw new Error(`Failed to fetch vehicles: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -73,7 +73,7 @@ export const api = {
       try {
         const client = await getStrapiClient();
         const response = await client.collection('testimonials').find(params);
-        return response.data || [];
+        return (response.data || []) as Testimonial[];
       } catch (error) {
         console.error('Error fetching testimonials:', error);
         throw new Error(`Failed to fetch testimonials: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -83,11 +83,11 @@ export const api = {
     async findOne(id: number, params?: QueryParams): Promise<Testimonial> {
       try {
         const client = await getStrapiClient();
-        const response = await client.collection('testimonials').findOne(id, params);
+        const response = await client.collection('testimonials').findOne(String(id), params);
         if (!response.data) {
           throw new Error(`Testimonial with id ${id} not found`);
         }
-        return response.data;
+        return response.data as Testimonial;
       } catch (error) {
         console.error(`Error fetching testimonial ${id}:`, error);
         throw new Error(`Failed to fetch testimonial: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -110,8 +110,9 @@ export const api = {
           throw new Error('FAQ content not found');
         }
         // Extract the faqs array from the single type response
-        const attributes = response.data.attributes || response.data;
-        const faqsArray = attributes.faqs || [];
+        const data = response.data as { attributes?: { faqs?: unknown[] }; faqs?: unknown[] };
+        const attributes = data.attributes || data;
+        const faqsArray = ('faqs' in attributes ? attributes.faqs : undefined) || [];
         // Transform component format to our expected format
         interface FAQItem {
           id?: string | number;
@@ -121,12 +122,15 @@ export const api = {
         }
         
         const transformedFAQs = Array.isArray(faqsArray)
-          ? faqsArray.map((item: FAQItem) => ({
-              id: item.id || item.title?.substring(0, 10) || Math.random().toString(),
-              title: item.title || '',
-              content: item.content || '',
-              order: item.order || 0,
-            }))
+          ? faqsArray.map((item: unknown) => {
+              const faqItem = item as FAQItem;
+              return {
+                id: faqItem.id || faqItem.title?.substring(0, 10) || Math.random().toString(),
+                title: faqItem.title || '',
+                content: faqItem.content || '',
+                order: faqItem.order || 0,
+              };
+            })
           : [];
         // Sort by order if order field exists
         return transformedFAQs.sort((a, b) => (a.order || 0) - (b.order || 0));
@@ -146,7 +150,7 @@ export const api = {
         if (!response.data) {
           throw new Error('Hero content not found');
         }
-        return response.data;
+        return response.data as Hero;
       } catch (error) {
         console.error('Error fetching hero content:', error);
         throw new Error(`Failed to fetch hero content: ${error instanceof Error ? error.message : 'Unknown error'}`);
@@ -163,7 +167,7 @@ export const api = {
         if (!response.data) {
           throw new Error('Global content not found');
         }
-        return response.data;
+        return response.data as GlobalContent;
       } catch (error) {
         console.error('Error fetching global content:', error);
         throw new Error(`Failed to fetch global content: ${error instanceof Error ? error.message : 'Unknown error'}`);

@@ -10,6 +10,10 @@ interface SecureIntermediationContent {
   subtitle?: string;
   features?: string[];
   carImage?: unknown;
+  infoTitle?: string;
+  whatsappButtonLink?: string;
+  whatsappButtonText?: string;
+  mainTitle?: string;
 }
 
 const SecureIntermediation = () => {

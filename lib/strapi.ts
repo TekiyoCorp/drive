@@ -11,7 +11,7 @@ interface StrapiClientParams {
 
 interface StrapiCollection {
   find: (params?: StrapiClientParams) => Promise<{ data: unknown[] }>;
-  findOne: (id: string | number, params?: StrapiClientParams) => Promise<{ data: unknown | null }>;
+  findOne: (id: string, params?: StrapiClientParams) => Promise<{ data: unknown | null }>;
 }
 
 interface StrapiSingle {
@@ -462,7 +462,7 @@ interface StrapiImageAttributes {
   updatedAt: string;
 }
 
-interface StrapiImageData {
+export interface StrapiImageData {
   id: number;
   attributes: StrapiImageAttributes;
 }
