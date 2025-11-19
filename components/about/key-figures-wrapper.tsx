@@ -43,15 +43,25 @@ export default async function KeyFiguresWrapper() {
         ? data.benefits
         : (typeof data.benefits === 'string' ? JSON.parse(data.benefits) : undefined);
 
-      keyFigures = parsedKeyFigures?.map((item: any) => ({
+      interface KeyFigureItem {
+        number?: string | number;
+        description?: string;
+      }
+
+      interface BenefitItem {
+        title?: string;
+        description?: string;
+      }
+
+      keyFigures = parsedKeyFigures?.map((item: KeyFigureItem) => ({
         number: String(item.number ?? ''),
         description: String(item.description ?? ''),
-      })).filter((i: any) => i.number || i.description);
+      })).filter((i: { number: string; description: string }): i is { number: string; description: string } => Boolean(i.number || i.description));
 
-      benefits = parsedBenefits?.map((item: any) => ({
+      benefits = parsedBenefits?.map((item: BenefitItem) => ({
         title: String(item.title ?? ''),
         description: String(item.description ?? ''),
-      })).filter((i: any) => i.title || i.description);
+      })).filter((i: { title: string; description: string }): i is { title: string; description: string } => Boolean(i.title || i.description));
     }
   } catch (err) {
     console.error('Error fetching key-figures section:', err);

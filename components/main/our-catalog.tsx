@@ -16,7 +16,7 @@ interface OurCatalogProps {
   isFranchisePage?: boolean;
 }
 
-const OurCatalog = ({ featuredVehicles, error = null, isFranchisePage = false }: OurCatalogProps) => {
+const OurCatalog = ({ featuredVehicles, isFranchisePage = false }: OurCatalogProps) => {
   const hasVehicles = featuredVehicles && featuredVehicles.length > 0;
   const showEmptyState = isFranchisePage && !hasVehicles;
 
@@ -61,7 +61,8 @@ const OurCatalog = ({ featuredVehicles, error = null, isFranchisePage = false }:
               {hasVehicles ? (
                 featuredVehicles.map((vehicle, idx) => {
                   // Handle both Strapi format (vehicle.attributes.title) and static format (vehicle.title)
-                  const title = vehicle.attributes?.title || vehicle.title;
+                  const isVehicle = 'attributes' in vehicle;
+                  const title = isVehicle ? (vehicle.attributes?.title || '') : vehicle.title;
                   const vehicleId = vehicle.id;
                   
                   return (

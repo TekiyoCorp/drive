@@ -14,7 +14,7 @@ type FeatureRecord = {
   alt?: string;
 };
 
-interface StrapiFeatureItem {
+export interface StrapiFeatureItem {
   id?: number | string;
   title?: string;
   description?: string;
@@ -39,7 +39,11 @@ const normalizeFeatures = (items: StrapiFeatureItem[] = []): FeatureRecord[] => 
     const attributes = item.attributes ?? item;
 
     const imageField = attributes.image ?? item.image;
-    const image = typeof imageField === "string" ? imageField : getImageUrl(imageField);
+    const image = typeof imageField === "string" 
+      ? imageField 
+      : (imageField && typeof imageField === "object" && ("data" in imageField || "attributes" in imageField))
+        ? getImageUrl(imageField as Parameters<typeof getImageUrl>[0])
+        : "";
 
     return {
       id,
@@ -51,7 +55,7 @@ const normalizeFeatures = (items: StrapiFeatureItem[] = []): FeatureRecord[] => 
   });
 };
 
-const Features = ({ features = [], error = null }: FeaturesProps) => {
+const Features = ({ features = [] }: FeaturesProps) => {
   const records = normalizeFeatures(features);
 
   // Fallback static content if no data from Strapi

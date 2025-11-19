@@ -25,7 +25,25 @@ export default async function OpenDriveAgencyWrapper() {
       signal: AbortSignal.timeout(10000),
     });
 
-    let data: any | null = null;
+    interface OpenDriveAgencyData {
+      title?: string;
+      subtitle?: string;
+      ctaText?: string;
+      statsText?: string;
+      backgroundImage?: {
+        data?: {
+          attributes?: {
+            url?: string;
+          };
+        };
+        attributes?: {
+          url?: string;
+        };
+        url?: string;
+      };
+    }
+
+    let data: OpenDriveAgencyData | null = null;
 
     if (!response.ok) {
       const errorText = await response.text();

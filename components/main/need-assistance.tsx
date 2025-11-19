@@ -7,8 +7,18 @@ import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { useEffect, useState } from "react";
 
+interface NeedAssistanceContent {
+  title?: string;
+  userMessageLabel?: string;
+  userMessage?: string;
+  driveMessageLabel?: string;
+  driveMessage?: string;
+  whatsappButtonText?: string;
+  whatsappButtonLink?: string;
+}
+
 const NeedAssistance = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<NeedAssistanceContent | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -40,7 +50,7 @@ const NeedAssistance = () => {
         if (!isMounted) return;
 
         setContent(attributes);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

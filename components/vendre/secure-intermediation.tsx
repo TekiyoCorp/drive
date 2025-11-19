@@ -5,8 +5,15 @@ import Image from "next/image";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
 
+interface SecureIntermediationContent {
+  title?: string;
+  subtitle?: string;
+  features?: string[];
+  carImage?: unknown;
+}
+
 const SecureIntermediation = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<SecureIntermediationContent | null>(null);
   const [carImageUrl, setCarImageUrl] = useState<string>("/images/main/car.svg");
   const [features, setFeatures] = useState<string[]>([
     "Estimation basée sur ventes réelles locales.",
@@ -75,7 +82,7 @@ const SecureIntermediation = () => {
         if (attributes?.features && Array.isArray(attributes.features)) {
           setFeatures(attributes.features);
         }
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

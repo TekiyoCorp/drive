@@ -4,9 +4,11 @@ import CatalogueCard from "@/components/catalogue/catalogue-card";
 import CatalogueFilter from "@/components/catalogue/catalogue-filter";
 import Wrapper from "@/components/global/wrapper";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
+import { Vehicle } from "@/lib/strapi";
+import { CatalogueCardData } from "./catalogue-card";
 
 interface CatalogueContentProps {
-  vehicles: any[];
+  vehicles: (Vehicle | CatalogueCardData)[];
   error?: string | null;
 }
 

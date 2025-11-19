@@ -5,8 +5,63 @@ import Wrapper from "../global/wrapper";
 import Container from "../global/container";
 import Image from "next/image";
 
+interface VehicleConditionContent {
+  estimationTitle?: string;
+  estimationDescription?: string;
+  estimationImage?: {
+    data?: {
+      attributes?: {
+        url?: string;
+      };
+    };
+    attributes?: {
+      url?: string;
+    };
+    url?: string;
+  };
+  inspectionTitle?: string;
+  inspectionDescription?: string;
+  inspectionImage?: {
+    data?: {
+      attributes?: {
+        url?: string;
+      };
+    };
+    attributes?: {
+      url?: string;
+    };
+    url?: string;
+  };
+  offerTitle?: string;
+  offerDescription?: string;
+  offerImage?: {
+    data?: {
+      attributes?: {
+        url?: string;
+      };
+    };
+    attributes?: {
+      url?: string;
+    };
+    url?: string;
+  };
+  paymentTitle?: string;
+  paymentDescription?: string;
+  paymentImage?: {
+    data?: {
+      attributes?: {
+        url?: string;
+      };
+    };
+    attributes?: {
+      url?: string;
+    };
+    url?: string;
+  };
+}
+
 const VehicleCondition = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<VehicleConditionContent | null>(null);
   const [estimationImageUrl, setEstimationImageUrl] = useState<string>("/images/vendre/vehicle-condition/1.webp");
   const [inspectionImageUrl, setInspectionImageUrl] = useState<string>("/images/vendre/vehicle-condition/2.webp");
   const [offerImageUrl, setOfferImageUrl] = useState<string>("/images/vendre/vehicle-condition/3.png");
@@ -137,7 +192,7 @@ const VehicleCondition = () => {
             setPaymentImageUrl(imageUrl);
           }
         }
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

@@ -88,7 +88,7 @@ const ContactUsPage = () => {
             setContactLinks(links);
           }
         }
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

@@ -34,15 +34,20 @@ export default async function WhyDriveWrapper() {
       title = data.title;
 
       // Handle items: can be array of strings or JSON string
+      interface ItemData {
+        text?: string;
+        [key: string]: unknown;
+      }
+
       if (Array.isArray(data.items)) {
-        items = data.items.map((item: any) => 
+        items = data.items.map((item: string | ItemData) => 
           typeof item === 'string' ? item : String(item.text || item)
-        ).filter(Boolean);
+        ).filter(Boolean) as string[];
       } else if (typeof data.items === 'string') {
         try {
           const parsed = JSON.parse(data.items);
           items = Array.isArray(parsed) 
-            ? parsed.map((item: any) => typeof item === 'string' ? item : String(item.text || item)).filter(Boolean)
+            ? parsed.map((item: string | ItemData) => typeof item === 'string' ? item : String(item.text || item)).filter(Boolean) as string[]
             : undefined;
         } catch {
           // If parsing fails, ignore

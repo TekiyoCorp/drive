@@ -15,9 +15,50 @@ import { usePathname } from "next/navigation";
 import { SnapElement } from "../global/scroll-snap";
 import { useEffect, useState } from "react";
 
+interface FooterContent {
+  navigationTitle?: string;
+  navigationLinks?: Array<{
+    name?: string;
+    link?: string;
+    attributes?: {
+      name?: string;
+      link?: string;
+    };
+  }>;
+  contactTitle?: string;
+  contactLinks?: Array<{
+    name?: string;
+    link?: string;
+    type?: string;
+    disabled?: boolean;
+    attributes?: {
+      name?: string;
+      link?: string;
+      type?: string;
+      disabled?: boolean;
+    };
+  }>;
+  socialTitle?: string;
+  socialLinks?: Array<{
+    platform?: string;
+    url?: string;
+    name?: string;
+    link?: string;
+    attributes?: {
+      platform?: string;
+      url?: string;
+      name?: string;
+      link?: string;
+    };
+  }>;
+  legalTitle?: string;
+  copyrightText?: string;
+  tekiyoCopyright?: string;
+}
+
 const Footer = () => {
   const pathname = usePathname();
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<FooterContent | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -48,7 +89,7 @@ const Footer = () => {
         if (!isMounted) return;
 
         setContent(attributes);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };
@@ -59,30 +100,47 @@ const Footer = () => {
     };
   }, []);
 
+  interface NavigationLink {
+    name: string;
+    link: string;
+  }
+
+  interface ContactLink {
+    name: string;
+    link: string;
+    type?: string;
+    disabled?: boolean;
+  }
+
+  interface SocialLink {
+    name: string;
+    link: string;
+  }
+
   const navigationTitle = content?.navigationTitle ?? "Navigation";
-  const navigationLinks = content?.navigationLinks && Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0
-    ? content.navigationLinks.map((link: any) => ({
-        name: link.name || link.attributes?.name,
-        link: link.link || link.attributes?.link,
-      })).filter((link: any) => link.name && link.link)
+  const navigationLinks: NavigationLink[] = content?.navigationLinks && Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0
+    ? content.navigationLinks.map((link) => ({
+        name: link.name || link.attributes?.name || '',
+        link: link.link || link.attributes?.link || '',
+      })).filter((link): link is NavigationLink => Boolean(link.name && link.link))
     : FOOTER_NAVIGATION_LINKS;
 
   const contactTitle = content?.contactTitle ?? "Contact";
-  const contactLinks = content?.contactLinks && Array.isArray(content.contactLinks) && content.contactLinks.length > 0
-    ? content.contactLinks.map((link: any) => ({
-        name: link.name || link.attributes?.name,
-        link: link.link || link.attributes?.link,
+  const contactLinks: ContactLink[] = content?.contactLinks && Array.isArray(content.contactLinks) && content.contactLinks.length > 0
+    ? content.contactLinks.map((link) => ({
+        name: link.name || link.attributes?.name || '',
+        link: link.link || link.attributes?.link || '',
         type: link.type || link.attributes?.type,
         disabled: link.disabled !== undefined ? link.disabled : (link.attributes?.disabled || false),
-      })).filter((link: any) => link.name)
+      })).filter((link: { name: string; link: string; type?: string; disabled?: boolean }): link is ContactLink => Boolean(link.name))
     : FOOTER_CONTACT_LINKS;
 
   const socialTitle = content?.socialTitle ?? "Réseaux";
-  const socialLinks = content?.socialLinks && Array.isArray(content.socialLinks) && content.socialLinks.length > 0
-    ? content.socialLinks.map((link: any) => ({
-        name: link.platform || link.attributes?.platform || link.name || link.attributes?.name,
+  const socialLinks: SocialLink[] = content?.socialLinks && Array.isArray(content.socialLinks) && content.socialLinks.length > 0
+    ? content.socialLinks.map((link) => ({
+        name: link.platform || link.attributes?.platform || link.name || link.attributes?.name || '',
         link: link.url || link.attributes?.url || link.link || link.attributes?.link || "#",
-      })).filter((link: any) => link.name)
+      })).filter((link): link is SocialLink => Boolean(link.name))
     : FOOTER_SOCIAL_LINKS;
 
   const legalTitle = content?.legalTitle ?? "Légal";

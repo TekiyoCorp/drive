@@ -10,6 +10,10 @@ import { useEffect, useState } from "react";
 interface HeroContent {
   title?: string;
   subtitle?: string;
+  primaryButtonText?: string;
+  primaryButtonLink?: string;
+  secondaryButtonText?: string;
+  secondaryButtonLink?: string;
   backgroundImage?: unknown;
 }
 

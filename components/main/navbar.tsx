@@ -71,7 +71,7 @@ const Navbar = () => {
         if (!isMounted) return;
 
         setContent(attributes);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };
@@ -86,10 +86,10 @@ const Navbar = () => {
   const isHomePage = isClient ? pathname === "/" : true;
 
   // Parse navigation links - handle different Strapi data structures
-  let navigationLinks = NAV_LINKS;
+  let navigationLinks: { name: string; link: string }[] = NAV_LINKS;
   if (content?.navigationLinks) {
     if (Array.isArray(content.navigationLinks) && content.navigationLinks.length > 0) {
-      navigationLinks = content.navigationLinks
+      const mappedLinks = content.navigationLinks
         .map((link: NavigationLink) => {
           if (link.name && link.link) {
             return { name: link.name, link: link.link };
@@ -97,12 +97,12 @@ const Navbar = () => {
           if (link.attributes?.name && link.attributes?.link) {
             return { name: link.attributes.name, link: link.attributes.link };
           }
-          return { name: link.name || link.attributes?.name, link: link.link || link.attributes?.link };
+          return null;
         })
-        .filter((link) => link && link.name && link.link);
+        .filter((link): link is { name: string; link: string } => link !== null && typeof link.name === "string" && typeof link.link === "string");
       
-      if (navigationLinks.length === 0) {
-        navigationLinks = NAV_LINKS;
+      if (mappedLinks.length > 0) {
+        navigationLinks = mappedLinks;
       }
     }
   }

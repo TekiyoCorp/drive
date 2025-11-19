@@ -7,8 +7,18 @@ import Wrapper from "../global/wrapper";
 import { useEffect, useState } from "react";
 import { getImageUrl } from "@/lib/strapi";
 
+interface ReadyToTakeActionContent {
+  title?: string;
+  subtitle?: string;
+  leftButtonText?: string;
+  rightButtonText?: string;
+  leftButtonLink?: string;
+  rightButtonLink?: string;
+  backgroundImage?: unknown;
+}
+
 const ReadyToTakeAction = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<ReadyToTakeActionContent | null>(null);
   const [bgUrl, setBgUrl] = useState<string>("/images/main/footer-bg.webp");
 
   useEffect(() => {
@@ -45,7 +55,7 @@ const ReadyToTakeAction = () => {
         const imageData = attributes?.backgroundImage || attributes?.backgroundImage?.data ? attributes.backgroundImage : null;
         const computedUrl = imageData ? getImageUrl(imageData) : null;
         if (computedUrl) setBgUrl(computedUrl);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

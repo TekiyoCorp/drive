@@ -59,7 +59,7 @@ const VehicleShowcase = () => {
         const imageData = attributes?.carImage || attributes?.carImage?.data ? attributes.carImage : null;
         const computedUrl = imageData ? getImageUrl(imageData) : null;
         if (computedUrl) setCarImageUrl(computedUrl);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

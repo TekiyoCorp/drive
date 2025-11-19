@@ -1,9 +1,23 @@
 import { TESTIMONIALS } from "@/constants/testimonials";
 import OurTestimonials from "./our-testimonials";
 
+interface TestimonialData {
+  id?: number;
+  attributes?: {
+    name?: string;
+    location?: string;
+    quote?: string;
+    avatar?: unknown;
+  };
+  name?: string;
+  location?: string;
+  quote?: string;
+  avatar?: unknown;
+}
+
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function OurTestimonialsWrapper() {
-  let testimonials: any[] = [];
+  let testimonials: TestimonialData[] = [];
   let error: string | null = null;
 
   try {

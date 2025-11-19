@@ -7,12 +7,26 @@ import Wrapper from "../global/wrapper";
 import { Carousel, CarouselContent, CarouselItem } from "../ui/carousel";
 import { getImageUrl } from "@/lib/strapi";
 
+interface TestimonialData {
+  id?: number;
+  attributes?: {
+    name?: string;
+    location?: string;
+    quote?: string;
+    avatar?: unknown;
+  };
+  name?: string;
+  location?: string;
+  quote?: string;
+  avatar?: unknown;
+}
+
 interface OurTestimonialsProps {
-  testimonials?: any[];
+  testimonials?: TestimonialData[];
   error?: string | null;
 }
 
-const OurTestimonials = ({ testimonials, error = null }: OurTestimonialsProps) => {
+const OurTestimonials = ({ testimonials }: OurTestimonialsProps) => {
   return (
     <div className="w-full min-h-screen flex items-center justify-center flex-col select-none">
       <Wrapper className="px-6 md:!px-24">
@@ -47,7 +61,7 @@ const OurTestimonials = ({ testimonials, error = null }: OurTestimonialsProps) =
                   <CarouselItem
                     key={testimonialId}
                     className="w-[266px] max-w-[266px] p-1.5"
-                    aria-label={`${name} card`}
+                    aria-label={`${name || 'Testimonial'} card`}
                   >
                     <Container
                       animation="fadeUp"
@@ -60,10 +74,19 @@ const OurTestimonials = ({ testimonials, error = null }: OurTestimonialsProps) =
                       <div className="relative w-[45px] h-[45px] rounded-full overflow-hidden">
                         {avatar ? (() => {
                           const avatarUrl = typeof avatar === 'string' ? avatar : getImageUrl(avatar);
+                          let altText = "Avatar";
+                          if (typeof avatar !== 'string' && avatar && typeof avatar === 'object') {
+                            if ('data' in avatar && avatar.data && typeof avatar.data === 'object' && 'attributes' in avatar.data) {
+                              const attrs = avatar.data.attributes as { alternativeText?: string };
+                              if (attrs.alternativeText) {
+                                altText = attrs.alternativeText;
+                              }
+                            }
+                          }
                           return avatarUrl ? (
                             <Image
                               src={avatarUrl}
-                              alt={typeof avatar === 'string' ? "Avatar" : avatar.data?.attributes?.alternativeText || "Avatar"}
+                              alt={altText}
                               fill
                               sizes="45px"
                               className="object-cover object-top"
@@ -71,14 +94,14 @@ const OurTestimonials = ({ testimonials, error = null }: OurTestimonialsProps) =
                           ) : (
                             <div className="w-full h-full bg-white/20 rounded-full flex items-center justify-center">
                               <span className="text-white text-sm font-medium">
-                                {name.charAt(0)}
+                                {name?.charAt(0) || '?'}
                               </span>
                             </div>
                           );
                         })() : (
                           <div className="w-full h-full bg-white/20 rounded-full flex items-center justify-center">
                             <span className="text-white text-sm font-medium">
-                              {name.charAt(0)}
+                              {name?.charAt(0) || '?'}
                             </span>
                           </div>
                         )}
@@ -98,7 +121,7 @@ const OurTestimonials = ({ testimonials, error = null }: OurTestimonialsProps) =
                         </p>
 
                         <h3 className="text-white font-medium text-[28px]">
-                          {name}
+                          {name || 'Anonymous'}
                         </h3>
                         <p className="text-white/70 text-lg -mt-2">
                           {location}

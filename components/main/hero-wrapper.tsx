@@ -1,8 +1,28 @@
 import Hero from "./hero";
 
+interface HeroData {
+  id?: number;
+  attributes?: {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: unknown;
+    ctaText?: string;
+    ctaLink?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
+  };
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: unknown;
+  ctaText?: string;
+  ctaLink?: string;
+}
+
 // Server Component wrapper that fetches data and passes it to the client component
 export default async function HeroWrapper() {
-  let heroData: any = null;
+  let heroData: HeroData | null = null;
   let error: string | null = null;
 
   try {

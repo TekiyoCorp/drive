@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getImageUrl } from "@/lib/strapi";
 
 const VehicleFeatures = () => {
-  const defaultFeatures = [
+  const defaultFeatures = useMemo(() => [
     {
       id: 1,
       title: "Candidature",
@@ -39,7 +39,7 @@ const VehicleFeatures = () => {
       description: "Finalisez la première vente de votre véhicule.",
       icon: "/images/main/sell-my-car/4.svg",
     },
-  ];
+  ], []);
 
   interface StrapiFeature {
     title?: string;
@@ -116,7 +116,7 @@ const VehicleFeatures = () => {
         const bannerData = attributes?.bannerImage || attributes?.bannerImage?.data ? attributes.bannerImage : null;
         const bannerComputedUrl = bannerData ? getImageUrl(bannerData) : null;
         if (bannerComputedUrl) setBannerUrl(bannerComputedUrl);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

@@ -22,6 +22,7 @@ interface SelectOption {
 interface ApplicationFormContent {
   title?: string;
   description?: string;
+  submitButtonText?: string;
   fieldLabels?: Record<string, string>;
   apportOptions?: SelectOption[];
   experienceOptions?: SelectOption[];
@@ -68,7 +69,7 @@ const ApplicationForm = () => {
         if (!isMounted) return;
 
         setContent(attributes);
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

@@ -42,7 +42,7 @@ const AboutUs = () => {
         const imageData = attributes?.backgroundImage || attributes?.backgroundImage?.data ? attributes.backgroundImage : null;
         const computedUrl = imageData ? getImageUrl(imageData) : null;
         if (computedUrl) setBgUrl(computedUrl);
-      } catch (_err) {
+      } catch {
         // ignore errors, keep defaults
       }
     };

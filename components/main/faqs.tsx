@@ -32,7 +32,7 @@ interface FAQsProps {
   error?: string | null;
 }
 
-const FAQs = ({ strapiFAQs, error = null }: FAQsProps) => {
+const FAQs = ({ strapiFAQs }: FAQsProps) => {
   return (
     <div className="flex flex-col items-center justify-center w-full py-16 lg:py-24 min-h-screen h-full">
       <Wrapper>

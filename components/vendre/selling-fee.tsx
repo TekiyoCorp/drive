@@ -7,8 +7,24 @@ import Wrapper from "../global/wrapper";
 import { Button } from "../ui/button";
 import { PhoneIcon, VideoIcon } from "lucide-react";
 
+interface SellingFeeContent {
+  title?: string;
+  subtitle?: string;
+  carImage?: {
+    data?: {
+      attributes?: {
+        url?: string;
+      };
+    };
+    attributes?: {
+      url?: string;
+    };
+    url?: string;
+  };
+}
+
 const SellingFee = () => {
-  const [content, setContent] = useState<any>(null);
+  const [content, setContent] = useState<SellingFeeContent | null>(null);
   const [carImageUrl, setCarImageUrl] = useState<string>("/images/vendre/car.webp");
 
   useEffect(() => {
@@ -64,7 +80,7 @@ const SellingFee = () => {
             setCarImageUrl(imageUrl);
           }
         }
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Wrapper from "../global/wrapper";
 import Container from "../global/container";
 import Image from "next/image";
@@ -29,6 +29,9 @@ const getLocalIconPath = (iconName: string | null | undefined, fallbackIndex: nu
 };
 
 interface SellMyCarContent {
+  badgeText?: string;
+  title?: string;
+  bottomText?: string;
   carImage?: unknown;
   features?: Array<{
     title?: string;
@@ -40,7 +43,7 @@ interface SellMyCarContent {
 const SellMyCar = () => {
   const [content, setContent] = useState<SellMyCarContent | null>(null);
   const [carImageUrl, setCarImageUrl] = useState<string>("/images/main/car.svg");
-  const defaultFeatures: Feature[] = [
+  const defaultFeatures: Feature[] = useMemo(() => [
     {
       id: 1,
       title: "Estimation instantanée",
@@ -65,7 +68,7 @@ const SellMyCar = () => {
       description: "Fonds viré avant remise des clés.",
       icon: getLocalIconPath("4", 3),
     },
-  ];
+  ], []);
 
   const [features, setFeatures] = useState<Feature[]>(defaultFeatures);
 
@@ -132,6 +135,7 @@ const SellMyCar = () => {
         // Handle features
         if (attributes?.features && Array.isArray(attributes.features) && attributes.features.length > 0) {
           interface StrapiFeature {
+            id?: number;
             title?: string;
             icon?: string;
             description?: string;
@@ -156,7 +160,7 @@ const SellMyCar = () => {
           });
           setFeatures(mappedFeatures);
         }
-      } catch (_err) {
+      } catch {
         // Ignore errors, fall back to defaults
       }
     };
@@ -178,16 +182,18 @@ const SellMyCar = () => {
                 {content?.badgeText ?? "Vendre ma voiture →"}
               </div>
               <h1 className="text-4xl font-medium max-w-4xl">
-                {content?.title ? (
-                  content.title.split("\n").map((line: string, index: number) => (
+                {content?.title ? (() => {
+                  const title = content.title;
+                  const lines = title.split("\n");
+                  return lines.map((line: string, index: number) => (
                     <React.Fragment key={index}>
                       {line}
-                      {index < content.title.split("\n").length - 1 && (
+                      {index < lines.length - 1 && (
                         <br className="max-md:hidden" />
                       )}
                     </React.Fragment>
-                  ))
-                ) : (
+                  ));
+                })() : (
                   <>
                     Nous estimons la valeur de votre voiture,
                     <br className="max-md:hidden" />
@@ -268,14 +274,16 @@ const SellMyCar = () => {
           <Container animation="fadeUp" delay={2.6}>
             <div className="text-center space-y-2 max-w-2xl mt-12 text-base">
               <p className="text-white font-medium">
-                {content?.bottomText ? (
-                  content.bottomText.split("\n").map((line: string, index: number) => (
+                {content?.bottomText ? (() => {
+                  const bottomText = content.bottomText;
+                  const lines = bottomText.split("\n");
+                  return lines.map((line: string, index: number) => (
                     <React.Fragment key={index}>
                       {line}
-                      {index < content.bottomText.split("\n").length - 1 && <br />}
+                      {index < lines.length - 1 && <br />}
                     </React.Fragment>
-                  ))
-                ) : (
+                  ));
+                })() : (
                   <>
                     Nous gérons chaque étape : <br /> évaluation, visibilité,
                     réservation et transfert d&apos;argent sans frais cachés, sans

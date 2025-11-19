@@ -5,12 +5,34 @@ import LiquidGlassButton from "../common/liquid-glass-button";
 import Wrapper from "../global/wrapper";
 import { getImageUrl } from "@/lib/strapi";
 
+interface HeroData {
+  id?: number;
+  attributes?: {
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    backgroundImage?: unknown;
+    ctaText?: string;
+    ctaLink?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
+  };
+  title?: string;
+  subtitle?: string;
+  backgroundImage?: unknown;
+  ctaText?: string;
+  ctaLink?: string;
+  sellButtonText?: string;
+  buyButtonText?: string;
+}
+
 interface HeroProps {
-  heroData?: any;
+  heroData?: HeroData | null;
   error?: string | null;
 }
 
-const Hero = ({ heroData, error = null }: HeroProps) => {
+const Hero = ({ heroData }: HeroProps) => {
   return (
     <div className="hero-container relative z-0 w-full !p-2.5 md:!p-4 min-h-screen h-full">
       {/* Critical LCP image - optimized for immediate loading */}
@@ -19,10 +41,34 @@ const Hero = ({ heroData, error = null }: HeroProps) => {
           <img
             src={heroData?.backgroundImage || heroData?.attributes?.backgroundImage ? (() => {
               const imageData = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
-              const imageUrl = getImageUrl(imageData);
-              return imageUrl || "/images/main/hero.webp";
+              if (imageData && typeof imageData === "object" && ("data" in imageData || "attributes" in imageData)) {
+                const imageUrl = getImageUrl(imageData as Parameters<typeof getImageUrl>[0]);
+                return imageUrl || "/images/main/hero.webp";
+              }
+              return "/images/main/hero.webp";
             })() : "/images/main/hero.webp"}
-            alt={heroData?.backgroundImage?.alternativeText || heroData?.attributes?.backgroundImage?.data?.attributes?.alternativeText || "Hero Image - Drive Premium Car Platform"}
+            alt={(() => {
+              const bgImage = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
+              if (bgImage && typeof bgImage === "object") {
+                // Check for direct alternativeText
+                if ("alternativeText" in bgImage && typeof bgImage.alternativeText === "string") {
+                  return bgImage.alternativeText;
+                }
+                // Check for nested data.attributes.alternativeText
+                if ("data" in bgImage && bgImage.data && typeof bgImage.data === "object") {
+                  if ("attributes" in bgImage.data && bgImage.data.attributes && typeof bgImage.data.attributes === "object") {
+                    const attrs = bgImage.data.attributes as { alternativeText?: string };
+                    if (attrs.alternativeText) return attrs.alternativeText;
+                  }
+                }
+                // Check for attributes.alternativeText (alternative structure)
+                if ("attributes" in bgImage && bgImage.attributes && typeof bgImage.attributes === "object") {
+                  const attrs = bgImage.attributes as { alternativeText?: string };
+                  if (attrs.alternativeText) return attrs.alternativeText;
+                }
+              }
+              return "Hero Image - Drive Premium Car Platform";
+            })()}
             className="w-full object-cover h-full min-h-screen object-center rounded-3xl"
             style={{
               transform: "translateZ(0)",
