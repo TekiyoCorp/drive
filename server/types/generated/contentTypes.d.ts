@@ -918,6 +918,49 @@ export interface ApiMaximizeYourProfitabilityMaximizeYourProfitability
   };
 }
 
+export interface ApiNeedAssistanceNeedAssistance
+  extends Struct.SingleTypeSchema {
+  collectionName: 'need_assistances';
+  info: {
+    description: "Contenu de la section 'Besoin d'assistance ?'";
+    displayName: 'Need Assistance';
+    pluralName: 'need-assistances';
+    singularName: 'need-assistance';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    driveMessage: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<'Bonjour, en quoi pouvons-\nnous vous aider ?'>;
+    driveMessageLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'DRIVE'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::need-assistance.need-assistance'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    title: Schema.Attribute.String &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<"Besoin d'assistance ?">;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    userMessage: Schema.Attribute.Text &
+      Schema.Attribute.DefaultTo<"Bonjour, j'ai besoin d'aide\nconcernant un v\u00E9hicule.">;
+    userMessageLabel: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Vous'>;
+    whatsappButtonLink: Schema.Attribute.String;
+    whatsappButtonText: Schema.Attribute.String &
+      Schema.Attribute.DefaultTo<'Whatsapp Business'>;
+  };
+}
+
 export interface ApiOpenAgencyApplicationFormOpenAgencyApplicationForm
   extends Struct.SingleTypeSchema {
   collectionName: 'open_agency_application_forms';
@@ -2018,6 +2061,7 @@ declare module '@strapi/strapi' {
       'api::hero.hero': ApiHeroHero;
       'api::key-figures.key-figures': ApiKeyFiguresKeyFigures;
       'api::maximize-your-profitability.maximize-your-profitability': ApiMaximizeYourProfitabilityMaximizeYourProfitability;
+      'api::need-assistance.need-assistance': ApiNeedAssistanceNeedAssistance;
       'api::open-agency-application-form.open-agency-application-form': ApiOpenAgencyApplicationFormOpenAgencyApplicationForm;
       'api::open-agency-features.open-agency-features': ApiOpenAgencyFeaturesOpenAgencyFeatures;
       'api::open-agency-hero.open-agency-hero': ApiOpenAgencyHeroOpenAgencyHero;
