@@ -82,7 +82,7 @@ const ContactUsPage = () => {
               link: item.link || item.attributes?.link || "#",
               disabled: item.disabled !== undefined ? item.disabled : (item.attributes?.disabled || false),
             }))
-            .filter((item) => item.name && item.link);
+            .filter((item: { name: string; link: string; disabled: boolean }) => item.name && item.link);
           
           if (links.length > 0) {
             setContactLinks(links);
