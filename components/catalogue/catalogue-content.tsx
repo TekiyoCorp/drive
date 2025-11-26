@@ -406,6 +406,7 @@ const CatalogueContent = ({ vehicles, error, agencyIds }: CatalogueContentProps)
         appliedFilters={appliedFilters}
         draftFilters={draftFilters}
         isPanelOpen={isPanelOpen}
+        isLoading={isFetchingRemote}
         options={filterOptions}
         onOpenPanel={handleOpenPanel}
         onCancelPanel={handleCancelPanel}
