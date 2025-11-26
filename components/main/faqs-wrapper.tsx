@@ -12,6 +12,8 @@ interface FAQItem {
 export default async function FAQsWrapper() {
   let strapiFAQs: FAQItem[] = [];
   let error: string | null = null;
+  let leftImageUrl: string | undefined;
+  let rightImageUrl: string | undefined;
 
   try {
     // Fetch FAQs from Strapi API server-side (single type with repeatable components)
@@ -39,6 +41,33 @@ export default async function FAQsWrapper() {
     const attributes = node ? (node.attributes ?? node) : null;
     const faqsData = attributes?.faqs || [];
     
+    const getMediaUrl = (media: any): string | undefined => {
+      if (!media || typeof media !== 'object') return undefined;
+
+      let url: string | undefined;
+
+      if ('data' in media && media.data) {
+        const data = media.data as { attributes?: { url?: string }; url?: string };
+        url = data.attributes?.url || data.url;
+      }
+
+      if (!url && 'attributes' in media && media.attributes) {
+        const attrs = media.attributes as { url?: string };
+        url = attrs.url;
+      }
+
+      if (!url && 'url' in media && typeof media.url === 'string') {
+        url = media.url;
+      }
+
+      if (!url || url.trim() === '') return undefined;
+
+      return url.startsWith('http') ? url : `${baseURL}${url}`;
+    };
+
+    leftImageUrl = getMediaUrl(attributes?.leftImage);
+    rightImageUrl = getMediaUrl(attributes?.rightImage);
+    
     // Transform component format to our expected format
     // Components have id, title, content, order directly
     strapiFAQs = Array.isArray(faqsData) 
@@ -60,6 +89,8 @@ export default async function FAQsWrapper() {
   return (
     <FAQs 
       strapiFAQs={strapiFAQs}
+      leftImageUrl={leftImageUrl}
+      rightImageUrl={rightImageUrl}
       error={error}
     />
   );

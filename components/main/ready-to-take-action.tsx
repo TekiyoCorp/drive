@@ -5,7 +5,6 @@ import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { useEffect, useState } from "react";
-import { getImageUrl } from "@/lib/strapi";
 
 interface ReadyToTakeActionContent {
   title?: string;
@@ -26,7 +25,8 @@ const ReadyToTakeAction = () => {
 
     const fetchContent = async () => {
       try {
-        const baseURL = process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+        const baseURL =
+          process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
         const apiToken = process.env.NEXT_PUBLIC_STRAPI_API_TOKEN || process.env.STRAPI_API_TOKEN;
 
         const response = await fetch(
@@ -52,9 +52,35 @@ const ReadyToTakeAction = () => {
 
         setContent(attributes);
 
-        const imageData = attributes?.backgroundImage || attributes?.backgroundImage?.data ? attributes.backgroundImage : null;
-        const computedUrl = imageData ? getImageUrl(imageData) : null;
-        if (computedUrl) setBgUrl(computedUrl);
+        const bgImage = attributes?.backgroundImage;
+        let url: string | undefined;
+
+        if (bgImage && typeof bgImage === "object") {
+          // Standard Strapi format: { data: { attributes: { url } } }
+          if ("data" in bgImage && bgImage.data) {
+            const data = bgImage.data as {
+              attributes?: { url?: string };
+              url?: string;
+            };
+            url = data.attributes?.url || data.url;
+          }
+
+          // Alternative format: { attributes: { url } }
+          if (!url && "attributes" in bgImage && bgImage.attributes) {
+            const attrs = bgImage.attributes as { url?: string };
+            url = attrs.url;
+          }
+
+          // Direct URL format: { url }
+          if (!url && "url" in bgImage && typeof bgImage.url === "string") {
+            url = bgImage.url;
+          }
+        }
+
+        if (url && url.trim() !== "") {
+          const fullUrl = url.startsWith("http") ? url : `${baseURL}${url}`;
+          setBgUrl(fullUrl);
+        }
       } catch {
         // Ignore errors, fall back to defaults
       }

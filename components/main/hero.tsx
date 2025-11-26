@@ -33,20 +33,56 @@ interface HeroProps {
 }
 
 const Hero = ({ heroData }: HeroProps) => {
+  const baseURL =
+    process.env.NEXT_PUBLIC_STRAPI_URL || "http://localhost:1337";
+
   return (
     <div className="hero-container relative z-0 w-full !p-2.5 md:!p-4 min-h-screen h-full">
       {/* Critical LCP image - optimized for immediate loading */}
       <div className="-z-10 rounded-3xl overflow-hidden">
         <picture>
           <img
-            src={heroData?.backgroundImage || heroData?.attributes?.backgroundImage ? (() => {
-              const imageData = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
-              if (imageData && typeof imageData === "object" && ("data" in imageData || "attributes" in imageData)) {
-                const imageUrl = getImageUrl(imageData as Parameters<typeof getImageUrl>[0]);
-                return imageUrl || "/images/main/hero.webp";
+            src={(() => {
+              const bgImage =
+                heroData?.backgroundImage ||
+                heroData?.attributes?.backgroundImage;
+
+              if (!bgImage || typeof bgImage !== "object") {
+                return "/images/main/hero.webp";
               }
-              return "/images/main/hero.webp";
-            })() : "/images/main/hero.webp"}
+
+              let url: string | undefined;
+
+              // Standard Strapi format: { data: { attributes: { url } } }
+              if (
+                "data" in bgImage &&
+                bgImage.data &&
+                typeof bgImage.data === "object"
+              ) {
+                const data = bgImage.data as {
+                  attributes?: { url?: string };
+                  url?: string;
+                };
+                url = data.attributes?.url || data.url;
+              }
+
+              // Alternative format: { attributes: { url } }
+              if (!url && "attributes" in bgImage && bgImage.attributes) {
+                const attrs = bgImage.attributes as { url?: string };
+                url = attrs.url;
+              }
+
+              // Direct URL format: { url }
+              if (!url && "url" in bgImage && typeof bgImage.url === "string") {
+                url = bgImage.url;
+              }
+
+              if (!url || url.trim() === "") {
+                return "/images/main/hero.webp";
+              }
+
+              return url.startsWith("http") ? url : `${baseURL}${url}`;
+            })()}
             alt={(() => {
               const bgImage = heroData?.backgroundImage || heroData?.attributes?.backgroundImage;
               if (bgImage && typeof bgImage === "object") {

@@ -30,9 +30,11 @@ interface FAQItem {
 interface FAQsProps {
   strapiFAQs?: FAQItem[];
   error?: string | null;
+  leftImageUrl?: string;
+  rightImageUrl?: string;
 }
 
-const FAQs = ({ strapiFAQs }: FAQsProps) => {
+const FAQs = ({ strapiFAQs, leftImageUrl, rightImageUrl }: FAQsProps) => {
   return (
     <div className="flex flex-col items-center justify-center w-full py-16 lg:py-24 min-h-screen h-full">
       <Wrapper>
@@ -148,7 +150,7 @@ const FAQs = ({ strapiFAQs }: FAQsProps) => {
                 className="relative grow h-full min-h-[262px]"
               >
                 <Image
-                  src="/images/main/faq/1.webp"
+                  src={leftImageUrl || "/images/main/faq/1.webp"}
                   alt="Car brake disc"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
@@ -165,7 +167,7 @@ const FAQs = ({ strapiFAQs }: FAQsProps) => {
                 className="relative h-full grow min-h-[400px]"
               >
                 <Image
-                  src="/images/main/faq/2.webp"
+                  src={rightImageUrl || "/images/main/faq/2.webp"}
                   alt="Car with person"
                   fill
                   sizes="(max-width: 1024px) 100vw, 50vw"
