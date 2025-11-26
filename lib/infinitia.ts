@@ -57,6 +57,12 @@ export interface InfinitiaPagination {
   totalPages: number;
 }
 
+export interface InfinitiaFilterClause {
+  field: string;
+  operator: "eq" | "gte" | "lte";
+  value: string | number;
+}
+
 export interface InfinitiaVehiclesResponse {
   items: InfinitiaVehicle[];
   pagination: InfinitiaPagination;
@@ -69,6 +75,7 @@ export interface FetchInfinitiaVehiclesOptions {
   pageSize?: number;
   signal?: AbortSignal;
   revalidateSeconds?: number;
+  filters?: InfinitiaFilterClause[];
 }
 
 /**
@@ -87,6 +94,13 @@ export async function fetchInfinitiaVehicles(
   const params = new URLSearchParams();
   if (options.page) params.set("page", String(options.page));
   if (options.pageSize) params.set("pageSize", String(options.pageSize));
+  if (options.filters && options.filters.length > 0) {
+    try {
+      params.set("filters", JSON.stringify(options.filters));
+    } catch (error) {
+      console.warn("Failed to serialize Infinitia filters", error);
+    }
+  }
 
   const url = `${baseUrl}/public/business/${agencyId}/vehicles${params.toString() ? `?${params.toString()}` : ""}`;
 

@@ -13,11 +13,12 @@ import type { CatalogueCardData } from "@/components/catalogue/catalogue-card";
 const CataloguePage = async () => {
   let vehicles: CatalogueCardData[] = [];
   let error: string | null = null;
+  let agencyIds: number[] = [];
 
   try {
     // Get all agencies
     const agencies = await getAgencies();
-    const agencyIds = agencies.map(agency => agency.id);
+    agencyIds = agencies.map(agency => agency.id).filter(id => Number.isFinite(id));
 
     if (agencyIds.length === 0) {
       // Fallback to static data if no agencies
@@ -41,12 +42,13 @@ const CataloguePage = async () => {
     error = err instanceof Error ? err.message : 'Failed to load vehicles';
     // Fallback to static data if API fails
     vehicles = OUR_CATALOGUES;
+    agencyIds = [];
   }
 
   return (
     <div className="w-full relative flex flex-col">
       <SnapScrollContentBox>
-        <CatalogueContent vehicles={vehicles} error={error} />
+        <CatalogueContent vehicles={vehicles} error={error} agencyIds={agencyIds} />
       </SnapScrollContentBox>
 
       <SnapElement>

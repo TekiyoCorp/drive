@@ -53,6 +53,14 @@ const LiquidGlass = ({
     }
   }, [isClient, isSafari, isSafariIOS, isSafariMacOS]);
 
+  if (!isClient) {
+    return (
+      <div style={safariStyles} className={cn("rounded-[30px]", parentClassName)}>
+        <div className={className}>{children}</div>
+      </div>
+    );
+  }
+
   return (
     <div style={safariStyles} className={cn("rounded-[30px]", parentClassName)}>
       <LiquidGlassDisplay
