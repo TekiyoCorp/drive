@@ -44,7 +44,7 @@ export async function POST(request: Request) {
     }
 
     const responses = await Promise.all(
-      agencyIds.map(async (agencyId) => {
+      agencyIds.map(async (agencyId: number) => {
         try {
           const result = await fetchInfinitiaVehicles(agencyId, {
             filters,
