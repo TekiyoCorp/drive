@@ -204,9 +204,7 @@ function MediaCardSlider() {
                       {item.text && (
                         <div className="w-full">
                           <p className="font-['SF_Pro_Display'] font-normal text-xl leading-normal m-0">
-                            <span className="text-white">Liquid Glass.</span>
-                            <span className="text-[#86868b] font-normal">
-                              {" "}
+                            <span className="text-white">
                               {item.text}
                             </span>
                           </p>
