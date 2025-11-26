@@ -12,6 +12,7 @@ import SpotlightSearch from "../common/spotlight-search";
 import Wrapper from "../global/wrapper";
 import { Button } from "../ui/button";
 import { NAV_LINKS } from "@/constants/links";
+import { useNavbarVisibility } from "@/contexts/navbar-visibility-context";
 
 const Navbar = () => {
   interface NavigationLink {
@@ -110,12 +111,19 @@ const Navbar = () => {
   const openAgencyButtonText = content?.openAgencyButtonText ?? "Ouvrir une agence";
   const openAgencyButtonLink = content?.openAgencyButtonLink ?? "/open-agency";
   const appointmentButtonText = content?.appointmentButtonText ?? "Prendre rendez-vous";
+  const { isFindDriveAgencyVisible } = useNavbarVisibility();
 
   return (
-    <header className="relative top-24 inset-x-0 z-50 w-full h-16 hidden xl:block pointer-events-none">
+    <header 
+      className={cn(
+        "fixed top-6 inset-x-0 z-30 w-full hidden xl:block pointer-events-none transition-opacity duration-300",
+        isFindDriveAgencyVisible && "opacity-0 pointer-events-none"
+      )} 
+      style={{ zIndex: 30 }}
+    >
       <Wrapper
         className={cn(
-          "flex items-center justify-between gap-2 pointer-events-auto",
+          "flex items-center justify-between gap-2 pointer-events-auto h-full z-30",
           isHomePage ? "px-8 lg:px-16" : "px-8 lg:px-24"
         )}
       >
@@ -165,13 +173,7 @@ const Navbar = () => {
           </LiquidGlass>
         </div>
 
-        <div>
-          <div
-            className={cn(
-              "flex items-center gap-3 fixed top-12",
-              isHomePage ? "right-8 lg:right-16" : "right-8 lg:right-24"
-            )}
-          >
+        <div className="flex items-center gap-3">
             {isClient && pathname === "/vendre" && (
               <Button className="rounded-full h-[45px] font-medium text-base !px-6 max-xl:hidden bg-white text-black">
                 {appointmentButtonText} <VideoIcon className="fill-black size-5" />
@@ -193,7 +195,6 @@ const Navbar = () => {
                 <span>{openAgencyButtonText}</span>
               </LiquidGlassButton>
             </Link>
-          </div>
         </div>
       </Wrapper>
     </header>

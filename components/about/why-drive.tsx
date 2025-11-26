@@ -21,6 +21,15 @@ const DEFAULT_ITEMS = [
   "Transmission de savoir faire",
 ];
 
+const capitalizeFirstLetter = (text: string): string => {
+  if (!text) return text;
+  // Convertir en minuscules puis capitaliser la première lettre de chaque mot
+  // Gère les espaces et les slashes
+  return text
+    .toLowerCase()
+    .replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
 const WhyDrive = ({ title, items }: WhyDriveProps) => {
   const resolvedTitle = title || DEFAULT_TITLE;
   const resolvedItems = (Array.isArray(items) && items.length > 0)
@@ -53,7 +62,7 @@ const WhyDrive = ({ title, items }: WhyDriveProps) => {
                 height={500}
                 className="object-contain aspect-square mix-blend-lighten"
               />
-              <p className="text-white text-[12px] font-semibold">{item}</p>
+              <p className="text-white text-[12px] font-semibold">{capitalizeFirstLetter(item)}</p>
             </Container>
           ))}
         </Container>

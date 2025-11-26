@@ -1,6 +1,6 @@
 import type { InfinitiaFilterClause } from "@/lib/infinitia";
 
-export type CatalogueSelectField = "brand" | "energy" | "transmission";
+export type CatalogueSelectField = "brand" | "energy" | "transmission" | "location";
 
 export type CatalogueRangeField = "price" | "year" | "km";
 
@@ -13,6 +13,7 @@ export interface CatalogueFiltersState {
   brand: string | null;
   energy: string | null;
   transmission: string | null;
+  location: string | null;
   price: CatalogueRangeValue;
   year: CatalogueRangeValue;
   km: CatalogueRangeValue;
@@ -22,6 +23,7 @@ export const createDefaultFiltersState = (): CatalogueFiltersState => ({
   brand: null,
   energy: null,
   transmission: null,
+  location: null,
   price: { min: null, max: null },
   year: { min: null, max: null },
   km: { min: null, max: null },
@@ -39,6 +41,7 @@ export const hasActiveFilters = (filters: CatalogueFiltersState): boolean => {
     filters.brand ||
       filters.energy ||
       filters.transmission ||
+      filters.location ||
       filters.price.min !== null ||
       filters.price.max !== null ||
       filters.year.min !== null ||
@@ -61,6 +64,10 @@ export const buildInfinitiaFilterPayload = (filters: CatalogueFiltersState): Inf
 
   if (filters.transmission) {
     payload.push({ field: "transmission", operator: "eq", value: filters.transmission });
+  }
+
+  if (filters.location) {
+    payload.push({ field: "location", operator: "eq", value: filters.location });
   }
 
   if (filters.price.min !== null) {
@@ -94,6 +101,7 @@ export interface CatalogueFilterOptionsSummary {
   brands: string[];
   energies: string[];
   transmissions: string[];
+  locations: string[];
   priceRange: CatalogueRangeValue;
   yearRange: CatalogueRangeValue;
   kmRange: CatalogueRangeValue;

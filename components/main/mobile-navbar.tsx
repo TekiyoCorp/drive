@@ -112,7 +112,7 @@ const MobileNavbar = () => {
   return (
     <header
       className={cn(
-        "absolute inset-x-0 z-50 w-full xl:hidden select-none",
+        "absolute inset-x-0 z-30 w-full xl:hidden select-none",
         toggleMenu ? "top-6" : isHomePage ? "top-6" : "top-6"
       )}
     >

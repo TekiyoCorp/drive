@@ -4,6 +4,7 @@ import CatalogueCard from "@/components/catalogue/catalogue-card";
 import CatalogueFilter from "@/components/catalogue/catalogue-filter";
 import Wrapper from "@/components/global/wrapper";
 import { OUR_CATALOGUES } from "@/constants/catalogues";
+import { LOCATIONS } from "@/constants/locations";
 import { Vehicle } from "@/lib/strapi";
 import { useCallback, useMemo, useState } from "react";
 import { CatalogueCardData } from "./catalogue-card";
@@ -196,6 +197,11 @@ const doesVehicleMatchFilters = (vehicle: NormalizedVehicle, filters: CatalogueF
     }
   }
 
+  // Location filter - will be implemented based on vehicle-agency relationship
+  // For now, if location filter is set, we'll need to check vehicle's agency city
+  // This requires additional data structure to map vehicles to agencies
+  // TODO: Implement location matching when vehicle-agency relationship is available
+
   return true;
 };
 
@@ -248,10 +254,16 @@ const buildFilterOptions = (vehicles: NormalizedVehicle[]): CatalogueFilterOptio
   const sortValues = (values: string[]) =>
     values.sort((a, b) => a.localeCompare(b, "fr", { sensitivity: "base" }));
 
+  // Extract unique cities from LOCATIONS
+  const locations = Array.from(new Set(LOCATIONS.map(loc => loc.city))).sort((a, b) => 
+    a.localeCompare(b, "fr", { sensitivity: "base" })
+  );
+
   return {
     brands: sortValues(Array.from(brandMap.values())),
     energies: sortValues(Array.from(energyMap.values())),
     transmissions: sortValues(Array.from(transmissionMap.values())),
+    locations,
     priceRange: finalizeRange(minPrice, maxPrice),
     yearRange: finalizeRange(minYear, maxYear),
     kmRange: finalizeRange(minKm, maxKm),

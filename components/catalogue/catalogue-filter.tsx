@@ -1,11 +1,14 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import Container from "@/components/global/container";
 import Wrapper from "@/components/global/wrapper";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { SlidersHorizontal, X } from "lucide-react";
+import { Search, SlidersHorizontal, X } from "lucide-react";
 import LiquidGlass from "../common/liquid-glass";
+import { Slider } from "../ui/slider";
 import {
   CatalogueFilterOptionsSummary,
   CatalogueFiltersState,
@@ -67,6 +70,10 @@ const getAppliedSummaries = (filters: CatalogueFiltersState) => {
     summaries.push(`Transmission ${filters.transmission}`);
   }
 
+  if (filters.location) {
+    summaries.push(`Localisation ${filters.location}`);
+  }
+
   const priceSummary = formatRangeSummary("Budget", filters.price, "€");
   if (priceSummary) {
     summaries.push(priceSummary);
@@ -85,8 +92,6 @@ const getAppliedSummaries = (filters: CatalogueFiltersState) => {
   return summaries;
 };
 
-const PANEL_TOP_OFFSET = 96;
-
 const CatalogueFilter = ({
   appliedFilters,
   draftFilters,
@@ -100,8 +105,23 @@ const CatalogueFilter = ({
   onRangeChange,
   onResetDraftFilters,
 }: CatalogueFilterProps) => {
+  const [mounted, setMounted] = useState(false);
+  const [locationSearch, setLocationSearch] = useState(draftFilters.location || "");
+  const [showLocationSuggestions, setShowLocationSuggestions] = useState(false);
   const appliedSummaries = getAppliedSummaries(appliedFilters);
   const activeAppliedCount = appliedSummaries.length;
+
+  // Vérifier que nous sommes côté client pour le Portal
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
+
+  // Synchroniser locationSearch avec draftFilters.location
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setLocationSearch(draftFilters.location || "");
+  }, [draftFilters.location]);
 
   const handleRangeClear = (field: CatalogueRangeField) => {
     onRangeChange(field, "min", null);
@@ -113,19 +133,43 @@ const CatalogueFilter = ({
     onSelectOption(field, currentValue === value ? null : value);
   };
 
+  const filteredLocations = options.locations.filter(location =>
+    location.toLowerCase().includes(locationSearch.toLowerCase())
+  );
+
+  const handleLocationSelect = (location: string) => {
+    onSelectOption("location", location);
+    setLocationSearch(location);
+    setShowLocationSuggestions(false);
+  };
+
+  const handleLocationInputChange = (value: string) => {
+    setLocationSearch(value);
+    setShowLocationSuggestions(true);
+    if (!value) {
+      onSelectOption("location", null);
+    }
+  };
+
   const renderSelectSection = (
     title: string,
     field: CatalogueSelectField,
-    values: string[]
+    values: string[],
+    index: number = 0
   ) => {
     if (!values.length) {
       return null;
     }
 
     return (
-      <section
+      <motion.section
         key={field}
-        className="border border-white/10 rounded-3xl p-6 bg-white/[0.02]"
+        className="max-w-[500px]"
+        style={{ fontFamily: "var(--font-base)", paddingBottom: "24px" }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 50 }}
+        transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
       >
         <div className="flex items-center justify-between gap-4">
           <p className="text-lg font-semibold">{title}</p>
@@ -133,7 +177,8 @@ const CatalogueFilter = ({
             <button
               type="button"
               onClick={() => onSelectOption(field, null)}
-              className="text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors"
+              className="text-xs capitalize text-white/60 hover:text-white transition-colors"
+              style={{ letterSpacing: "-0.06em" }}
             >
               Effacer
             </button>
@@ -155,7 +200,77 @@ const CatalogueFilter = ({
             />
           ))}
         </div>
-      </section>
+      </motion.section>
+    );
+  };
+
+  const renderLocationSection = (index: number = 0) => {
+    if (!options.locations.length) {
+      return null;
+    }
+
+    return (
+      <motion.section
+        key="location"
+        className="max-w-[500px]"
+        style={{ fontFamily: "var(--font-base)", paddingBottom: "24px" }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 50 }}
+        transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
+      >
+        <div className="flex items-center justify-between gap-4">
+          <p className="text-lg font-semibold">Localisation</p>
+          {draftFilters.location && (
+            <button
+              type="button"
+              onClick={() => {
+                onSelectOption("location", null);
+                setLocationSearch("");
+              }}
+              className="text-xs capitalize text-white/60 hover:text-white transition-colors"
+              style={{ letterSpacing: "-0.06em" }}
+            >
+              Effacer
+            </button>
+          )}
+        </div>
+
+        <div className="relative mt-5">
+          <LiquidGlass className="border border-white/50 border-x-0 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/60 h-5 w-5 z-10" />
+            <input
+              type="text"
+              placeholder="Rechercher une ville"
+              value={locationSearch || draftFilters.location || ""}
+              onChange={(e) => handleLocationInputChange(e.target.value)}
+              onFocus={() => setShowLocationSuggestions(true)}
+              onBlur={() => {
+                // Delay to allow click on suggestion
+                setTimeout(() => setShowLocationSuggestions(false), 200);
+              }}
+              className="h-[39px] outline-none w-full pl-10 pr-4 bg-transparent text-white placeholder:text-white/50"
+              style={{ fontFamily: "var(--font-base)" }}
+            />
+          </LiquidGlass>
+
+          {showLocationSuggestions && filteredLocations.length > 0 && (
+            <div className="absolute z-20 w-full mt-2 bg-[#050505]/95 backdrop-blur-[10px] border border-white/20 rounded-lg max-h-[200px] overflow-y-auto">
+              {filteredLocations.map((location) => (
+                <button
+                  key={location}
+                  type="button"
+                  onClick={() => handleLocationSelect(location)}
+                  className="w-full text-left px-4 py-2 hover:bg-white/10 transition-colors text-white"
+                  style={{ fontFamily: "var(--font-base)" }}
+                >
+                  {location}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      </motion.section>
     );
   };
 
@@ -164,15 +279,47 @@ const CatalogueFilter = ({
     title: string,
     description: string,
     unit?: string,
-    suggested?: CatalogueRangeValue
+    suggested?: CatalogueRangeValue,
+    index: number = 0
   ) => {
     const currentRange = draftFilters[field];
     const hasValue = currentRange.min !== null || currentRange.max !== null;
+    
+    // Valeurs pour le slider (min et max de la plage disponible)
+    const rangeMin = suggested?.min ?? 0;
+    const rangeMax = suggested?.max ?? (field === "price" ? 100000 : field === "year" ? new Date().getFullYear() : 300000);
+    const step = field === "price" ? 1000 : field === "year" ? 1 : 1000;
+    
+    // Valeurs actuelles du slider (utiliser les valeurs du filtre ou les valeurs par défaut)
+    const sliderMin = currentRange.min !== null ? currentRange.min : rangeMin;
+    const sliderMax = currentRange.max !== null ? currentRange.max : rangeMax;
+    
+    // Valeur pour le slider (array avec min et max)
+    const sliderValue = [sliderMin, sliderMax];
+
+    const handleSliderChange = (values: number[]) => {
+      const [newMin, newMax] = values;
+      // Si la valeur est égale à la valeur min/max de la plage, on la met à null pour indiquer "pas de filtre"
+      // Mais on garde la valeur si elle a été explicitement choisie
+      onRangeChange(field, "min", newMin === rangeMin ? null : newMin);
+      onRangeChange(field, "max", newMax === rangeMax ? null : newMax);
+    };
+
+    // Ajouter padding de 12px pour Budget (price), Année (year) et Kilométrage (km)
+    const shouldAddPadding = field === "price" || field === "year" || field === "km";
 
     return (
-      <section
+      <motion.section
         key={field}
-        className="border border-white/10 rounded-3xl p-6 bg-white/[0.02]"
+        className="max-w-[500px]"
+        style={{ 
+          fontFamily: "var(--font-base)",
+          ...(shouldAddPadding && { padding: "12px" })
+        }}
+        initial={{ opacity: 0, x: 50 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: 50 }}
+        transition={{ duration: 0.4, delay: 0.4 + index * 0.1 }}
       >
         <div className="flex items-start justify-between gap-4">
           <div>
@@ -185,30 +332,42 @@ const CatalogueFilter = ({
             <button
               type="button"
               onClick={() => handleRangeClear(field)}
-              className="text-xs uppercase tracking-[0.2em] text-white/60 hover:text-white transition-colors"
+              className="text-xs capitalize text-white/60 hover:text-white transition-colors"
+              style={{ letterSpacing: "-0.06em" }}
             >
               Effacer
             </button>
           )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-          <RangeInput
-            label="Min"
-            unit={unit}
-            value={currentRange.min}
-            placeholder={suggested?.min}
-            onChange={value => onRangeChange(field, "min", value)}
-          />
-          <RangeInput
-            label="Max"
-            unit={unit}
-            value={currentRange.max}
-            placeholder={suggested?.max}
-            onChange={value => onRangeChange(field, "max", value)}
+        <div className="mt-6 space-y-4">
+          {/* Affichage des valeurs actuelles */}
+          <div className="flex items-center justify-between text-sm text-white/70">
+            <div className="flex items-center gap-2">
+              <span className="text-white/50">Min:</span>
+              <span className="font-medium text-white">
+                {numberFormatter.format(sliderMin)}{unit ? ` ${unit}` : ""}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-white/50">Max:</span>
+              <span className="font-medium text-white">
+                {numberFormatter.format(sliderMax)}{unit ? ` ${unit}` : ""}
+              </span>
+            </div>
+          </div>
+
+          {/* Slider avec deux thumbs (min et max) */}
+          <Slider
+            value={sliderValue}
+            onValueChange={handleSliderChange}
+            min={rangeMin}
+            max={rangeMax}
+            step={step}
+            className="w-full"
           />
         </div>
-      </section>
+      </motion.section>
     );
   };
 
@@ -235,7 +394,8 @@ const CatalogueFilter = ({
                       {appliedSummaries.slice(0, 3).map(summary => (
                         <span
                           key={summary}
-                          className="px-3 py-1 rounded-full border border-white/30 text-xs uppercase tracking-wide"
+                          className="px-3 py-1 rounded-full text-xs capitalize"
+                          style={{ letterSpacing: "-0.06em" }}
                         >
                           {summary}
                         </span>
@@ -256,128 +416,177 @@ const CatalogueFilter = ({
         </Container>
       </Wrapper>
 
-      <AnimatePresence>
-        {isPanelOpen && (
-          <motion.button
-            type="button"
-            aria-label="Fermer les filtres"
-            key="filters-overlay"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-x-0 bottom-0 bg-black/60 backdrop-blur-[10px] z-[9998]"
-            style={{
-              top: `${PANEL_TOP_OFFSET}px`,
-              height: `calc(100vh - ${PANEL_TOP_OFFSET}px)`,
-            }}
-            onClick={onCancelPanel}
-          />
-        )}
-      </AnimatePresence>
+      {/* Portal pour sortir du stacking context */}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {isPanelOpen && (
+              <>
+                {/* Backdrop overlay avec blur */}
+                <motion.button
+                  type="button"
+                  aria-label="Fermer les filtres"
+                  key="filters-overlay"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.3 }}
+                  className="fixed inset-0 bg-black/60 backdrop-blur-[10px] z-[10000]"
+                  onClick={onCancelPanel}
+                />
 
-      <AnimatePresence>
-        {isPanelOpen && (
-          <motion.div
-            key="filters-panel"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
-            className="fixed inset-x-0 bottom-0 right-0 w-full bg-[#050505]/95 z-[9999] text-white"
-            style={{
-              padding: "50px",
-              top: `${PANEL_TOP_OFFSET}px`,
-              height: `calc(100vh - ${PANEL_TOP_OFFSET}px)`,
-            }}
-          >
+                {/* Panel full screen avec slide from right */}
+                <motion.div
+                  key="filters-panel"
+                  initial={{ x: "100%" }}
+                  animate={{ x: 0 }}
+                  exit={{ x: "100%" }}
+                  transition={{ duration: 0.45, ease: [0.32, 0.72, 0, 1] }}
+                  className="fixed top-0 left-0 right-0 bottom-0 w-screen h-screen bg-[#050505]/40 backdrop-blur-[10px] text-white z-[10001]"
+                  style={{
+                    fontFamily: "var(--font-base, 'InterDisplay', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Roboto, sans-serif)",
+                    padding: "50px",
+                  }}
+                >
             <div className="flex flex-col h-full">
-              <div className="flex items-start justify-between gap-6">
-                <div>
-                  <p className="text-xs uppercase tracking-[0.3em] text-white/50">
-                    Filtres catalogue
-                  </p>
-                  <h1 className="text-[36px] leading-[44px] font-semibold mt-2">
-                    Affinez votre sélection
-                  </h1>
-                </div>
-                <button
+              {/* Header avec bouton fermer en haut à droite */}
+              <div className="flex items-start justify-end">
+                <motion.button
                   type="button"
                   onClick={onCancelPanel}
                   className="p-2 border border-white/20 rounded-full hover:bg-white/10 transition-colors"
+                  aria-label="Fermer le panneau de filtres"
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: 50 }}
+                  transition={{ duration: 0.4, delay: 0.2 }}
                 >
                   <X className="size-5" />
-                </button>
+                </motion.button>
               </div>
 
-              <div className="flex flex-wrap items-center justify-between gap-4 mt-8 text-sm text-white/70">
-                <p>
-                  Sélectionnez des filtres pour mettre à jour le catalogue en temps réel.
-                </p>
+              <motion.div 
+                className="flex flex-wrap items-center justify-start gap-4 text-sm text-white/70" 
+                style={{ fontFamily: "var(--font-base)", marginTop: "12px" }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.4, delay: 0.3 }}
+              >
                 <button
                   type="button"
                   onClick={onResetDraftFilters}
-                  className="uppercase tracking-[0.3em] text-xs text-white/60 hover:text-white transition-colors"
+                  className="capitalize text-xs text-white/60 hover:text-white transition-colors"
+                  style={{ letterSpacing: "-0.06em" }}
                 >
                   Réinitialiser
                 </button>
-              </div>
+              </motion.div>
 
-              <div className="mt-8 flex-1 overflow-y-auto pr-3 pb-6">
+              <motion.div 
+                className="mt-8 flex-1 overflow-y-auto pr-3"
+                style={{ paddingBottom: "24px" }}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 50 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+              >
                 <div className="flex flex-col gap-6">
-                  {renderSelectSection("Marque", "brand", options.brands)}
+                  {renderSelectSection("Marque", "brand", options.brands, 0)}
+                  {renderLocationSection(1)}
                   {renderRangeSection(
                     "price",
                     "Budget",
                     "Définissez une fourchette de prix idéale",
                     "€",
-                    options.priceRange
+                    options.priceRange,
+                    2
                   )}
                   {renderRangeSection(
                     "year",
                     "Année",
                     "Choisissez la période de mise en circulation",
                     undefined,
-                    options.yearRange
+                    options.yearRange,
+                    3
                   )}
                   {renderRangeSection(
                     "km",
                     "Kilométrage",
                     "Limitez le kilométrage parcouru",
                     "km",
-                    options.kmRange
+                    options.kmRange,
+                    4
                   )}
-                  {renderSelectSection("Énergie", "energy", options.energies)}
-                  {renderSelectSection("Transmission", "transmission", options.transmissions)}
+                  {renderSelectSection("Énergie", "energy", options.energies, 5)}
+                  {renderSelectSection("Transmission", "transmission", options.transmissions, 6)}
                 </div>
-              </div>
+              </motion.div>
 
-              <div className="mt-auto pt-10 flex items-center justify-end gap-4">
-                <button
+              {/* Boutons Valider/Annuler en bas à droite en fixed */}
+              <div 
+                className="fixed bottom-0 left-1/2 -translate-x-1/2 md:left-auto md:translate-x-0 md:bottom-10 md:right-10 flex items-center justify-center z-[10002] w-full md:w-auto px-6 py-6 md:px-0 md:py-0" 
+                style={{ fontFamily: "var(--font-base)", gap: "24px" }}
+              >
+                <motion.button
                   type="button"
                   onClick={onCancelPanel}
-                  className="px-6 py-3 rounded-full border border-white/30 text-sm font-medium hover:bg-white/10 transition-colors"
+                  className="text-sm font-medium hover:opacity-70 transition-opacity"
+                  style={{ height: "fit-content", width: "fit-content" }}
+                  variants={{
+                    hidden: { opacity: 0, x: 50 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, delay: 1.0 } },
+                    exit: { opacity: 0, x: 50, transition: { duration: 0.45, delay: 0, ease: [0.32, 0.72, 0, 1] } }
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   Annuler
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   type="button"
                   onClick={onValidateFilters}
                   disabled={isLoading}
                   className={cn(
-                    "px-8 py-3 rounded-full text-sm font-semibold transition-colors",
+                    "text-sm font-semibold transition-all",
                     isLoading
-                      ? "bg-white/60 text-black/70 cursor-not-allowed"
-                      : "bg-white text-black hover:bg-white/90"
+                      ? "opacity-50 cursor-not-allowed"
+                      : "hover:opacity-90"
                   )}
+                  style={{ 
+                    height: "fit-content",
+                    paddingLeft: "28px",
+                    paddingRight: "28px",
+                    paddingTop: "12px",
+                    paddingBottom: "12px",
+                    borderRadius: "100px",
+                    backgroundColor: "white",
+                    color: "black"
+                  }}
+                  variants={{
+                    hidden: { opacity: 0, x: 50 },
+                    visible: { opacity: 1, x: 0, transition: { duration: 0.4, delay: 1.0 } },
+                    exit: { opacity: 0, x: 50, transition: { duration: 0.45, delay: 0, ease: [0.32, 0.72, 0, 1] } }
+                  }}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   {isLoading ? "Chargement..." : "Valider"}
-                </button>
+                </motion.button>
               </div>
             </div>
           </motion.div>
+          </>
         )}
-      </AnimatePresence>
+      </AnimatePresence>,
+      document.body
+      )}
     </>
   );
 };
@@ -398,53 +607,11 @@ const FilterChip = ({ label, selected, onClick }: FilterChipProps) => (
         ? "bg-white text-black border-white"
         : "border-white/20 text-white hover:border-white/60"
     )}
+    style={{ fontFamily: "var(--font-base)" }}
   >
     {label}
   </button>
 );
 
-interface RangeInputProps {
-  label: string;
-  value: number | null;
-  placeholder?: number | null;
-  unit?: string;
-  onChange: (value: number | null) => void;
-}
-
-const RangeInput = ({ label, value, placeholder, unit, onChange }: RangeInputProps) => {
-  const placeholderText =
-    placeholder !== null && placeholder !== undefined
-      ? numberFormatter.format(placeholder)
-      : undefined;
-
-  return (
-    <label className="flex flex-col gap-2 text-sm text-white/60">
-      <span>{label}</span>
-      <div className="relative">
-        <input
-          type="number"
-          inputMode="numeric"
-          value={value ?? ""}
-          onChange={(event) => {
-            const rawValue = event.target.value;
-            if (rawValue === "") {
-              onChange(null);
-              return;
-            }
-            const parsed = Number(rawValue);
-            onChange(Number.isNaN(parsed) ? null : parsed);
-          }}
-          className="w-full bg-white/5 border border-white/20 rounded-2xl px-4 py-3 text-base text-white placeholder:text-white/30 focus:border-white/60 focus:outline-none"
-          placeholder={placeholderText}
-        />
-        {unit && (
-          <span className="absolute right-4 top-1/2 -translate-y-1/2 text-white/50 text-sm pointer-events-none">
-            {unit}
-          </span>
-        )}
-      </div>
-    </label>
-  );
-};
 
 export default CatalogueFilter;

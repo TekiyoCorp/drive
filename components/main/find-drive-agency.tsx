@@ -4,12 +4,15 @@ import Container from "@/components/global/container";
 import { LOCATIONS } from "@/constants/locations";
 import { MARKERS } from "@/constants/map";
 import { Search } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import LiquidGlass from "../common/liquid-glass";
 import MinimalInteractiveMap from "../ui/interactive-map-minimal";
+import { useNavbarVisibility } from "@/contexts/navbar-visibility-context";
 
 const FindDriveAgency = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const { setIsFindDriveAgencyVisible } = useNavbarVisibility();
+  const sectionRef = useRef<HTMLDivElement>(null);
 
   const filteredLocations = LOCATIONS.filter(
     (location) =>
@@ -27,8 +30,33 @@ const FindDriveAgency = () => {
     title: marker.title || `${marker.popup?.title} - DRIVE agency`,
   }));
 
+  // Intersection Observer to detect when section is visible
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          setIsFindDriveAgencyVisible(entry.isIntersecting);
+        });
+      },
+      {
+        threshold: 0.1, // Trigger when 10% of the section is visible
+      }
+    );
+
+    const currentRef = sectionRef.current;
+    if (currentRef) {
+      observer.observe(currentRef);
+    }
+
+    return () => {
+      if (currentRef) {
+        observer.unobserve(currentRef);
+      }
+    };
+  }, [setIsFindDriveAgencyVisible]);
+
   return (
-    <div className="relative z-0 w-full p-2.5 md:p-4 min-h-[95vh] h-full overflow-hidden">
+    <div ref={sectionRef} className="relative z-0 w-full p-2.5 md:p-4 min-h-[95vh] h-full overflow-hidden">
       <MinimalInteractiveMap
         center={[46.603354, 1.888334]} // Center of France
         zoom={6.2}

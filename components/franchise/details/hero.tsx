@@ -12,25 +12,25 @@ interface FranchiseHeroProps {
 const FranchiseHero = ({ agency }: FranchiseHeroProps) => {
 
   return (
-    <div className="relative z-0 w-full h-screen p-2.5 md:p-4">
+    <div className="relative z-0 w-full max-h-[560px] p-2.5 md:p-4">
       <Container
         animation="scaleUp"
         delay={0.1}
-        className="w-full h-screen relative overflow-hidden rounded-3xl"
+        className="w-full max-h-[560px] h-[560px] relative overflow-hidden rounded-3xl"
       >
-        <div className="w-full h-full bg-gradient-to-t from-black/70 to-transparent absolute top-0 left-0"></div>
         <Image
           src={agency.imageUrl}
           alt={agency.name}
-          width={1024}
-          height={1024}
-          className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
+          fill
+          className="object-cover object-center z-10 rounded-3xl"
+          sizes="100vw"
           priority
           fetchPriority="high"
         />
+        <div className="w-full h-full bg-gradient-to-t from-black/70 to-transparent absolute top-0 left-0 z-10"></div>
       </Container>
 
-      <Wrapper className="absolute bottom-0 left-0 w-full h-full md:h-fit py-6 z-10 flex items-center md:items-end justify-between !px-12 flex-col md:flex-row max-md:text-center">
+      <Wrapper className="absolute bottom-0 left-0 w-full h-full md:h-fit py-6 z-20 flex items-center md:items-end justify-between !px-12 flex-col md:flex-row max-md:text-center">
         <div className="flex flex-col md:justify-end gap-2">
           <h3 className="text-2xl font-medium">{agency.name}</h3>
           <div>
@@ -42,7 +42,7 @@ const FranchiseHero = ({ agency }: FranchiseHeroProps) => {
             </p>
           </div>
           <div className="w-fit max-md:mx-auto">
-            <Link href={"/franchise"}>
+            <Link href={"/catalogue"}>
               <LiquidGlassButton className="px-12">
                 <span>Voir le stock</span>
               </LiquidGlassButton>

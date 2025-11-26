@@ -3,7 +3,6 @@
 import { ArrowRight } from "lucide-react";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Wrapper from "../global/wrapper";
-import { getImageUrl } from "@/lib/strapi";
 
 interface HeroData {
   id?: number;
@@ -132,7 +131,7 @@ const Hero = ({ heroData }: HeroProps) => {
         <div className="flex flex-col items-center justify-center w-full z-10">
           {/* Critical content - render immediately for LCP */}
           <h1
-            className="hero-title text-balance !leading-[1.25] text-center text-[32px] font-semibold tracking-tight mt-6 w-full prevent-cls"
+            className="hero-title text-balance !leading-[1.25] text-center text-[32px] font-semibold tracking-tight mt-3 w-full prevent-cls"
             style={{
               contain: "layout style",
               willChange: "auto",
@@ -143,7 +142,7 @@ const Hero = ({ heroData }: HeroProps) => {
 
           {/* LCP supporting text - immediate render */}
           <p
-            className="hero-description text-base font-normal text-center text-white/80 max-w-[23rem] mx-auto mt-4 leading-relaxed prevent-cls"
+            className="hero-description text-base font-normal text-center text-white/80 max-w-[23rem] mx-auto mt-2 leading-relaxed prevent-cls"
             style={{
               contain: "layout style",
               willChange: "auto",
@@ -154,7 +153,7 @@ const Hero = ({ heroData }: HeroProps) => {
           </p>
 
           {/* Critical action buttons - defer animation for faster LCP */}
-          <div className="mt-6 flex items-center gap-3 prevent-cls">
+          <div className="mt-3 flex items-center gap-3 prevent-cls">
             <LiquidGlassButton
               className="btn-primary px-8 md:px-12"
               style={{ willChange: "auto" }}
@@ -173,7 +172,7 @@ const Hero = ({ heroData }: HeroProps) => {
 
           {/* Secondary CTA - render without heavy animations initially */}
           <button
-            className="mt-6 flex items-center gap-1 text-base font-medium group cursor-pointer prevent-cls"
+            className="mt-3 flex items-center gap-1 text-base font-medium group cursor-pointer prevent-cls"
             aria-label="Discover the DRIVE network"
             style={{
               contain: "layout style",

@@ -89,6 +89,9 @@ const CatalogueCard = ({
         />
       </div>
 
+      {/* Gradient noir du haut vers la moitié de la card */}
+      <div className="absolute inset-0 bg-gradient-to-b from-black via-black/50 to-transparent" style={{ height: "50%" }} />
+
       <div className="absolute top-6 left-6 right-6 text-white z-10">
         <h3 className="font-medium leading-tight">
           <span className="text-[28px]">{cardData.title}</span>
@@ -96,7 +99,7 @@ const CatalogueCard = ({
           <span className="text-[24px] text-white/70">{cardData.subtitle}</span>
         </h3>
 
-        <p className="mt-2 text-base font-medium max-w-[80%] text-white">
+        <p className="mt-2 text-base font-medium max-w-[80%] text-white" style={{ lineHeight: "1.3" }}>
           {cardData.description ||
             "Lorem ipsum is a dummy text for Tekiyo presentation"}
         </p>

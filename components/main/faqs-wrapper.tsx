@@ -41,7 +41,7 @@ export default async function FAQsWrapper() {
     const attributes = node ? (node.attributes ?? node) : null;
     const faqsData = attributes?.faqs || [];
     
-    const getMediaUrl = (media: any): string | undefined => {
+    const getMediaUrl = (media: unknown): string | undefined => {
       if (!media || typeof media !== 'object') return undefined;
 
       let url: string | undefined;
