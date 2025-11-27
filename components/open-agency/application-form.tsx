@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 
@@ -29,6 +30,7 @@ interface ApplicationFormContent {
 }
 
 const ApplicationForm = () => {
+  const router = useRouter();
   const [content, setContent] = useState<ApplicationFormContent | null>(null);
   const [formData, setFormData] = useState({
     nomComplet: "",
@@ -119,7 +121,13 @@ const ApplicationForm = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    // TODO: Submit to Strapi or API endpoint
+    
+    // Extract first name from nomComplet
+    const firstName = formData.nomComplet.split(" ")[0] || formData.nomComplet || "Thomas";
+    const encodedName = encodeURIComponent(firstName);
+    
+    // Redirect to thank you page with client name
+    router.push(`/thankyou?name=${encodedName}`);
   };
 
   return (
@@ -260,7 +268,7 @@ const ApplicationForm = () => {
                 <div className="pt-8 mx-auto md:w-fit max-md:px-4">
                   <Button
                     type="submit"
-                    className="bg-white text-black font-medium py-3 h-11 w-full md:px-32 rounded-full text-base mx-auto"
+                    className="bg-white text-black font-medium py-3 h-11 w-full md:px-32 rounded-full text-base mx-auto hover:bg-white"
                   >
                     {content?.submitButtonText || "ENVOYER"}
                   </Button>

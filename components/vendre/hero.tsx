@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import LiquidGlass from "../common/liquid-glass";
 import LiquidGlassButton from "../common/liquid-glass-button";
 import Container from "../global/container";
@@ -8,12 +9,24 @@ import Wrapper from "../global/wrapper";
 import CarFilters from "./car-filters";
 import ImageUpload from "./image-upload";
 import UserInfo from "./user-info";
+import { useVendreForm } from "@/contexts/vendre-form-context";
 
 const Hero = () => {
+  const router = useRouter();
+  const { progress, fullName } = useVendreForm();
+
+  const handleSubmit = async () => {
+    // Extract first name from fullName
+    const firstName = fullName.split(" ")[0] || fullName || "Thomas";
+    const encodedName = encodeURIComponent(firstName);
+    
+    // Redirect to thank you page with client name
+    router.push(`/thankyou?name=${encodedName}`);
+  };
   return (
-    <div className="relative z-0 w-full p-2.5 md:p-4 min-h-screen">
-      <Container animation="scaleUp" delay={0.1} className="w-full h-screen">
-        <div className="relative w-full h-screen">
+    <div className="relative z-0 w-full p-2.5 md:p-4 min-h-screen max-lg:min-h-[150vh]">
+      <Container animation="scaleUp" delay={0.1} className="w-full h-screen min-h-screen max-lg:min-h-[150vh]">
+        <div className="relative w-full h-full min-h-screen max-lg:min-h-[150vh]">
           <Image
             src={"/images/vendre/hero.webp"}
             alt={"Hero Image"}
@@ -49,9 +62,15 @@ const Hero = () => {
               contrast={1.2}
               elasticity={0.8}
               displacementScale={1}
-              className="border border-white/50 border-x-0 relative mt-6 !w-full lg:!w-fit mx-auto"
+              className="border border-white/50 border-x-0 relative mt-6 !w-full lg:!w-fit mx-auto bg-black/60"
             >
-              <CarFilters />
+              <div className="flex flex-col bg-transparent rounded-full py-4 px-6 min-w-[335px] w-full lg:py-0.5">
+                <CarFilters />
+                <div className="lg:hidden">
+                  <div className="w-full h-px bg-white/40 my-3" />
+                  <UserInfo />
+                </div>
+              </div>
             </LiquidGlass>
           </Container>
 
@@ -71,7 +90,7 @@ const Hero = () => {
 
           <Container
             delay={0.3}
-            className="w-full max-lg:max-w-lg px-4 mx-auto max-lg:hidden"
+            className="w-full max-lg:max-w-lg px-4 mx-auto"
           >
             <LiquidGlass
               blur={2}
@@ -84,23 +103,29 @@ const Hero = () => {
 
           <Container
             delay={0.3}
-            className="w-full max-lg:max-w-lg px-4 mx-auto mt-6 max-lg:hidden"
+            className="w-full max-lg:max-w-lg px-4 mx-auto mt-6"
           >
             <div className="flex items-center justify-center gap-3 flex-col">
-              <div className="relative w-[336px] bg-white/40 rounded-full h-2">
-                <div className="w-4 absolute top-0 left-0 bg-white h-full rounded-full" />
+              <div className="relative w-[336px] bg-white/40 rounded-full h-2 overflow-hidden">
+                <div
+                  className="absolute top-0 left-0 bg-white h-full rounded-full transition-all duration-300 ease-out"
+                  style={{ width: `${progress}%` }}
+                />
               </div>
-              <p>16%</p>
+              <p className="text-white text-sm">{progress}%</p>
+              {progress === 100 && (
+                <Container delay={0.4} className="mt-4">
+                  <LiquidGlassButton 
+                    className="px-10"
+                    onClick={handleSubmit}
+                  >
+                    <span>Envoyer</span>
+                  </LiquidGlassButton>
+                </Container>
+              )}
             </div>
           </Container>
 
-          <Container delay={0.3} className="lg:hidden">
-            <div className="mt-6 flex items-center gap-3">
-              <LiquidGlassButton className="px-10">
-                <span>Suivant</span>
-              </LiquidGlassButton>
-            </div>
-          </Container>
 
           <Container delay={0.4}>
             <p className="text-xs text-white/50 font-medium mt-6">

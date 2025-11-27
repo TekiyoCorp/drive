@@ -133,7 +133,7 @@ const CatalogueFilter = ({
     onSelectOption(field, currentValue === value ? null : value);
   };
 
-  const filteredLocations = options.locations.filter(location =>
+  const filteredLocations = (options.locations || []).filter(location =>
     location.toLowerCase().includes(locationSearch.toLowerCase())
   );
 
@@ -205,7 +205,7 @@ const CatalogueFilter = ({
   };
 
   const renderLocationSection = (index: number = 0) => {
-    if (!options.locations.length) {
+    if (!options.locations || !options.locations.length) {
       return null;
     }
 

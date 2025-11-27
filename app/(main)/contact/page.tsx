@@ -4,29 +4,28 @@ import LiquidGlassButton from "@/components/common/liquid-glass-button";
 import Container from "@/components/global/container";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ArrowUpRightIcon } from "lucide-react";
 import { SnapElement } from "@/components/global/scroll-snap";
+import { useRouter } from "next/navigation";
 
 const ContactUsPage = () => {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     nomComplet: "",
-    telephone: "",
     email: "",
-    ville: "",
-    apport: "",
-    experience: "",
+    telephone: "",
     commentaires: "",
   });
+
+  const [errors, setErrors] = useState<{
+    nomComplet?: string;
+    email?: string;
+    telephone?: string;
+    commentaires?: string;
+  }>({});
 
   const [contactLinks, setContactLinks] = useState<Array<{ name: string; link: string; disabled?: boolean }>>([
     { name: "Mail", link: "mailto:contact@example.com" },
@@ -104,11 +103,77 @@ const ContactUsPage = () => {
       ...prev,
       [field]: value,
     }));
+    // Clear error when user starts typing
+    if (errors[field as keyof typeof errors]) {
+      setErrors((prev) => ({
+        ...prev,
+        [field]: undefined,
+      }));
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    const newErrors: typeof errors = {};
+
+    if (!formData.nomComplet.trim()) {
+      newErrors.nomComplet = "Le nom complet est requis";
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = "L'adresse email est requise";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = "L'adresse email n'est pas valide";
+    }
+
+    if (!formData.telephone.trim()) {
+      newErrors.telephone = "Le numéro de téléphone est requis";
+    }
+
+    if (!formData.commentaires.trim()) {
+      newErrors.commentaires = "Le message est requis";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate all fields
+    if (!validateForm()) {
+      console.log("Form validation failed:", errors);
+      return;
+    }
+
     console.log("Form submitted:", formData);
+    
+    try {
+      // Extract first name from nomComplet
+      const firstName = formData.nomComplet.split(" ")[0] || formData.nomComplet || "Thomas";
+      const encodedName = encodeURIComponent(firstName);
+      
+      // Redirect to thank you page with client name
+      if (router && typeof router.push === "function") {
+        await router.push(`/thankyou?name=${encodedName}`);
+      } else {
+        // Fallback to window.location if router is not available
+        window.location.href = `/thankyou?name=${encodedName}`;
+      }
+    } catch (error) {
+      console.error("Error during form submission:", error);
+      // Fallback to window.location on error
+      const firstName = formData.nomComplet.split(" ")[0] || formData.nomComplet || "Thomas";
+      const encodedName = encodeURIComponent(firstName);
+      window.location.href = `/thankyou?name=${encodedName}`;
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    // Prevent form submission on Enter key unless it's in the textarea
+    if (e.key === "Enter" && e.target instanceof HTMLInputElement) {
+      e.preventDefault();
+    }
   };
 
   return (
@@ -153,6 +218,7 @@ const ContactUsPage = () => {
           >
             <form
               onSubmit={handleSubmit}
+              onKeyDown={handleKeyDown}
               className="space-y-5 md:space-y-6 bg-black/10 md:bg-black/20 backdrop-blur-[28px] brightness-125 rounded-3xl py-6 lg:py-8 px-6 lg:px-10 border border-white/10"
             >
               <Container delay={0.5}>
@@ -170,79 +236,84 @@ const ContactUsPage = () => {
                     onChange={(e) =>
                       handleInputChange("nomComplet", e.target.value)
                     }
-                    className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 pt-0 pb-5 text-white focus:border-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base"
+                    className={`bg-transparent border-0 border-b rounded-none px-0 pt-0 pb-5 text-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base ${
+                      errors.nomComplet
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-white/20 focus:border-white"
+                    }`}
                   />
+                  {errors.nomComplet && (
+                    <p className="text-red-500 text-sm mt-1">{errors.nomComplet}</p>
+                  )}
                 </div>
               </Container>
 
               <Container animation="fadeUp" delay={0.8}>
                 <div className="space-y-2">
                   <Input
-                    type="tel"
+                    type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="Adresse mail"
-                    value={formData.telephone}
-                    onChange={(e) =>
-                      handleInputChange("telephone", e.target.value)
-                    }
-                    className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 pt-0 pb-5 text-white focus:border-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base"
+                    value={formData.email}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
+                    className={`bg-transparent border-0 border-b rounded-none px-0 pt-0 pb-5 text-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base ${
+                      errors.email
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-white/20 focus:border-white"
+                    }`}
                   />
+                  {errors.email && (
+                    <p className="text-red-500 text-sm mt-1">{errors.email}</p>
+                  )}
                 </div>
               </Container>
 
               <Container animation="fadeUp" delay={1.0}>
                 <div className="space-y-2">
                   <Input
-                    type="email"
-                    placeholder="Téléphone"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
-                    className="bg-transparent border-0 border-b border-white/20 rounded-none px-0 pt-0 pb-5 text-white focus:border-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    placeholder="Numéro de téléphone"
+                    value={formData.telephone}
+                    onChange={(e) => handleInputChange("telephone", e.target.value)}
+                    className={`bg-transparent border-0 border-b rounded-none px-0 pt-0 pb-5 text-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 !text-base ${
+                      errors.telephone
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-white/20 focus:border-white"
+                    }`}
                   />
+                  {errors.telephone && (
+                    <p className="text-red-500 text-sm mt-1">{errors.telephone}</p>
+                  )}
                 </div>
               </Container>
 
-              <Container animation="fadeUp" delay={1.4}>
+              <Container animation="fadeUp" delay={1.2}>
                 <div className="space-y-2">
-                  <Select
-                    onValueChange={(value) =>
-                      handleInputChange("apport", value)
+                  <Textarea
+                    id="commentaires"
+                    placeholder="Votre message"
+                    value={formData.commentaires}
+                    onChange={(e) =>
+                      handleInputChange("commentaires", e.target.value)
                     }
-                  >
-                    <SelectTrigger className="!bg-transparent w-full border-0 border-b border-white/20 rounded-none px-0 pt-0 pb-5 text-white focus:border-white focus:ring-0 focus-visible:ring-0 h-auto !text-base data-[placeholder]:text-white/60">
-                      <SelectValue
-                        placeholder="Apport"
-                        className="text-white placeholder:!text-white/60 data-[placeholder]:!text-white/60"
-                      />
-                    </SelectTrigger>
-                    <SelectContent className="!bg-[#1C1C1C] border-white/20/20 text-white">
-                      <SelectItem value="0-5000">0 - 5 000€</SelectItem>
-                      <SelectItem value="5000-10000">
-                        5 000 - 10 000€
-                      </SelectItem>
-                      <SelectItem value="10000-20000">
-                        10 000 - 20 000€
-                      </SelectItem>
-                      <SelectItem value="20000+">20 000€+</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    className={`!bg-transparent border-0 border-b rounded-none px-0 pt-0 pb-5 text-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 min-h-[150px] resize-none !text-base ${
+                      errors.commentaires
+                        ? "border-red-500 focus:border-red-500"
+                        : "border-white/20 focus:border-white"
+                    }`}
+                  />
+                  {errors.commentaires && (
+                    <p className="text-red-500 text-sm mt-1">{errors.commentaires}</p>
+                  )}
                 </div>
-              </Container>
-
-              <Container animation="fadeUp" delay={1.8}>
-                <Textarea
-                  id="commentaires"
-                  placeholder="Votre message"
-                  value={formData.commentaires}
-                  onChange={(e) =>
-                    handleInputChange("commentaires", e.target.value)
-                  }
-                  className="!bg-transparent border-0 border-b border-white/20 rounded-none px-0 pt-0 pb-5 text-white focus:border-white focus:ring-0 focus-visible:ring-0 placeholder:text-white/60 min-h-[150px] resize-none !text-base"
-                />
               </Container>
 
               <Container delay={0.3} className="w-fit mx-auto">
                 <LiquidGlassButton className="px-10">
-                  <span className="text-white">Envouer</span>
+                  <span className="text-white">Envoyer</span>
                 </LiquidGlassButton>
               </Container>
 

@@ -5,7 +5,7 @@ import {
 import FAQsWrapper from "@/components/main/faqs-wrapper";
 import OurCatalog from "@/components/main/our-catalog";
 import OurTestimonials from "@/components/main/our-testimonials";
-import Hero from "@/components/vendre/hero";
+import HeroWrapper from "@/components/vendre/hero-wrapper";
 import LatestSales from "@/components/vendre/latest-sales";
 import SecureIntermediation from "@/components/vendre/secure-intermediation";
 import SellingFee from "@/components/vendre/selling-fee";
@@ -15,7 +15,7 @@ const SellYourCarPage = () => {
   return (
     <div className="w-full relative flex flex-col">
       <SnapElement>
-        <Hero />
+        <HeroWrapper />
       </SnapElement>
       <SnapElement>
         <SecureIntermediation />

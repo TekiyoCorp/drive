@@ -1,16 +1,19 @@
 "use client";
 
-import { useState } from "react";
 import { Input } from "@/components/ui/input";
-import { Send } from "lucide-react";
+import { useVendreForm } from "@/contexts/vendre-form-context";
 
 const UserInfo = () => {
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    city: "",
-  });
+  const {
+    fullName,
+    email,
+    phone,
+    city,
+    setFullName,
+    setEmail,
+    setPhone,
+    setCity,
+  } = useVendreForm();
 
   // const [phoneInputWidth, setPhoneInputWidth] = useState(1);
   // const [cityInputWidth, setCityInputWidth] = useState(1);
@@ -27,60 +30,56 @@ const UserInfo = () => {
   // }, [formData.phone, formData.city]);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: value,
-    }));
-
-    // Update width for phone and city inputs
-    // if (field === "phone") {
-    //   setPhoneInputWidth(calculateCharWidth(value));
-    // } else if (field === "city") {
-    //   setCityInputWidth(calculateCharWidth(value));
-    // }
+    // Update context
+    if (field === "fullName") setFullName(value);
+    if (field === "email") setEmail(value);
+    if (field === "phone") setPhone(value);
+    if (field === "city") setCity(value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Form data:", formData);
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLFormElement>) => {
+    // Prevent form submission on Enter key
+    if (e.key === "Enter") {
+      e.preventDefault();
+    }
   };
 
   return (
     <form
-      onSubmit={handleSubmit}
-      className="flex lg:flex-row flex-col lg:items-center gap-0 bg-transparent rounded-full py-4 px-6 min-w-[335px] w-full lg:py-1"
+      onKeyDown={handleKeyDown}
+      className="flex lg:flex-row flex-col lg:items-center gap-0 bg-transparent rounded-full py-4 px-6 min-w-[335px] w-full lg:py-1 max-lg:py-0 max-lg:px-0 max-lg:items-start"
     >
-      <div className="min-w-[100px] flex items-center justify-start lg:justify-center h-12">
+      <div className="min-w-[160px] flex items-center justify-start lg:justify-center h-12">
         <Input
           type="text"
           placeholder="Nom complet"
-          value={formData.fullName}
+          value={fullName}
           onChange={(e) => handleInputChange("fullName", e.target.value)}
-          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center"
+          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 max-lg:text-left lg:text-center"
         />
       </div>
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
-      <div className="min-w-[100px] flex items-center justify-start lg:justify-center h-12">
+      <div className="min-w-[160px] flex items-center justify-start lg:justify-center h-12">
         <Input
           type="email"
           placeholder="Adresse mail"
-          value={formData.email}
+          value={email}
           onChange={(e) => handleInputChange("email", e.target.value)}
-          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center"
+          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 max-lg:text-left lg:text-center"
         />
       </div>
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
-      <div className="min-w-[100px] flex items-center justify-start lg:justify-center h-12">
+      <div className="min-w-[160px] flex items-center justify-start lg:justify-center h-12">
         <Input
           type="tel"
           placeholder="Téléphone: +33"
-          value={formData.phone}
+          value={phone}
           onChange={(e) => handleInputChange("phone", e.target.value)}
-          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center"
+          className="!text-sm !outline-none !bg-transparent border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 max-lg:text-left lg:text-center"
         />
       </div>
 
@@ -100,21 +99,14 @@ const UserInfo = () => {
 
       <div className="w-full h-px lg:w-px lg:h-3 bg-white/40 max-lg:my-3 max-lg:mt-2" />
 
-      <div className="min-w-[140px] flex items-center justify-center h-12">
+      <div className="min-w-[160px] flex items-center justify-start lg:justify-center h-12">
         <Input
           type="text"
           placeholder="Votre ville"
-          value={formData.city}
+          value={city}
           onChange={(e) => handleInputChange("city", e.target.value)}
-          className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 text-center max-w-full transition-all duration-200 min-w-24"
-          // style={{ width: `${cityInputWidth}ch` }}
+          className="!text-sm !outline-none border-none text-white placeholder:text-white/70 focus:!ring-0 max-lg:p-0 rounded-none h-12 max-lg:text-left lg:text-center"
         />
-        <button
-          className="bg-white w-5 aspect-square rounded-full flex items-center justify-center"
-          aria-label="Submit location"
-        >
-          <Send className="size-3 fill-black text-black" />
-        </button>
       </div>
     </form>
   );
