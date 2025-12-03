@@ -4,7 +4,6 @@ import Image from "next/image";
 import Container from "../global/container";
 import Wrapper from "../global/wrapper";
 import { useEffect, useState } from "react";
-import { getImageUrl } from "@/lib/strapi";
 
 const AboutUs = () => {
   const [contentHtml, setContentHtml] = useState<string>("");
@@ -39,9 +38,35 @@ const AboutUs = () => {
           setContentHtml(attributes.content);
         }
 
-        const imageData = attributes?.backgroundImage || attributes?.backgroundImage?.data ? attributes.backgroundImage : null;
-        const computedUrl = imageData ? getImageUrl(imageData) : null;
-        if (computedUrl) setBgUrl(computedUrl);
+        const bgImage = attributes?.backgroundImage;
+        let url: string | undefined;
+
+        if (bgImage && typeof bgImage === "object") {
+          // Standard Strapi format: { data: { attributes: { url } } }
+          if ("data" in bgImage && bgImage.data) {
+            const data = bgImage.data as {
+              attributes?: { url?: string };
+              url?: string;
+            };
+            url = data.attributes?.url || data.url;
+          }
+
+          // Alternative format: { attributes: { url } }
+          if (!url && "attributes" in bgImage && bgImage.attributes) {
+            const attrs = bgImage.attributes as { url?: string };
+            url = attrs.url;
+          }
+
+          // Direct URL format: { url }
+          if (!url && "url" in bgImage && typeof bgImage.url === "string") {
+            url = bgImage.url;
+          }
+        }
+
+        if (url && url.trim() !== "") {
+          const fullUrl = url.startsWith("http") ? url : `${baseURL}${url}`;
+          setBgUrl(fullUrl);
+        }
       } catch {
         // ignore errors, keep defaults
       }
