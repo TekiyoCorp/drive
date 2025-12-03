@@ -30,6 +30,20 @@ export const SnapElement = ({
   });
   const isMobile = useIsMobile();
 
+  // Check if motion is available
+  if (!motion || !motion.div) {
+    return (
+      <div
+        className={`${
+          isMobile ? "" : "snap-child-center"
+        } w-full flex flex-col justify-center items-center z-50`}
+        ref={ref}
+      >
+        <div className="w-full">{children}</div>
+      </div>
+    );
+  }
+
   return (
     <div
       className={`${

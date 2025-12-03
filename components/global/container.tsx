@@ -10,7 +10,11 @@ interface Props {
   delay?: number;
 }
 
-const getAnimationVariants = (animation: string) => {
+const getAnimationVariants = (animation?: string) => {
+  if (!animation) {
+    return { opacity: 0, y: 20 };
+  }
+  
   switch (animation) {
     case "fadeUp":
       return { opacity: 0, y: 20 };
@@ -33,10 +37,19 @@ const Container = ({
   animation = "fadeUp",
   delay = 0,
 }: Props) => {
+  // Check if motion is available
+  if (!motion || !motion.div) {
+    console.warn("Framer Motion not available, rendering fallback");
+    return <div className={className}>{children}</div>;
+  }
+
+  const animationVariants = getAnimationVariants(animation);
+  const calculatedDelay = typeof delay === "number" && !isNaN(delay) ? delay * 0.2 : 0;
+
   return (
     <motion.div
       className={className}
-      initial={getAnimationVariants(animation)}
+      initial={animationVariants}
       whileInView={{
         opacity: 1,
         y: 0,
@@ -46,7 +59,7 @@ const Container = ({
       viewport={{ once: true }}
       transition={{
         duration: 0.2,
-        delay: delay * 0.2,
+        delay: calculatedDelay,
         ease: "easeOut",
       }}
     >

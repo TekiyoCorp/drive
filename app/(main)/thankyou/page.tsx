@@ -1,21 +1,28 @@
+"use client";
+
 import LiquidGlassButton from "@/components/common/liquid-glass-button";
 import Container from "@/components/global/container";
 import { SnapElement } from "@/components/global/scroll-snap";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
-const ThankyouPage = () => {
+const ThankyouContent = () => {
+  const searchParams = useSearchParams();
+  const clientName = searchParams.get("name") || "Thomas";
+
   return (
     <SnapElement>
       <div className="relative z-0 w-full p-2.5 md:p-4 h-screen">
-        <div className="absolute w-full h-screen bg-gradient-to-t from-black via-transparent to-black rounded-4xl" />
+        <div className="absolute w-full h-screen bg-gradient-to-t from-black via-transparent to-black rounded-4xl z-15" />
 
-        <Container animation="scaleUp" delay={0.4} className="w-full h-screen">
+        <Container animation="scaleUp" delay={0.4} className="w-full h-screen relative">
           <Image
             src="/images/thankyou/hero.webp"
             alt="Hero Image"
-            width={1024}
-            height={1024}
-            className="object-cover object-center top-0 z-10 rounded-3xl w-full h-screen"
+            fill
+            className="object-cover object-center z-10 rounded-3xl"
+            sizes="100vw"
             priority
             fetchPriority="high"
           />
@@ -23,10 +30,10 @@ const ThankyouPage = () => {
 
         <Container
           delay={0.4}
-          className="absolute max-md:top-32 max-md:left-1/2 max-md:-translate-x-1/2 md:inset-0 w-fit h-fit md:m-auto whitespace-nowrap"
+          className="absolute max-md:top-32 max-md:left-1/2 max-md:-translate-x-1/2 md:inset-0 w-fit h-fit md:m-auto whitespace-nowrap z-20"
         >
           <h1 className="text-white text-[48px] md:text-[60px] font-regular tracking-[-5px]">
-            Merci, Thomas !
+            Merci, {clientName} !
           </h1>
         </Container>
 
@@ -75,6 +82,22 @@ const ThankyouPage = () => {
         </div>
       </div>
     </SnapElement>
+  );
+};
+
+const ThankyouPage = () => {
+  return (
+    <Suspense fallback={
+      <SnapElement>
+        <div className="relative z-0 w-full p-2.5 md:p-4 h-screen flex items-center justify-center">
+          <h1 className="text-white text-[48px] md:text-[60px] font-regular tracking-[-5px]">
+            Merci !
+          </h1>
+        </div>
+      </SnapElement>
+    }>
+      <ThankyouContent />
+    </Suspense>
   );
 };
 

@@ -2,7 +2,8 @@
 
 import { Download, X } from "lucide-react";
 import Image from "next/image";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useVendreForm } from "@/contexts/vendre-form-context";
 
 interface UploadedImage {
   id: string;
@@ -11,10 +12,16 @@ interface UploadedImage {
 }
 
 const ImageUpload = () => {
+  const { setImageCount } = useVendreForm();
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const maxImages = 4;
   const maxFileSize = 5 * 1024 * 1024; // 5MB in bytes
+
+  // Update context when images change
+  useEffect(() => {
+    setImageCount(uploadedImages.length);
+  }, [uploadedImages.length, setImageCount]);
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(event.target.files || []);
@@ -91,7 +98,7 @@ const ImageUpload = () => {
             className="p-2 hover:bg-white/10 rounded-lg transition-colors"
             disabled={uploadedImages.length >= maxImages}
           >
-            <Download className="w-5 h-5 text-white" />
+            <Download className="w-4 h-4 text-white" />
           </button>
         </div>
 
@@ -105,7 +112,7 @@ const ImageUpload = () => {
         {imageSlots.map(({ index, uploadedImage }) => (
           <div
             key={index}
-            className="relative w-24 h-24 lg:w-20 lg:h-20 bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-xl border border-white/20 group cursor-pointer hover:border-white/40 transition-all"
+            className="relative w-16 h-16 lg:w-16 lg:h-16 bg-gradient-to-br from-gray-700/50 to-gray-800/50 rounded-xl border border-white/20 group cursor-pointer hover:border-white/40 transition-all"
             onClick={!uploadedImage ? triggerFileInput : undefined}
           >
             {uploadedImage ? (
@@ -121,14 +128,14 @@ const ImageUpload = () => {
                     e.stopPropagation();
                     removeImage(uploadedImage.id);
                   }}
-                  className="absolute -top-1 -right-1 size-3.5 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10 shadow-lg"
+                  className="absolute -top-1 -right-1 size-3 bg-red-500 rounded-full flex items-center justify-center hover:bg-red-600 transition-colors z-10 shadow-lg"
                 >
-                  <X className="size-2.5 text-white" />
+                  <X className="size-2 text-white" />
                 </button>
               </>
             ) : (
               <div className="w-full h-full flex items-center justify-center group-hover:bg-white/5 transition-all">
-                <Download className="w-5 h-5 text-white" />
+                <Download className="w-3 h-3 text-white" />
               </div>
             )}
           </div>
